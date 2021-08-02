@@ -1,0 +1,469 @@
+{% extends 'layout.html' %}
+{% set active_page = 'explore' %}
+
+{% block header %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="textblock flexbox">
+        <div id="project_counter" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+            <span class="big_number no_wrap" id="project_count_in">--</span> <br>
+            Analysed Projects
+        </div>
+        <div id="number_of_ras" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+            <span class="medium_number" id="minimum_ras_in">-</span> to <span class="medium_number" id="maximum_ras_in">-</span> Research Areas per Project <br>
+            <span class="medium_number" id="average_ras_in">-</span> Research Areas on average
+        </div>
+        <div id="number_of_nes" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+            <span class="medium_number" id="minimum_nes_in">-</span> to <span class="medium_number" id="maximum_nes_in">-</span> Named Entities per Project <br>
+            <span class="medium_number" id="average_nes_in">-</span> Named Entities on average
+        </div>
+
+        <div id="ra_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+            Top 20 Research Areas
+            <div id="ra_dis_load"></div>
+            <canvas id="ra_dist_chart_in" width="600" height="400"></canvas>
+        </div>
+
+        <div id="ne_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+            Top 20 Named Entities
+            <div id="ne_dis_load"></div>
+            <canvas id="ne_dist_chart_in" width="600" height="400"></canvas>
+        </div>
+
+        <div class="card bg-light p-3 m-1 card_no_wrap">
+            <!--form class="btn-group btn-group-toggle" data-toggle="buttons">
+                <button type="radio" name="browser" class="btn btn-secondary active" onclick="update_network_clicked(this.value)" value="project">Folded to projects only</button>
+                <button type="radio" name="browser" class="btn btn-secondary active" onclick="update_network_clicked(this.value)" value="research_areas">Only Projects and Research Areas</button>
+                <button type="radio" name="browser" class="btn btn-secondary active" onclick="update_network_clicked(this.value)" value="complete">Complete Network</button>
+            </form-->
+            <div id="select_connectors input-group mb-3">
+                <div class="input-group-prepend">
+                    <label for="connectors_select_box"> Choose connectors for the network:</label>
+                </div>
+
+                <select multiple class="js-example-basic-multiple js-states form-control" id="connectors_select_box" name="connectors[]" >
+                    <option value="ORG">Organisations</option>
+                    <option value="DATE TIME">Dates and Time</option>
+                    <option value="GPE LOC FAC">Places</option>
+                    <option value="PERSON PER">People</option>
+                    <option value="PERCENT MONEY QUANTITY ORDINAL CARDINAL">Numbers and Amounts</option>
+                    <option value="PRODUCT WORK_OF_ART">Items and Things</option>
+                    <option value="NORP LAW LANGUAGE MISC">Others</option>
+
+                    <option value="research-area">Research Areas</option>
+                </select>
+                <button class="btn btn-outline-dark" type="button" id="buttonConnectorsApply" value="Apply">Apply</button>
+
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="find_node_input">Find Node</label>
+                </div>
+                <input id="find_node_input" type="text" name="project_name" class="form-control" placeholder="Type to search..." list="datalistNodeOptions">
+                <datalist id="datalistNodeOptions">
+
+                </datalist>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-dark" type="button" id="buttonFindNode" value="Find"><i class="fas fa-search"></i> Find</button>
+                </div>
+            </div>
+
+            <div id="network">
+                <div id="network_in"></div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $j = jQuery.noConflict();
+
+        var network
+        var vis_projects, vis_research_areas, vis_complete, vis_leafless
+
+        var project_list = []
+
+        var cards = ["ra_dis_load", "ne_dis_load", "network_in"]
+
+        var vis_options = {
+            configure: {
+                enabled: false
+            },
+            edges: {
+                color: {
+                    inherit: false,
+                    highlight: '#36b761'
+                },
+                smooth: {
+                    enabled: false,
+                    type: "continuous"
+                }
+            },
+            interaction: {
+                dragNodes: true,
+                hideEdgesOnDrag: false,
+                hideNodesOnDrag: false
+            },
+            physics: {
+                enabled: true,
+                stabilization: {
+                    enabled: true,
+                    fit: true,
+                    iterations: 1000,
+                    onlyDynamicEdges: false,
+                    updateInterval: 50
+                },
+                solver: "repulsion",
+                repulsion: {
+                    nodeDistance: 200
+                },
+                barnesHut: {
+                    springConstant: 0,
+                    avoidOverlap: 0.2
+                }
+            }
+        }
+
+
+        $j(document).ready(function(){
+            $j('.js-example-basic-multiple').select2({
+                placeholder: "Connectors between projects (default is folded network with all connectors)",
+                width: 'resolve'
+            });
+            cards.forEach(function (div_id){
+                loading(div_id)
+            })
+
+            $j.get("{{ url_for("data_bp.get_dashboard_data") }}").done(function(res){
+                res = JSON.parse(res)
+
+                var options = {
+                    configure: {
+                        enabled: false
+                    },
+                    edges: {
+                        color: {
+                            inherit: false,
+                            highlight: '#36b761'
+                        },
+                        smooth: {
+                            enabled: false,
+                            type: "continuous"
+                        }
+                    },
+                    interaction: {
+                        dragNodes: true,
+                        hideEdgesOnDrag: false,
+                        hideNodesOnDrag: false
+                    },
+                    physics: {
+                        enabled: true,
+                        stabilization: {
+                            enabled: true,
+                            fit: true,
+                            iterations: 1000,
+                            onlyDynamicEdges: false,
+                            updateInterval: 50
+                        },
+                        solver: "repulsion",
+                        repulsion: {
+                            nodeDistance: 200
+                        },
+                        barnesHut: {
+                            springConstant: 0,
+                            avoidOverlap: 0.2
+                        }
+                    }
+                }
+
+                var vis = res["vis_projects"]
+                vis_projects = {
+                    "nodes": vis["nodes"],
+                    "edges": vis["edges"],
+                    "options": options
+                }
+
+                vis["nodes"].forEach(function (node){
+                    project_list.push(node["label"])
+                })
+
+                vis = res["vis_projects_and_ras"]
+                vis_research_areas = {
+                    "nodes": vis["nodes"],
+                    "edges": vis["edges"]
+                }
+
+                vis = res["vis_complete"]
+                vis_complete = {
+                    "nodes": vis["nodes"],
+                    "edges": vis["edges"]
+                }
+
+                vis = res["vis_leafless"]
+                vis_leafless = {
+                    "nodes": vis["nodes"],
+                    "edges": vis["edges"]
+                }
+
+
+                var ra_numbers = res["ra_numbers"]
+                var ne_numbers = res["ne_numbers"]
+                var ra_occurances = res["ra_occurances"]
+                var ne_occurances = res["ne_occurances"]
+
+                update_dashboard(res["project_count"],ra_numbers["minimum"],ra_numbers["maximum"],(Math.round(10*ra_numbers["average"])/10),
+                    ne_numbers["minimum"],ne_numbers["maximum"],(Math.round(10*ne_numbers["average"])/10),
+                    ra_occurances["labels"], ra_occurances["values"], ne_occurances["labels"], ne_occurances["values"], vis_projects)
+            })
+
+        })
+
+        function randomInt(){
+            return Math.floor(Math.random()*240)
+        }
+
+
+        function update_dashboard(project_count, min_ras, max_ras, avg_ras, min_nes, max_nes, avg_nes,
+                                  ra_count_dict_labels, ra_count_dict_values, ne_count_dict_labels, ne_count_dict_values, vis_network){
+            document.getElementById("project_count_in").innerText = project_count
+            document.getElementById("minimum_ras_in").innerText = min_ras
+            document.getElementById("maximum_ras_in").innerText = max_ras
+            document.getElementById("average_ras_in").innerText = avg_ras
+
+            document.getElementById("minimum_nes_in").innerText = min_nes
+            document.getElementById("maximum_nes_in").innerText = max_nes
+            document.getElementById("average_nes_in").innerText = avg_nes
+
+            update_ra_count(ra_count_dict_labels, ra_count_dict_values)
+            update_ne_count(ne_count_dict_labels, ne_count_dict_values)
+            update_network(vis_network)
+
+        }
+
+        function update_ra_count(ra_count_dict_labels, ra_count_dict_values){
+            endloading("ra_dis_load")
+            var bg_colors = []
+            var bord_color = []
+            for (var i=0; i< ra_count_dict_values.length; i++){
+                var r = randomInt()
+                var g = randomInt()
+                var b = randomInt()
+                bg_colors.push('rgba(' + r + ', ' + g + ', ' + b + ', 0.3)')
+                bord_color.push('rgba(' + r + ', ' + g + ', ' + b + ', 1)')
+            }
+
+            var ctx = document.getElementById('ra_dist_chart_in').getContext('2d');
+            Chart.defaults.indexAxis = 'y'
+            const data = {
+                labels: ra_count_dict_labels,
+                datasets: [{
+                    label: '# Projects',
+                    data: ra_count_dict_values,
+                    backgroundColor: bg_colors,
+                    borderColor: bord_color,
+                    borderWidth: 1
+                }]
+            }
+
+            var myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: data,
+                options: {
+                    scales: {
+                        y: {
+                            min: 0
+                        }
+                    }
+                }
+            });
+        }
+
+        function update_ne_count(ne_count_dict_labels, ne_count_dict_values){
+            endloading("ne_dis_load")
+            var bg_colors = []
+            var bord_color = []
+            for (var i=0; i< ne_count_dict_values.length; i++){
+                var r = randomInt()
+                var g = randomInt()
+                var b = randomInt()
+                bg_colors.push('rgba(' + r + ', ' + g + ', ' + b + ', 0.3)')
+                bord_color.push('rgba(' + r + ', ' + g + ', ' + b + ', 1)')
+            }
+
+            var ctx = document.getElementById('ne_dist_chart_in').getContext('2d');
+            Chart.defaults.indexAxis = 'y'
+            const data = {
+                labels: ne_count_dict_labels,
+                datasets: [{
+                    label: '# Projects',
+                    data: ne_count_dict_values,
+                    backgroundColor: bg_colors,
+                    borderColor: bord_color,
+                    borderWidth: 1
+                }]
+            }
+
+            var myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: data,
+                options: {
+                    scales: {
+                        y: {
+                            min: 0
+                        }
+                    }
+                }
+            });
+        }
+
+        function update_network(vis_network){
+            endloading("network_in")
+            var nodes = new vis.DataSet(vis_network["nodes"])
+            var edges = new vis.DataSet(vis_network["edges"])
+            var options
+            if ("options" in vis_network) options = vis_network["options"]
+            else options = vis_options
+
+            var container = document.getElementById("network_in");
+            var data = {
+                nodes: nodes,
+                edges: edges,
+            };
+            network = new vis.Network(container, data, options);
+            set_up_node_options(nodes)
+            network.on("doubleClick", function(params){
+                clicked_in_network(params)
+            })
+            network.on("click", function(params){
+                console.log(params)
+            })
+        }
+
+        function set_up_node_options(nodes){
+            document.getElementById("datalistNodeOptions").innerHTML = ""
+            var options = []
+            nodes.forEach(function(node){
+                options.push(node["id"])
+            })
+
+            options = options.sort(function (a,b){
+                if (a < b) {return -1}
+                else if (a > b) {return 1}
+                return 0
+            })
+
+            options.forEach(function(node){
+                var node_option = document.createElement("option")
+                node_option.value = node
+                node_option.innerText = node
+                document.getElementById("datalistNodeOptions").appendChild(node_option);
+            })
+
+            console.log("done")
+        }
+
+        function update_network_clicked(e){
+            switch (e){
+                case "projects":
+                    //document.getElementById("select_connectors").innerHTML = ""
+                    update_network(vis_projects);
+                    break;
+                case "research_areas":
+                    //document.getElementById("select_connectors").innerHTML = ""
+                    update_network(vis_research_areas);
+                    break;
+                case "complete":
+                    {#var new_select = document.createElement("select")
+                    new_select.className = "connectors_select_box"
+                    new_select.name = "connectors[]"
+                    new_select.multiple = "multiple"
+
+                    var connector_options = [["Organisation(s)", "ORG"], ]
+
+                    document.getElementById("select_connectors").appendChild(new_select)#}
+                    update_network(vis_complete);
+                    break;
+            }
+        }
+
+        function filter_nodes(nodes, chosen_connectors){
+            var filtered_nodes = []
+            chosen_connectors.push("project")
+            nodes.forEach(function(node){
+                if (chosen_connectors.includes(node["group"])){
+                    //node["size"]= 25
+                    filtered_nodes.push(node)
+                } else if("ne_type" in node){
+                    if (chosen_connectors.includes(node["ne_type"])){
+                        //node["size"]= 25
+                        filtered_nodes.push(node)
+                    }
+                }
+            })
+            return filtered_nodes
+        }
+
+        $j("#buttonConnectorsApply").click(function (){
+            var connectors = $j("#connectors_select_box").val()
+            var chosen_connectors = []
+            connectors.forEach(function(c){
+                var split_at_space = c.split(" ")
+                for (var i=0; i<split_at_space.length; i++){
+                    chosen_connectors.push(split_at_space[i])
+                }
+            })
+            if (chosen_connectors.length > 0){
+                var filtered_nodes = filter_nodes(vis_leafless["nodes"], chosen_connectors)
+                var filtered_network = {
+                    "nodes": filtered_nodes,
+                    "edges": vis_leafless["edges"]
+                }
+                update_network(filtered_network)
+            } else {
+                update_network(vis_projects)
+            }
+
+        })
+
+        function clicked_in_network(params){
+            var project
+            if (params["nodes"].length > 0){
+                if(project_list.includes(params["nodes"][0])){
+                    project = params["nodes"][0]
+                    navigate_to_analysed_project(project, true)
+                }
+            }
+        }
+
+        var move_options = {
+            scale: 1.0,
+            offset: {x:0, y:0},
+            animation: { // -------------------> can be a boolean too!
+                duration: 500,
+                easingFunction: "easeInOutQuad"
+            }
+        }
+        $j('#buttonFindNode').click(function(){
+            var node_name = $j('#find_node_input').val()
+            console.log("selecting: " + node_name)
+            network.selectNodes([node_name])
+            network.focus(node_name, move_options)
+        })
+
+
+    </script>
+{% endblock %}

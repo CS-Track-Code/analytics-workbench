@@ -1,0 +1,374 @@
+{% extends 'modify_results_barebone.html' %}
+{% set active_page= 'analyse' %}
+
+{% block modification_content %}
+
+    <div class="modal" id="check_which_substring" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Several substrings matched</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Several substrings in the description match your input. Please choose the instance(s) you want to apply your changes to</p>
+                </div>
+
+                <div class="text_ner" id="check_instances">
+
+                </div>
+
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="input_named_entity_read">Named Entity</label>
+                </div>
+                <input id="input_named_entity_read" type="text" name="named_entity" class="form-control" placeholder="click on existing or copy new">
+
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="input_select_type_read">Type</label>
+                </div>
+                <input class="custom-select" id="input_select_type_read">
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-dark safe" id="safe_from_modal">Save changes and leave</button>
+                    <button type="button" class="btn btn-dark" id="quit_from_modal">Leave without saving</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-group">
+        <div class="text_ner" id="project_description"></div>
+        <! textarea readonly class="form-control" id="project_description" aria-label="project description textarea" rows="10"><!/textarea>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="input_named_entity">Named Entity</label>
+            </div>
+            <input id="input_named_entity" type="text" name="named_entity" class="form-control" placeholder="click on existing or copy new">
+
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="input_select_type">Type</label>
+            </div>
+            <select class="custom-select" id="input_select_type">
+                <option selected value="">Choose...</option>
+            </select>
+
+            <div class="input-group-append">
+                <button class="btn btn-outline-dark" type="button" id="buttonApplyChangedNE" value="Save NE">Apply <i class="fas fa-pencil-alt"></i></button>
+            </div>
+            <div class="input-group-append">
+                <button class="btn btn-outline-dark" type="button" id="buttonDeleteNE" value="Delete NE">Delete <i class="far fa-trash-alt"></i></button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+<script>
+    {% block more_script %}
+
+        var description = null;
+        var named_entities = null;
+        var all_descriptors = [];
+        var descriptor_dict = {};
+        var clicked_index = null;
+        var choice_screen = false;
+
+        $j(document).ready(function () {
+            description = localStorage["project-description"];
+
+            var res = JSON.parse(localStorage["ner_res"])
+            named_entities = res["ner_list"]
+            var all_descriptors = res["all_descriptors"]
+
+            all_descriptors.forEach(function (line){
+                descriptor_dict[line[0]] = line[1]
+            })
+
+            annotate_description(description)
+
+            all_descriptors = all_descriptors.sort(function (a,b){
+                if (a[0] < b[0]) {return -1}
+                else if (a[0] > b[0]) {return 1}
+                return 0
+            })
+
+            for (var i=0; i<all_descriptors.length; i++){
+                var descriptor_selector = document.createElement("option")
+                var label = all_descriptors[i][0]
+                var label_description = all_descriptors[i][1]
+                descriptor_selector.value = label
+                descriptor_selector.id = "type_select_" + i.toString()
+                descriptor_selector.innerText = label + " (" + label_description + ")"
+                document.getElementById("input_select_type").appendChild(descriptor_selector);
+            }
+            unsaved_changes = false;
+        })
+
+        function annotate_description(work_in_progress){
+            //TODO check if html in description
+            named_entities = named_entities.sort(function (a,b){
+                if (a[3] < b[3]) {return -1}
+                else if (a[3] > b[3]) {return 1}
+                return 0
+            })
+            console.log(named_entities)
+
+            for (var i=named_entities.length-1; i>=0; i--){
+                var ne = named_entities[i][0]
+                var type = named_entities[i][1] + " (" + named_entities[i][2] + ")"
+                var begin_char = named_entities[i][3]
+                var end_char = named_entities[i][4]
+
+                var ne_link = "<span class='ne_link' data-value='"+ i +"'>"+ ne + "</span>"
+                var partA = work_in_progress.substring(0, begin_char)
+                var partB = work_in_progress.substring(end_char)
+                work_in_progress = partA + ne_link + partB
+            }
+
+            var content_block = document.createElement("div")
+            content_block.id = "content_description"
+            content_block.innerHTML = work_in_progress
+
+            var elem = document.getElementById("content_description");
+            if (elem != null) {
+                elem.parentNode.removeChild(elem);
+            }
+
+            $j("#project_description").append(content_block)
+            $j("#input_named_entity").prop("readonly", false)
+            $j("#input_select_type").prop("readonly", false)
+            choice_screen = false;
+
+            var ne_list = document.getElementsByClassName("ne_link")
+            Array.from(ne_list).forEach(function (ne_link){
+                ne_link.addEventListener('click', move_to_edit)
+            })
+        }
+
+        var move_to_edit = function(e){
+            console.log(e.target)
+
+            var id = e.target.getAttribute('data-value');
+            var ne = named_entities[id][0]
+            var label = named_entities[id][1]
+
+            clicked_index = id
+
+            $j("#input_named_entity").val(ne)
+            $j("#input_select_type").val(label)
+
+        }
+
+        function num_ne_occurances_in_text(substring){
+            var res = description.split(substring);
+            var count = 0
+
+            var begin_char = res[0].length
+            var end_char = begin_char + substring.length
+
+            for (var i=1; i<res.length; i++){
+                if (check_for_overlap(begin_char, end_char) === false){
+                    count += 1
+                }
+
+                begin_char = end_char + res[i].length
+                end_char = begin_char + substring.length
+            }
+            return count
+        }
+
+        $j('#buttonApplyChangedNE').click(function(){
+            var ne = $j("#input_named_entity").val()
+            var lab = $j("#input_select_type").val()
+            var desc = descriptor_dict[lab]
+
+            if(!choice_screen){
+                var id = clicked_index;
+
+                if (clicked_index === null) {
+                    id = named_entities.length
+                    named_entities.push(["", "", "", 0, 0])
+
+                }
+
+                var clicked_ne = named_entities[id][0]
+
+                var begin_char = named_entities[id][3]
+                var end_char = named_entities[id][4]
+
+
+                if (clicked_index != null && ne.search(clicked_ne) >= 0){
+                    var change_first =  ne.search(clicked_ne)
+
+                    begin_char -= change_first
+                    end_char = begin_char + ne.length
+                    apply_changes(id, ne, lab, desc, begin_char, end_char)
+
+                } else if (clicked_index != null && clicked_ne.search(ne) >= 0){
+                    var change_first =  clicked_ne.search(ne)
+
+                    begin_char += change_first
+                    end_char = begin_char + ne.length
+                    apply_changes(id, ne, lab, desc, begin_char, end_char)
+                } else {
+                    // new named entity
+                    var occurances = num_ne_occurances_in_text(ne)
+                    if (occurances === 1){
+                        begin_char = description.search(ne)
+                        end_char = begin_char + ne.length
+                        if (check_for_overlap(begin_char, end_char) === false){
+                            apply_changes(id, ne, lab, desc, begin_char, end_char)
+                        } else {
+                            //TODO: ERROR -> overlap
+                        }
+                    } else {
+                        choose_substring(id, ne, lab, desc, begin_char, end_char)
+                    }
+                }
+            } else {
+                var checkboxes = document.getElementsByClassName("ner_checkbox")
+                Array.from(checkboxes).forEach(function(checkbox){
+                    if(checkbox.checked){
+                        var id = named_entities.length
+                        named_entities.push(["", "", "", 0, 0])
+                        begin_char = parseInt(checkbox.value)
+                        end_char = begin_char + ne.length
+                        named_entities[id][0] = ne
+                        named_entities[id][1] = lab
+                        named_entities[id][2] = desc
+                        named_entities[id][3] = begin_char
+                        named_entities[id][4] = end_char
+                    }
+                })
+                annotate_description(description)
+
+                $j("#input_named_entity").val("")
+                $j("#input_select_type").val("")
+
+                clicked_index = null;
+                unsaved_changes = true;
+            }
+
+
+        })
+
+        function choose_substring(id, ne, lab, desc, begin_char, end_char){
+            var res = description.split(ne);
+            var wip = res[0]
+
+            begin_char = res[0].length
+            end_char = begin_char + ne.length
+
+            for (var i=1; i<res.length; i++){
+                var ne_checkbox = '<span class="ner_check"><input class="form-check-input ner_checkbox" type="checkbox" value="' + begin_char + '" ><label class="form-check-label" for="ner_checkbox">' + ne + '</label></span>'
+                if (check_for_overlap(begin_char, end_char) === false){
+                    wip += " " + ne_checkbox + res[i]
+                } else {
+                    wip += " " + ne + res[i]
+                }
+
+                begin_char = end_char + res[i].length
+                end_char = begin_char + ne.length
+            }
+
+            var content_block = document.createElement("div")
+            content_block.id = "content_description"
+            content_block.innerHTML = wip
+
+            var elem = document.getElementById("content_description");
+            if (elem != null) {
+                elem.parentNode.removeChild(elem);
+            }
+
+            choice_screen = true
+            $j("#project_description").append(content_block)
+            $j("#input_named_entity").prop("readonly", true)
+            $j("#input_select_type").prop("readonly", true)
+
+        }
+
+        function check_for_overlap(begin_char, end_char){
+            var overlap = false
+            named_entities.forEach(function (ne_row){
+                var ne_begin = ne_row[3]
+                var ne_end = ne_row[4]
+                if (ne_begin <= begin_char && begin_char < ne_end){
+                    overlap = true
+                }
+                if (ne_begin < end_char && end_char <= ne_end) {
+                    overlap = true
+                }
+            })
+            return overlap
+        }
+
+        function apply_changes(id, ne, lab, desc, begin_char, end_char){
+            if (ne !== "" && lab !== ""){
+                named_entities[id][0] = ne
+                named_entities[id][1] = lab
+                named_entities[id][2] = desc
+                named_entities[id][3] = begin_char
+                named_entities[id][4] = end_char
+
+                annotate_description(description)
+
+                $j("#input_named_entity").val("")
+                $j("#input_select_type").val("")
+
+                clicked_index = null;
+                unsaved_changes = true;
+            } else {
+                //TODO alert
+            }
+
+        }
+
+        $j('#buttonDeleteNE').click(function(){
+            if (!choice_screen){
+                var ne = $j("#input_named_entity").val()
+                var label = $j("#input_select_type").val()
+
+                var occurances = num_ne_occurances_in_text(ne)
+
+                if (ne === named_entities[clicked_index][0]){
+                    named_entities.splice(clicked_index, 1)
+                } else if (occurances > 1){
+                    //TODO notify don't change to delete
+                }
+
+                unsaved_changes = true;
+            }
+            annotate_description(description)
+
+            $j("#input_named_entity").val("")
+            $j("#input_select_type").val("")
+
+            clicked_index = null;
+        });
+
+        function safe(){
+            var project_name = localStorage["project_name"]
+            var link = localStorage["project-link"];
+            var description = localStorage["project-description"];
+            var res = JSON.parse(localStorage["ner_res"]);
+            res["ner_list"] = named_entities;
+            $j.post("/analyse/project/modify_ner", {"name": project_name, "link":link, "description":description, "ner_res": JSON.stringify(res)}).done(function (res_save){
+                var res_save_success = JSON.parse(res_save)["success"]
+                if (res_save_success === true){
+                    localStorage["ner_res"] = JSON.stringify(res);
+                    unsaved_changes = false;
+                } else {
+                    //TODO: Reaktion?
+                }
+
+            })
+            add_modified_project(project_name)
+        }
+
+
+    {% endblock %}
+</script>

@@ -1,0 +1,283 @@
+{% extends 'layout.html' %}
+{% set active_page= 'analyse' %}
+
+{% block content %}
+
+    <div class="textblock project_input">
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="project_name_input">Project name</label>
+            </div>
+            <input readonly id="project_name_input" type="text" name="project_name" class="form-control" placeholder="Type to search..." list="datalistOptions">
+            <datalist id="datalistOptions">
+
+            </datalist>
+        </div>
+
+        Project Link: <br/>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="project_link_input">Project link</label>
+            </div>
+            <input readonly id="project_link_input" type="text" name="project_link_B" class="form-control" aria-describedby="basic-addon2">
+        </div>
+
+        <br/> Project description:
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">project <br/>description</span>
+            </div>
+            <textarea readonly class="form-control" id="project_description" aria-label="project description textarea" rows="10"></textarea>
+        </div>
+        <div class="btn_row">
+            <div class="btn-group btn_send2" role="group">
+                <button type="button" class="btn btn-secondary" id="buttonReset">Analyse different project</button>
+                <button type="button" class="btn btn-dark" id="buttonRestart">Modify Description</button>
+            </div>
+
+        </div>
+
+
+        <div class="analysis_results">
+
+            <div class="btn_row2">
+                <h3>Research Areas - ESA results</h3>
+                <div class="btn-group btn_send2" role="group">
+                    <button type="button" class="btn btn-outline-secondary" id="whats_esa_button">What is ESA?</button>
+                    <button type="button" class="btn btn-outline-dark" id="mod_esa_button">Modify Results</button>
+                </div>
+            </div>
+
+            <table class="table result_table" id="esa_results">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Research Area</th>
+                        <th scope="col">Similarity</th>
+                    </tr>
+                </thead>
+                <tbody id="esa_best_rows">
+
+                </tbody>
+            </table>
+
+
+            <div class="btn_row2">
+                <h3>Named Entities - NER results</h3>
+                <div class="btn-group btn_send2" role="group">
+                    <button type="button" class="btn btn-outline-secondary" id="whats_ner_button">What is NER?</button>
+                    <button type="button" class="btn btn-outline-dark" id="mod_ner_button">Modify Results</button>
+                </div>
+            </div>
+            <table class="table result_table" id="ner_results">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Named Entity</th>
+                    <th scope="col">Type</th>
+                </tr>
+                </thead>
+                <tbody id="ner_rows">
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        $j = jQuery.noConflict();
+
+        var best_research_areas = null
+        var all_research_areas_with_sim = null
+        var used_tokens = null
+
+        var named_entities = null
+        var all_descriptors = null
+
+        function update_research_areas(){
+            endloading("esa_best_rows")
+            if (best_research_areas != null){
+                for (var i=0; i<best_research_areas.length; i++){
+                    var newRow = document.createElement("tr");
+                    var newCell = document.createElement("th");
+                    var num_cell = i+1;
+                    newCell.scope="row"
+                    newCell.innerHTML = num_cell.toString()
+                    newRow.append(newCell);
+                    var raCell = document.createElement("td");
+                    raCell.innerHTML = best_research_areas[i][1];
+                    newRow.append(raCell);
+
+                    var simCell = document.createElement("td");
+                    var sim = Math.round(parseFloat(best_research_areas[i][2]) * 100000 + Number.EPSILON) / 100000
+                    simCell.innerHTML = sim.toString();
+                    newRow.append(simCell);
+                    document.getElementById("esa_best_rows").appendChild(newRow);
+                }
+            } else {
+                var newRow = document.createElement("tr");
+                var newCell = document.createElement("th");
+                newCell.scope="row"
+                newCell.innerHTML = ""
+                newRow.append(newCell);
+                var neCell = document.createElement("td");
+                neCell.innerHTML = "no results available"
+                newRow.append(neCell);
+                var typeCell = document.createElement("td");
+                typeCell.innerHTML = ""
+                newRow.append(typeCell);
+
+                document.getElementById("esa_best_rows").appendChild(newRow);
+            }
+        }
+
+        function update_named_entities(){
+            endloading("ner_rows")
+            if (named_entities != null){
+                for (var i=0; i<named_entities.length; i++){
+                    var newRow = document.createElement("tr");
+                    var newCell = document.createElement("th");
+                    var num_cell = i+1;
+                    newCell.scope="row"
+                    newCell.innerHTML = num_cell.toString()
+                    newRow.append(newCell);
+                    var neCell = document.createElement("td");
+                    neCell.innerHTML = named_entities[i][0]
+                    newRow.append(neCell);
+                    var typeCell = document.createElement("td");
+                    typeCell.innerHTML = named_entities[i][1] + " (" + named_entities[i][2] + ")"
+                    newRow.append(typeCell);
+
+                    document.getElementById("ner_rows").appendChild(newRow);
+                }
+            } else {
+                var newRow = document.createElement("tr");
+                var newCell = document.createElement("th");
+                newCell.scope="row"
+                newCell.innerHTML = ""
+                newRow.append(newCell);
+                var neCell = document.createElement("td");
+                neCell.innerHTML = "no results available"
+                newRow.append(neCell);
+                var typeCell = document.createElement("td");
+                typeCell.innerHTML = ""
+                newRow.append(typeCell);
+
+                document.getElementById("ner_rows").appendChild(newRow);
+            }
+        }
+
+        $j(document).ready(function (){
+            loading("esa_best_rows")
+            loading("ner_rows")
+            if ("project-link" in localStorage && "project-description" in localStorage){
+                var project_name = localStorage["project_name"]
+                var link = localStorage["project-link"];
+                var description = localStorage["project-description"];
+                $j("#project_name_input").val(project_name)
+                $j("#project_link_input").val(link);
+                $j("#project_description").val(description);
+
+                if (localStorage.getItem("esa_res") === null){
+                    $j.post("/analyse/project/esa", {"name": project_name, "link":link, "description":description}).done(function (res){
+                        localStorage["esa_res"] = res
+                        res = JSON.parse(res)
+                        best_research_areas = res["top_research_areas_with_sim"]
+                        all_research_areas_with_sim = res["research_areas_with_sim_list"]
+                        used_tokens = res["used_tokens"]
+                        update_research_areas();
+                        localStorage["changed_project_lists"] = true
+                    })
+                } else {
+                    var res = JSON.parse(localStorage["esa_res"])
+                    best_research_areas = res["top_research_areas_with_sim"]
+                    all_research_areas_with_sim = res["research_areas_with_sim_list"]
+                    used_tokens = res["used_tokens"]
+                    update_research_areas();
+                }
+
+                if (localStorage.getItem("ner_res") === null){
+                    $j.post("/analyse/project/ner", {"name": project_name, "link":link, "description":description}).done(function (res){
+                        localStorage["ner_res"] = res
+                        res = JSON.parse(res)
+                        named_entities = res["ner_list"]
+                        all_descriptors = res["all_descriptors"]
+                        update_named_entities();
+                        localStorage["changed_project_lists"] = true
+                    })
+                } else {
+                    var res = JSON.parse(localStorage["ner_res"])
+                    named_entities = res["ner_list"]
+                    all_descriptors = res["all_descriptors"]
+                    update_named_entities();
+                }
+            } else if ("project_name" in localStorage) {
+                var project_name = localStorage["project_name"]
+                $j("#project_name_input").val(project_name)
+                $j.post("/analyse/project/data", {"name":project_name}).done(function (res) {
+                    res = JSON.parse(res)
+                    var link = res["project_link"]
+                    var description = res["project_description"]
+                    var esa_res = res["esa_results"]
+                    var ner_res = res["ner_results"]
+
+                    localStorage["project-link"] = link
+                    localStorage["project-description"] = description
+                    $j("#project_link_input").val(link);
+                    $j("#project_description").val(description);
+
+                    localStorage["esa_res"] = JSON.stringify(esa_res)
+                    best_research_areas = esa_res["top_research_areas_with_sim"]
+                    all_research_areas_with_sim = esa_res["research_areas_with_sim_list"]
+                    used_tokens = esa_res["used_tokens"]
+                    update_research_areas();
+
+                    localStorage["ner_res"] = JSON.stringify(ner_res)
+                    named_entities = ner_res["ner_list"]
+                    all_descriptors = ner_res["all_descriptors"]
+                    update_named_entities();
+                })
+            }
+
+            add_visited_project(project_name)
+
+        })
+
+        $j("#buttonRestart").click(function (){
+            window.location.href = "/analyse"
+        })
+
+        $j("#buttonReset").click(function (){
+            localStorage.removeItem("project_name")
+            localStorage.removeItem("project-link")
+            localStorage.removeItem("project-description")
+            localStorage.removeItem("esa_res")
+            localStorage.removeItem("ner_res")
+            window.location.href = "/analyse"
+        })
+
+        $j("#mod_esa_button").click(function (){
+            window.location.href = "/analyse/project/modify_esa"
+        })
+
+        $j("#mod_ner_button").click(function (){
+            window.location.href = "/analyse/project/modify_ner"
+        })
+
+        $j('#whats_esa_button').click(function (){
+            window.location.href = "{{ url_for("explanation_bp.explanation_esa") }}"
+        })
+
+        $j('#whats_ner_button').click(function (){
+            window.location.href = "{{ url_for("explanation_bp.explanation_ner") }}"
+        })
+
+
+    </script>
+{% endblock %}

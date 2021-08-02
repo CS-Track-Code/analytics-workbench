@@ -1,0 +1,227 @@
+
+<div class="sidebar">
+    <div>
+        <span id="rec_descriptor"></span>
+        <button type="button" class="btn btn-secondary" id="rec_help" data-toggle="tooltip" data-placement="right" title="More about recommendations">
+            <i class="far fa-question-circle"></i>
+        </button>
+        <div id="recommendations"></div>
+        <br><br>
+        <span id="tba_descriptor">Help adding to the database and work on one of these projects:</span>
+        <div id="projects-tba"></div>
+    </div>
+</div>
+
+
+<script>
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function (){
+        init_recommendations()
+        get_recommendations(6, "recommendations")
+
+        get_tba_projects()
+
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+
+    function get_tba_projects(){
+        if (!("tba_projects" in localStorage)){
+            request_tba_projects()
+        } else if (JSON.parse(localStorage["used_tba"]) > 1){
+            request_tba_projects()
+        } else {
+            set_up_tba_projects()
+        }
+    }
+
+    function request_tba_projects(){
+        $j.get("/get-tba-projects").done(function (res){
+            localStorage["tba_projects"] = res
+            localStorage["used_tba"] = 0
+            set_up_tba_projects()
+        })
+    }
+
+    function set_up_tba_projects(){
+        var tba_projects = JSON.parse(localStorage["tba_projects"])
+        localStorage["used_tba"] = JSON.parse(localStorage["used_tba"]) + 1
+        var random_start = Math.floor(Math.random()*tba_projects.length)
+        var max = (5 < tba_projects.length) ? 5 : tba_projects.length
+        for (var i=0; i<max; i++){
+            var project = tba_projects[(random_start*(1+i))%tba_projects.length]
+            var projectButton =document.createElement("button");
+            projectButton.type = "button"
+            projectButton.className = "project_button"
+            projectButton.value = project
+            projectButton.innerText = project
+            projectButton.addEventListener('click', clicked_tba_project)
+            document.getElementById("projects-tba").appendChild(projectButton);
+        }
+        if (max === 0){
+            document.getElementById("tba_descriptor").innerText = "There are currently no unanalyzed Projects in the Database."
+        }
+    }
+
+    function init_recommendations(){
+        if(!("project_lists" in localStorage)){
+            var project_lists = {
+                "visited_list": [],
+                "modified_list": [],
+                "fave_list": []
+            }
+            localStorage["project_lists"] = JSON.stringify(project_lists)
+            localStorage["changed_project_lists"] = true
+
+        }
+    }
+
+    function get_recommendations(count_of_recommendations, table_div){
+        if ("project_name" in localStorage) add_visited_project(localStorage["project_name"])
+        if ("recommendations" in localStorage && localStorage["changed_project_lists"] === "false"){
+            var res = JSON.parse(localStorage["recommendations"])
+            var recommendations = []
+            if (res.length < count_of_recommendations){
+                count_of_recommendations = res.length
+            }
+            for (var i=0; i<count_of_recommendations; i++){
+                recommendations.push(res[i][0])
+            }
+            update_recommendations(recommendations, table_div)
+        }else{
+            console.log("getting new recommendations")
+            new_recommendations(count_of_recommendations, table_div)
+        }
+
+    }
+
+    function update_recommendations(recommendations, div_id){
+        var project_lists = JSON.parse(localStorage["project_lists"])
+        var visited_list = project_lists["visited_list"]
+
+        if (!(recommendations.length >0)) {
+            document.getElementById("rec_descriptor").innerText = "There are currently no projects in the database."
+            document.getElementById("rec_help").title = "Once there are projects in the database this is were recommendations of interesting projects will be displayed"
+        }
+        else if (visited_list.length>0) {
+            document.getElementById("rec_descriptor").innerText = "Projects you might be interested in based on the projects you visited:"
+            document.getElementById("rec_help").title = "These Recommendations are based on the projects you visited and those you analyzed of modified."
+        }
+        else {
+            document.getElementById("rec_descriptor").innerText = "Projects you might be interested in:"
+            document.getElementById("rec_help").title = "For now these ar general recommendations, personalized recommendations will be made as soon as you start looking at individual projects."
+        }
+
+        $('#rec_help').tooltip('enable')
+
+        show_recommendations(recommendations, div_id)
+
+    }
+
+    function show_recommendations(recommendations, div_id){
+        recommendations.forEach(function(rec){
+            var projectButton =document.createElement("button");
+            projectButton.type = "button"
+            projectButton.value = rec
+            projectButton.className = "project_button"
+            projectButton.innerText = rec
+            projectButton.addEventListener('click', clicked_project)
+            document.getElementById(div_id).appendChild(projectButton);
+        })
+    }
+
+    $j("#rec_help").click(function(){
+        window.location.href = "{{url_for("explanation_bp.explanation_recommendation")}}"
+    })
+
+    var clicked_project = function(e){
+        var project_name
+        if (e.target.type === "button") {
+            project_name = e.target.value
+        } else {
+            project_name = e.target.parentNode.value
+        }
+
+        navigate_to_analysed_project(project_name)
+    }
+
+    function navigate_to_analysed_project(project_name, new_window_or_tab=false){
+        localStorage["project_name"] = project_name
+        localStorage.removeItem("project-link")
+        localStorage.removeItem("project-description")
+        localStorage.removeItem("esa_res")
+        localStorage.removeItem("ner_res")
+        if (new_window_or_tab){
+            window.open("/analyse/project")
+        } else {
+            window.location.href = "/analyse/project"
+        }
+    }
+
+    var clicked_tba_project = function(e){
+        var project_name
+        if (e.target.type === "button") {
+            project_name = e.target.value
+        } else {
+            project_name = e.target.parentNode.value
+        }
+
+        localStorage["project_name"] = project_name
+        localStorage.removeItem("project-link")
+        localStorage.removeItem("project-description")
+        localStorage.removeItem("esa_res")
+        localStorage.removeItem("ner_res")
+
+        window.location.href = "/analyse"
+    }
+
+    function new_recommendations(count_of_recommendations, table_div){
+        var project_lists = JSON.parse(localStorage["project_lists"])
+        var visited_list = project_lists["visited_list"]
+        var modified_list = project_lists["modified_list"]
+        var fave_list = project_lists["fave_list"]
+        $j.post("/data/recommendations", {"visited_list": JSON.stringify(visited_list), "modified_list":JSON.stringify(modified_list),
+            "fave_list":JSON.stringify(fave_list)}).done(function (res){
+            res = JSON.parse(res)["recommendations"]
+            localStorage["recommendations"] = JSON.stringify(res)
+            localStorage["changed_project_lists"] = false
+            if (res.length < count_of_recommendations){
+                count_of_recommendations = res.length
+            }
+            var recommendations = []
+            for (var i=0; i<count_of_recommendations; i++){
+                recommendations.push(res[i][0])
+            }
+
+            update_recommendations(recommendations, table_div)
+        })
+    }
+
+    function add_visited_project(project){
+        var project_lists = JSON.parse(localStorage["project_lists"])
+        if (!(project_lists["visited_list"].includes(project))) {
+            project_lists["visited_list"].push(project)
+            localStorage["project_lists"] = JSON.stringify(project_lists)
+            localStorage["changed_project_lists"] = true
+        }
+    }
+
+    function add_modified_project(project){
+        var project_lists = JSON.parse(localStorage["project_lists"])
+        if (!(project_lists["modified_list"].includes(project))) {
+            project_lists["modified_list"].push(project)
+            localStorage["project_lists"] = JSON.stringify(project_lists)
+            localStorage["changed_project_lists"] = true
+        }
+    }
+
+    function add_fave_project(project){
+        var project_lists = JSON.parse(localStorage["project_lists"])
+        if (!(project_lists["fave_list"].includes(project))){
+            project_lists["fave_list"].push(project)
+            localStorage["project_lists"] = JSON.stringify(project_lists)
+            localStorage["changed_project_lists"] = true
+        }
+
+    }
+</script>

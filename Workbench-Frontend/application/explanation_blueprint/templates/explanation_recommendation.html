@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+{% set active_page = 'explanation_recommendation' %}
+
+{% block content %}
+    <div class="textblock">
+        <h1>How do the recommendations work?</h1>
+        To calculate recommendations we use a personalized PageRank.
+        PageRank (Page, Brin, Motwani & Winograd, 1998) was introduced in 1998 and Google was developed to test the algorithm.
+        It is mainly used to create rankings in networks of websites with the links leading from one website to another serving as directed edges.
+        <br><br>
+
+        The basic idea of the PageRank Algorithm is explained as a <i>Random Surfer</i> that surfs through the network.
+        This Surfer randomly moves from one Website to another using the links.
+        Occasionally he will get bored and jump to any website regardless of links.
+        The PageRank of a website represents the probability of the <i>Random Surfer</i> visiting that website if he moves through the network indefinitely.
+        <br><br>
+
+        The algorithm can be personalized by defining which websites the <i>Random Surfer</i> cam randomly jump to when not following links.
+        <br><br>
+
+        We use the projects you've visited or modified for that. These lists of projects are saved locally in your
+        browsers local storage and can be deleted by clearing it.
+        <br><br>
+
+        <!-- TODO: Button: show me my saved Projects-->
+
+        <b>Page, L., Brin, S., Motwani, R. & Winograd, T. (1999).</b> <i>The PageRank Citation Ranking: Bringing Order to the Web</i>
+        Technical Report. Stanford InfoLab. doi: 10.1.1.31.1768
+    </div>
+
+{% endblock %}

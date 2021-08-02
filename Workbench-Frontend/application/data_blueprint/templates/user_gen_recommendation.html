@@ -1,0 +1,146 @@
+{% extends 'layout.html' %}
+{% set active_page = 'recommendation' %}
+
+{% block header %}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="textblock">
+        <h1>Find a project that is similar to ...</h1>
+        <label class="input-group-text" for="like_project_input">Projects</label>
+        <select multiple class="js-example-basic-multiple js-states form-control" id="like_project_input" name="projects[]">
+
+        </select>
+
+        <label class="input-group-text" for="like_research_area_input">Research Areas</label>
+        <select multiple class="js-example-basic-multiple js-states form-control" id="like_research_area_input" name="research_areas[]">
+
+        </select>
+
+        <div class="btn_row">
+            <button type="button" class="btn btn-secondary btn_send" id="generate_recommendations">generate</button>
+        </div>
+
+        <div id="generated_recommendations_loading"></div>
+        <div id="generated_recommendations" class="flexbox"></div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $j = jQuery.noConflict();
+
+        var current_recommendations = []
+
+        $j(document).ready(function(){
+            $j('.js-example-basic-multiple').select2({
+                placeholder: "Type to search ...",
+                width: 'resolve'
+            });
+
+            $j.get("{{ url_for("data_bp.get_research_areas") }}").done(function(res){
+                var research_areas = JSON.parse(res)
+
+                research_areas = research_areas.sort(function (a,b){
+                    if (a < b) {return -1}
+                    else if (a > b) {return 1}
+                    return 0
+                })
+
+                research_areas.forEach(function(ra){
+                    var newOption = new Option(ra, ra, false, false);
+                    $j("#like_research_area_input").append(newOption).trigger('change');
+
+                    /*var ra_option = document.createElement("option")
+                    ra_option.value = ra
+                    ra_option.innerText = ra
+                    document.getElementById("like_research_area_input").appendChild(ra_option);*/
+                })
+            })
+
+            $j.get("/get-project-names").done(function(res){
+                var project_names = JSON.parse(res)
+
+                project_names = project_names.sort(function (a,b){
+                    if (a < b) {return -1}
+                    else if (a > b) {return 1}
+                    return 0
+                })
+
+                project_names.forEach(function(project){
+                    var newOption = new Option(project, project, false, false);
+                    $j("#like_project_input").append(newOption).trigger('change');
+                    /*var project_option = document.createElement("option")
+                    project_option.value = project
+                    project_option.innerText = project
+                    document.getElementById("like_project_input").appendChild(project_option);*/
+                })
+            })
+        })
+
+        $j('#generate_recommendations').click(function(){
+            var project_list = $j('#like_project_input').select2('data');
+            var ra_list = $j('#like_research_area_input').select2('data');
+            var complete_list = []
+            if (project_list !== undefined && project_list.length > 0){
+                project_list.forEach(function(option){
+                    if (option !== undefined){
+                        complete_list.push(option['id'])
+                    }
+                })
+            }
+            if (ra_list !== undefined && ra_list.length > 0){
+                ra_list.forEach(function(option){
+                    if (option !== undefined){
+                        complete_list.push(option['id'])
+                    }
+                })
+            }
+
+            for (var i=current_recommendations.length; i>0; i--){
+                var rec = current_recommendations.pop()
+                var rec_card = document.getElementById(rec)
+                document.getElementById(rec).parentNode.removeChild(rec_card)
+            }
+            loading("generated_recommendations_loading")
+
+            $j.post("/data/recommendations", {"visited_list": JSON.stringify(complete_list)}).done(function(res){
+                res = JSON.parse(res)["recommendations"]
+                var count_of_recommendations = 10
+                if (res.length < count_of_recommendations){
+                    count_of_recommendations = res.length
+                }
+                endloading("generated_recommendations_loading")
+                for (var i=0; i<count_of_recommendations; i++){
+                    current_recommendations.push("recommended_card_" + i)
+                    add_recommended_project_card(res[i][0], "recommended_card_" +  i, "generated_recommendations")
+                    //recommendations.push(res[i][0])
+                }
+                //show_recommendations(recommendations, "generated_recommendations")
+            })
+        })
+
+        function add_recommended_project_card(recommended, count, div_id){
+            var card = document.createElement("div")
+            card.className = "card bg-light p-3 m-1 card_no_wrap"
+            card.id = count
+            var paragraph = document.createElement("p")
+            paragraph.innerText = recommended
+            card.appendChild(paragraph)
+            var button = document.createElement("button")
+            button.type = "button"
+            button.value = recommended
+            button.className = "project_button btn btn-outline-secondary"
+            button.innerText = "visit"
+            button.addEventListener('click', clicked_project)
+            card.appendChild(button)
+            document.getElementById(div_id).appendChild(card);
+        }
+
+    </script>
+{% endblock %}

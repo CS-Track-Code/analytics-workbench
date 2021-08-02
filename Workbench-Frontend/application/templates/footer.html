@@ -1,0 +1,31 @@
+<footer class="footer footer-bar">
+
+    {% set how_links= [
+        (url_for("explanation_bp.explanation_esa"), 'explanation_esa', 'What is ESA?'),
+        (url_for("explanation_bp.explanation_ner"), 'explanation_ner', 'What is NER?'),
+        (url_for("explanation_bp.explanation_recommendation"), 'explanation_recommentation', 'How do the recommendations work?')
+    ] %}
+    {% set other_links= [
+        (url_for("home_bp.contact"), 'contact', 'Contact us'),
+        ("https://rias-institut.de/en/imprint", 'legal_notice', 'Legal Notice')
+    ] %}
+
+    <div class="container">
+        <div class="row align-items-start">
+            <div class="col">
+                <b>How does it work</b>
+                {% for href, id, caption in how_links %}
+
+                    <a class="nav{% if id == active_page %} active{% endif %}" href="{{ href|e }}">{{ caption|e }}</a>
+                {% endfor %}
+
+            </div>
+            <div class="col">
+                {% for href, id, caption in other_links %}
+
+                    <a class="nav{% if id == active_page %} active{% endif %}" href="{{ href|e }}">{{ caption|e }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</footer>

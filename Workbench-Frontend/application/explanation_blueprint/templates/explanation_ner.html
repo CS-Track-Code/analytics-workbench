@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+{% set active_page = 'explanation_ner' %}
+
+{% block content %}
+    <div class="textblock">
+        <h1>What is NER?</h1>
+        <p>
+            Named Entity Recognition, short NER, is used to identify named entities in texts.
+            Such as names of people, places or organisations as well as dates or numbers.
+        </p>
+        <p>
+            For this the unstructured text is first turned into a structured computational representation of text.
+            Namely part of speech tagging is utilized to identify potential named entities.
+            Additionally, capitalization rules and sentence structure are considered for this step.
+            Next comes assigning types to the named entities.
+        </p>
+        <p>
+            In the Workbench we use spaCy to do that. Spacy offers pretrained models for several languages.
+            And can be used out of the box or can be additionally trained with training material.
+        </p>
+
+        <p>
+            Explosion. (n.d.). Facts & Figures · spaCy Usage Documentation. Retrieved April 27, 2021, from https://spacy.io/usage/facts-figures
+        </p>
+
+    </div>
+
+{% endblock %}
