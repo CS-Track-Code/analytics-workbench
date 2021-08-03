@@ -2,13 +2,13 @@ import pymongo
 
 
 class MongoInterface:
-    def __init__(self, pymongo_clientport, pymongo_client_name, db_name="projects"):
+    def __init__(self, pymongo_clientport, pymongo_client_name, db_name="projects", user_prefix="user_"):
 
         self.client = pymongo.MongoClient("mongodb://localhost:{}/".format(pymongo_clientport))
         self.db = self.client[pymongo_client_name]
         self.data_collection = self.db[db_name]
 
-        self.user_prefix = "user_"
+        self.user_prefix = user_prefix
 
     def check_for_description(self, project_name, project_link, user_generated=True):
         description, link, esa_res, ner_res = self.get_project_data(project_name, project_link,
@@ -127,6 +127,14 @@ class MongoInterface:
             }
 
             filtered_list.append(simplified_project)
+        return filtered_list
+
+    def get_complete_projects_with_user_generated_data(self):
+        project_list = self.data_collection.find()
+        filtered_list = []
+        for project in project_list:
+            if self.user_prefix + "esa_results" in project or self.user_prefix + "ner_results" in project:
+                filtered_list.append(project)
         return filtered_list
 
     def delete_project(self, project_name, project_link):

@@ -37,9 +37,15 @@ host_port = 5004
 pymongo_clientport = '27017'
 pymongo_client_name = "data_collection"
 
-projects_db = "projects"
+user_prefix = "user_"
+
+projects_db = "projects_new"
+eval_db = "eval_db"
 
 # to save networks for given time before new calculation
 # set_save_time = 60  #  10000  # in seconds
-mongo = MongoInterface(pymongo_clientport, pymongo_client_name, projects_db)
+mongo = MongoInterface(pymongo_clientport, pymongo_client_name, projects_db, user_prefix)
 safe_for_list_and_networks = Safe(0, mongo)
+
+eval_mongo = MongoInterface(pymongo_clientport, pymongo_client_name, eval_db, user_prefix)
+eval_safe_for_list_and_networks = Safe(0, eval_mongo)
