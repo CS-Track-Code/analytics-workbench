@@ -97,29 +97,59 @@ def external_get_ner():
 @ex_ac_bp.route("/external/addProjectsToDatabase", methods=['POST'])
 def external_add_to_db():
     project_list = request.form.getlist("projects")
+    code = 200
     for project in project_list:
         name = project["name"]
         link = project["link"]
         description = project["description"]
 
-        ner = json.loads(request_ner(name, link, description))
-        esa = json.loads(request_esa(name, link, description))
+        status_code = add_project_to_database(name, link, description)
+        if status_code != 200:
+            code = status_code
 
-        output_data = {
-            "name": name,
-            "link": link,
-            "description": description,
-            "esa_results": esa,
-            "ner_results": ner
-        }
-
-        url_data = config.backend_data + "data/save-complete-project"
-        data_response = py_requests.post(url_data, data=output_data)
-
-    json_result = json.dumps({'success': True})
+    json_result = get_status_reply(code)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000", 'ContentType': 'application/json'}
-    response = BaseResponse(json_result, status=200, headers=header)
+    response = BaseResponse(json_result, status=code, headers=header)
     return response
+
+
+@ex_ac_bp.route("/external/addSingleProjectToDatabase", methods=['POST'])
+def external_add_one_to_db():
+    name = request.form["name"]
+    link = request.form["link"]
+    description = request.form["description"]
+
+    code = add_project_to_database(name, link, description)
+
+    json_result = get_status_reply(code)
+    header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000", 'ContentType': 'application/json'}
+    response = BaseResponse(json_result, status=code, headers=header)
+    return response
+
+
+def add_project_to_database(name, link, description):
+    ner = request_ner(name, link, description)
+    esa = request_esa(name, link, description)
+
+    output_data = {
+        "name": name,
+        "link": link,
+        "description": description,
+        "esa_results": esa,
+        "ner_results": ner
+    }
+
+    url_data = config.backend_data + "data/save-complete-project"
+    data_response = py_requests.post(url_data, data=output_data)
+    return data_response.status_code
+
+
+def get_status_reply(code):
+    if code == 200:
+        json_result = json.dumps({'success': True})
+    else:
+        json_result = json.dumps({'success': False})
+    return json_result
 
 
 def request_ner(name, link, description):

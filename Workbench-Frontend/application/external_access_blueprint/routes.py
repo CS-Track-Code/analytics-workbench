@@ -35,7 +35,7 @@ def analyse():
     return response
 
 
-@ex_ac_bp.route("/getResearchAreas", methods=['POST'])
+@ex_ac_bp.route("/ex/getResearchAreas", methods=['POST'])
 def external_get_esa():
     name = request.form["name"]
     link = request.form["link"]
@@ -55,7 +55,7 @@ def external_get_esa():
     return response
 
 
-@ex_ac_bp.route("/external/ner", methods=['POST'])
+@ex_ac_bp.route("/ex/getNEs", methods=['POST'])
 def external_get_ner():
     name = request.form["name"]
     link = request.form["link"]
@@ -70,17 +70,39 @@ def external_get_ner():
 
     response = py_requests.post(url, data=data)
     content = response.content
-    ner = content
 
-    url_data = config.backend_data + "data/save-updates"
+    response = BaseResponse(content, status=200)
+    return response
+
+
+@ex_ac_bp.route("/ex/addProjectsToDatabase", methods=['POST'])
+def external_add_to_db():
+    project_list = request.form.getlist("projects")
+    url = config.middleware + "external/addProjectsToDatabase"
+    data = {
+        "projects": project_list
+    }
+    response = py_requests.post(url, data=data)
+    content = response.content
+
+    response = BaseResponse(content, status=200)
+    return response
+
+
+@ex_ac_bp.route("/ex/addSingleProjectToDatabase", methods=['POST'])
+def external_add_one_to_db():
+    name = request.form["name"]
+    link = request.form["link"]
+    description = request.form["description"]
+
+    url = config.middleware + "external/addSingleProjectToDatabase"
     data = {
         "name": name,
         "link": link,
-        "description": description,
-        "ner_results": content
+        "description": description
     }
-    data_response = py_requests.post(url_data, data=data)
+    response = py_requests.post(url, data=data)
+    content = response.content
 
-    header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=200, headers=header)
+    response = BaseResponse(content, status=200)
     return response
