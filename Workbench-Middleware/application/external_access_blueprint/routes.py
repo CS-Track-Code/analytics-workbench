@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, request
-from flask import current_app as app
+from flask import Blueprint, request
 import requests as py_requests
 from werkzeug.wrappers import BaseResponse
 import json
@@ -22,8 +21,12 @@ def analyse():
     link = request.form["link"]
     description = request.form["description"]
 
-    ner = json.loads(request_ner(name, link, description))
-    esa = json.loads(request_esa(name, link, description))
+    ner, ner_code = request_ner(name, link, description)
+    esa, esa_code = request_esa(name, link, description)
+    ner = json.loads(ner)
+    esa = json.loads(esa)
+
+    code = ner_code if ner_code > esa_code else esa_code
 
     output_data = {
         "name": name,
@@ -40,7 +43,7 @@ def analyse():
     # """
 
     json_data = json.dumps(output_data)
-    response = BaseResponse(json_data, status=200)
+    response = BaseResponse(json_data, status=code)
     return response
 
 
@@ -50,7 +53,7 @@ def external_get_esa():
     link = request.form["link"]
     description = request.form["description"]
 
-    content = request_esa(name, link, description)
+    content, code = request_esa(name, link, description)
 
     # """
     # # Save
@@ -65,7 +68,7 @@ def external_get_esa():
     # """
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=200, headers=header)
+    response = BaseResponse(content, status=code, headers=header)
     return response
 
 
@@ -75,7 +78,7 @@ def external_get_ner():
     link = request.form["link"]
     description = request.form["description"]
 
-    content = request_ner(name, link, description)
+    content, code = request_ner(name, link, description)
 
     # """
     # # Save
@@ -90,40 +93,47 @@ def external_get_ner():
     # """
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=200, headers=header)
+    response = BaseResponse(content, status=code,  headers=header)
     return response
 
 
 @ex_ac_bp.route("/external/addProjectsToDatabase", methods=['POST'])
 def external_add_to_db():
-    project_list = request.form.getlist("projects")
-    code = 200
-    for project in project_list:
-        name = project["name"]
-        link = project["link"]
-        description = project["description"]
-
-        status_code = add_project_to_database(name, link, description)
-        if status_code != 200:
-            code = status_code
-
-    json_result = get_status_reply(code)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000", 'ContentType': 'application/json'}
-    response = BaseResponse(json_result, status=code, headers=header)
+
+    try:
+        project_list = request.form.getlist("projects")
+        code = 200
+        for project in project_list:
+            name = project["name"]
+            link = project["link"]
+            description = project["description"]
+
+            status_code = add_project_to_database(name, link, description)
+            if status_code != 200:
+                code = status_code
+
+        response = BaseResponse(status=code, headers=header)
+    except ConnectionError:
+        response = BaseResponse(headers=header)
+
     return response
 
 
 @ex_ac_bp.route("/external/addSingleProjectToDatabase", methods=['POST'])
 def external_add_one_to_db():
-    name = request.form["name"]
-    link = request.form["link"]
-    description = request.form["description"]
-
-    code = add_project_to_database(name, link, description)
-
-    json_result = get_status_reply(code)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000", 'ContentType': 'application/json'}
-    response = BaseResponse(json_result, status=code, headers=header)
+
+    try:
+        name = request.form["name"]
+        link = request.form["link"]
+        description = request.form["description"]
+
+        code = add_project_to_database(name, link, description)
+
+        response = BaseResponse(status=code, headers=header)
+    except ConnectionError:
+        response = BaseResponse(headers=header)
     return response
 
 
@@ -144,14 +154,6 @@ def add_project_to_database(name, link, description):
     return data_response.status_code
 
 
-def get_status_reply(code):
-    if code == 200:
-        json_result = json.dumps({'success': True})
-    else:
-        json_result = json.dumps({'success': False})
-    return json_result
-
-
 def request_ner(name, link, description):
     url_new = config.backend_ner + "get_ners"
     data = {
@@ -162,7 +164,8 @@ def request_ner(name, link, description):
 
     backend_response = py_requests.post(url_new, data=data)
     content = backend_response.content
-    return content
+    code = backend_response.status_code
+    return content, code
 
 
 def request_esa(name, link, description):
@@ -175,4 +178,5 @@ def request_esa(name, link, description):
 
     backend_response = py_requests.post(url_new, data=data)
     content = backend_response.content
-    return content
+    code = backend_response.status_code
+    return content, code

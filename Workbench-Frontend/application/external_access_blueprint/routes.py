@@ -29,9 +29,10 @@ def analyse():
     }
 
     response = py_requests.post(url, data=input_data)
-    result = response.content
+    content = response.content
+    code = response.status_code
 
-    response = BaseResponse(result, status=200)
+    response = BaseResponse(content, status=code)
     return response
 
 
@@ -50,8 +51,9 @@ def external_get_esa():
 
     response = py_requests.post(url, data=data)
     content = response.content
+    code = response.status_code
 
-    response = BaseResponse(content, status=200)
+    response = BaseResponse(content, status=code)
     return response
 
 
@@ -70,8 +72,9 @@ def external_get_ner():
 
     response = py_requests.post(url, data=data)
     content = response.content
+    code = response.status_code
 
-    response = BaseResponse(content, status=200)
+    response = BaseResponse(content, status=code)
     return response
 
 
@@ -84,8 +87,9 @@ def external_add_to_db():
     }
     response = py_requests.post(url, data=data)
     content = response.content
+    code = response.status_code
 
-    response = BaseResponse(content, status=200)
+    response = BaseResponse(content, status=code)
     return response
 
 
@@ -103,6 +107,7 @@ def external_add_one_to_db():
     }
     response = py_requests.post(url, data=data)
     content = response.content
+    code = response.status_code
 
-    response = BaseResponse(content, status=200)
+    response = BaseResponse(content, status=code)
     return response
