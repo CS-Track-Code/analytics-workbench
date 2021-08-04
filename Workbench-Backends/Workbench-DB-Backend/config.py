@@ -39,7 +39,7 @@ pymongo_client_name = "data_collection"
 
 user_prefix = "user_"
 
-projects_db = "projects_new"
+projects_db = "projects"
 eval_db = "eval_db"
 
 # to save networks for given time before new calculation
