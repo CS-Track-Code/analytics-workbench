@@ -92,7 +92,6 @@ fabric.properties
 
 # custom
 *old*
-*test*
 *pycache*
 *zz_*
 *.db
