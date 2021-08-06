@@ -20,10 +20,9 @@ esa_bp = Blueprint(
 def results():
     name = request.form["name"]
     description = request.form["description"]
-    if "classification_scheme" in request.form:
-        classification_scheme = request.form["classification_scheme"]
-    else:
-        classification_scheme = "research_areas"
+
+    classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
+        else "research_areas"
 
     tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
     similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None

@@ -25,17 +25,20 @@ def analyse():
     similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
 
     ner, ner_code = request_ner(name, link, description)
-    esa, esa_code = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff)
+    res_areas, res_areas_code = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff, "research_areas")
+    sdg, sdg_code = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff, "sdgs")
     ner = json.loads(ner)
-    esa = json.loads(esa)
+    res_areas = json.loads(res_areas)
+    sdg = json.loads(sdg)
 
-    code = ner_code if ner_code > esa_code else esa_code
+    code = ner_code if ner_code > res_areas_code else res_areas_code
 
     output_data = {
         "name": name,
         "link": link,
         "description": description,
-        "esa_results": esa,
+        "esa_results": res_areas,
+        "sdg_results": sdg,
         "ner_results": ner
     }
 
@@ -56,10 +59,13 @@ def external_get_esa():
     link = request.form["link"]
     description = request.form["description"]
 
+    classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
+        else "research_areas"
+
     tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
     similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
 
-    content, code = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff)
+    content, code = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff, classification_scheme)
 
     # """
     # # Save
@@ -115,10 +121,14 @@ def external_add_to_db():
             link = project["link"]
             description = project["description"]
 
+            classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
+                else "research_areas"
+
             tfidf_cutoff = project["tfidf_cutoff"] if "tfidf_cutoff" in project else None
             similarity_cutoff = project["similarity_cutoff"] if "similarity_cutoff" in project else None
 
-            status_code = add_project_to_database(name, link, description, tfidf_cutoff, similarity_cutoff)
+            status_code = add_project_to_database(name, link, description, tfidf_cutoff, similarity_cutoff,
+                                                  classification_scheme)
             if status_code != 200:
                 code = status_code
 
@@ -138,10 +148,13 @@ def external_add_one_to_db():
         link = request.form["link"]
         description = request.form["description"]
 
+        classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
+            else "research_areas"
+
         tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
         similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
 
-        code = add_project_to_database(name, link, description, tfidf_cutoff, similarity_cutoff)
+        code = add_project_to_database(name, link, description, tfidf_cutoff, similarity_cutoff, classification_scheme)
 
         response = BaseResponse(status=code, headers=header)
     except ConnectionError:
@@ -151,13 +164,15 @@ def external_add_one_to_db():
 
 def add_project_to_database(name, link, description, tfidf_cutoff, similarity_cutoff):
     ner = request_ner(name, link, description)
-    esa = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff)
+    res_areas = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff, "research_areas")
+    sdgs = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff, "sdgs")
 
     output_data = {
         "name": name,
         "link": link,
         "description": description,
-        "esa_results": esa,
+        "esa_results": res_areas,
+        "sdg_results": sdgs,
         "ner_results": ner
     }
 
@@ -180,14 +195,15 @@ def request_ner(name, link, description):
     return content, code
 
 
-def request_esa(name, link, description, tfidf_cutoff, similarity_cutoff):
+def request_esa(name, link, description, tfidf_cutoff, similarity_cutoff, classification_scheme):
     url_new = config.backend_esa + "results"
     data = {
         "name": name,
         "link": link,
         "description": description,
         "tfidf_cutoff": tfidf_cutoff,
-        "similarity_cutoff": similarity_cutoff
+        "similarity_cutoff": similarity_cutoff,
+        "classification_scheme": classification_scheme
     }
 
     backend_response = py_requests.post(url_new, data=data)

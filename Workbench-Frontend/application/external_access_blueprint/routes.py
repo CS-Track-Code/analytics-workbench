@@ -62,6 +62,28 @@ def external_get_esa():
     return response
 
 
+@ex_ac_bp.route("/ex/getSDGs", methods=['POST'])
+def external_get_sdgs():
+    name = request.form["name"]
+    link = request.form["link"]
+    description = request.form["description"]
+
+    url = config.middleware + "external/esa"
+    data = {
+        "name": name,
+        "link": link,
+        "description": description,
+        "classification_scheme": "sdgs"
+    }
+
+    response = py_requests.post(url, data=data)
+    content = response.content
+    code = response.status_code
+
+    response = BaseResponse(content, status=code)
+    return response
+
+
 @ex_ac_bp.route("/ex/getNEs", methods=['POST'])
 def external_get_ner():
     name = request.form["name"]

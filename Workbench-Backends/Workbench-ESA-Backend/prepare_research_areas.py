@@ -2,6 +2,7 @@ import pandas as pd
 import copy
 import mysql.connector
 import nltk
+from os import path
 
 from esa_analysis import esa
 from esa_analysis.esa import ESA
@@ -11,10 +12,20 @@ import config_esa as config
 ###
 """Edit to prepare other Comparison Bases (like SDGs)"""
 data_base_name = config.research_area_database
-table_base_name = "research_areas"
+table_base_name = "research_areas"  # name currently necessary for analysis!
 
-filepath_csv = "application/esa_blueprint/static/esa/esa_data/" + "research_areas.csv"
+filepath_base = "application/esa_blueprint/static/esa/esa_data/"
+filename = "research_areas.csv"
+filepath_csv = filepath_base + filename
 ###
+
+in_data_base = input("Enter Database-Name (enter for '" + data_base_name + "'): ")
+data_base_name = in_data_base if in_data_base != '' else data_base_name
+
+print("Please have the csv table with wiki-links for each classification area prepared and saved in " + filepath_base)
+in_file_name = input("Enter filename for csv (enter for '" + filename + "'): ")
+filepath_csv = filepath_base + in_file_name if in_file_name != '' and path.exists(filepath_base + in_file_name) \
+    else filepath_base + filename
 
 
 def init(data_base_name, table_base_name):
