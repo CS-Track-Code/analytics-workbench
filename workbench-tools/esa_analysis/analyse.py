@@ -61,12 +61,12 @@ def keywords_plain_dbpedia(dbpedia_list):
 def setup_research_area(research_areas_esa, host, user, password, database, edits, top, cutoff_in_relation_to_max, sort,
                         tfidf_proportion):
     """ deprecated """
-    return setup_classification_area(research_areas_esa, host, user, password, database, edits, top,
-                                     cutoff_in_relation_to_max, sort, tfidf_proportion)
+    return setup_classification_area_esa(research_areas_esa, host, user, password, database, edits, top,
+                                         cutoff_in_relation_to_max, sort, tfidf_proportion)
 
 
-def setup_classification_area(classification_areas_esa, host, user, password, database, edits, top,
-                              cutoff_in_relation_to_max, sort, tfidf_proportion):
+def setup_classification_area_esa(classification_areas_esa, host, user, password, database, edits, top,
+                                  cutoff_in_relation_to_max, sort, tfidf_proportion):
     """
 
     :param database:
@@ -131,8 +131,8 @@ def get_classification_areas_esa(text, host, user, password, database, tfidf_ext
     top_category (category with most matched classification areas),
     bow (used bag of words for esa)
     """
-    classification_areas_esa = setup_classification_area(classification_areas_esa, host, user, password, database, edits,
-                                                         top, cutoff_in_relation_to_max, sort, tfidf_proportion)
+    classification_areas_esa = setup_classification_area_esa(classification_areas_esa, host, user, password, database, edits,
+                                                             top, cutoff_in_relation_to_max, sort, tfidf_proportion)
 
     classification_areas_with_sim_list, classification_areas, categories_with_count, top_category, bow = \
         classification_areas_esa.get_classification_area_similarities_from_text(text, tfidf_extractor)
@@ -174,8 +174,8 @@ def get_classification_areas_esa_with_dbpedia(text, host, user, password, databa
     db_classification_areas (classification areas that match found dbpedia keywords),
     bow (used bag of words for esa)
     """
-    classification_areas_esa = setup_classification_area(classification_areas_esa, host, user, password, database, edits, top,
-                                                         cutoff_in_relation_to_max, sort, tfidf_proportion)
+    classification_areas_esa = setup_classification_area_esa(classification_areas_esa, host, user, password, database, edits, top,
+                                                             cutoff_in_relation_to_max, sort, tfidf_proportion)
 
     try:
         db_list = keyword_extraction_dbpedia(text, "en")

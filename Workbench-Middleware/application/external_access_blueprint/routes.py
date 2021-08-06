@@ -21,8 +21,11 @@ def analyse():
     link = request.form["link"]
     description = request.form["description"]
 
+    tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+    similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
+
     ner, ner_code = request_ner(name, link, description)
-    esa, esa_code = request_esa(name, link, description)
+    esa, esa_code = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff)
     ner = json.loads(ner)
     esa = json.loads(esa)
 
@@ -53,7 +56,10 @@ def external_get_esa():
     link = request.form["link"]
     description = request.form["description"]
 
-    content, code = request_esa(name, link, description)
+    tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+    similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
+
+    content, code = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff)
 
     # """
     # # Save
@@ -109,7 +115,10 @@ def external_add_to_db():
             link = project["link"]
             description = project["description"]
 
-            status_code = add_project_to_database(name, link, description)
+            tfidf_cutoff = project["tfidf_cutoff"] if "tfidf_cutoff" in project else None
+            similarity_cutoff = project["similarity_cutoff"] if "similarity_cutoff" in project else None
+
+            status_code = add_project_to_database(name, link, description, tfidf_cutoff, similarity_cutoff)
             if status_code != 200:
                 code = status_code
 
@@ -129,7 +138,10 @@ def external_add_one_to_db():
         link = request.form["link"]
         description = request.form["description"]
 
-        code = add_project_to_database(name, link, description)
+        tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+        similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
+
+        code = add_project_to_database(name, link, description, tfidf_cutoff, similarity_cutoff)
 
         response = BaseResponse(status=code, headers=header)
     except ConnectionError:
@@ -137,9 +149,9 @@ def external_add_one_to_db():
     return response
 
 
-def add_project_to_database(name, link, description):
+def add_project_to_database(name, link, description, tfidf_cutoff, similarity_cutoff):
     ner = request_ner(name, link, description)
-    esa = request_esa(name, link, description)
+    esa = request_esa(name, link, description, tfidf_cutoff, similarity_cutoff)
 
     output_data = {
         "name": name,
@@ -168,12 +180,14 @@ def request_ner(name, link, description):
     return content, code
 
 
-def request_esa(name, link, description):
+def request_esa(name, link, description, tfidf_cutoff, similarity_cutoff):
     url_new = config.backend_esa + "results"
     data = {
         "name": name,
         "link": link,
-        "description": description
+        "description": description,
+        "tfidf_cutoff": tfidf_cutoff,
+        "similarity_cutoff": similarity_cutoff
     }
 
     backend_response = py_requests.post(url_new, data=data)

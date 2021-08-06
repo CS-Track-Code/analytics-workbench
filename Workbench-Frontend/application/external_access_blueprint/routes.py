@@ -42,11 +42,16 @@ def external_get_esa():
     link = request.form["link"]
     description = request.form["description"]
 
+    tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+    similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
+
     url = config.middleware + "external/esa"
     data = {
         "name": name,
         "link": link,
-        "description": description
+        "description": description,
+        "tfidf_cutoff": tfidf_cutoff,
+        "similarity_cutoff": similarity_cutoff
     }
 
     response = py_requests.post(url, data=data)
@@ -99,11 +104,16 @@ def external_add_one_to_db():
     link = request.form["link"]
     description = request.form["description"]
 
+    tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+    similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
+
     url = config.middleware + "external/addSingleProjectToDatabase"
     data = {
         "name": name,
         "link": link,
-        "description": description
+        "description": description,
+        "tfidf_cutoff": tfidf_cutoff,
+        "similarity_cutoff": similarity_cutoff
     }
     response = py_requests.post(url, data=data)
     content = response.content

@@ -24,14 +24,18 @@ def results():
         classification_scheme = request.form["classification_scheme"]
     else:
         classification_scheme = "research_areas"
+
+    tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+    similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
+
     print("## ANALYSE ##\n" + name)
 
-    result = get_esa_results(description, classification_scheme)
+    result = get_esa_results(description, classification_scheme, tfidf_cutoff, similarity_cutoff)
 
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, status=200, headers=header)
+    response = BaseResponse(json_result, headers=header)
     print(response)
 
     return response
@@ -41,13 +45,17 @@ def results():
 def esa_results():
     name = request.form["name"]
     description = request.form["description"]
+
+    tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+    similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
+
     print("## ANALYSE ##\n" + name)
 
-    result = get_esa_results(description, "research_areas")
+    result = get_esa_results(description, "research_areas", tfidf_cutoff, similarity_cutoff)
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, status=200, headers=header)
+    response = BaseResponse(json_result, headers=header)
     print(response)
 
     return response
@@ -57,19 +65,23 @@ def esa_results():
 def sdg_results():
     name = request.form["name"]
     description = request.form["description"]
+
+    tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+    similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
+
     print("## ANALYSE ##\n" + name)
 
-    result = get_esa_results(description, "sdgs")
+    result = get_esa_results(description, "sdgs", tfidf_cutoff, similarity_cutoff)
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, status=200, headers=header)
+    response = BaseResponse(json_result, headers=header)
     print(response)
 
     return response
 
 
-def get_esa_results(description, classification_scheme):
+def get_esa_results(description, classification_scheme, tfidf_cutoff, similarity_cutoff):
     if classification_scheme == "sdgs":
         database = config.database_sdgs
         classification_areas = config.sdg_areas
@@ -77,6 +89,18 @@ def get_esa_results(description, classification_scheme):
         classification_area_vectors = config.sdg_area_vectors
         classification_esa = ClassificationESA(config.esa_db_path, config.host, config.user, config.password, database,
                                                classification_areas, classification_wikis, classification_area_vectors)
+
+        # TODO: defaults für sdgs?
+        tfidf_cutoff = tfidf_cutoff if isinstance(tfidf_cutoff, float) and 0 <= tfidf_cutoff < 1 \
+            else config.esa_tf_proportion
+        similarity_cutoff = similarity_cutoff if isinstance(similarity_cutoff, float) and 0 <= similarity_cutoff < 1 \
+            else config.esa_cutoff_in_relation_to_max
+
+        classification_esa = analyse.setup_classification_area_esa(classification_esa, config.host, config.user,
+                                                                   config.password, database, edits=True, top=None,
+                                                                   cutoff_in_relation_to_max=similarity_cutoff,
+                                                                   sort=True, tfidf_proportion=tfidf_cutoff)
+
         classification_areas_similarity_shortlist, classification_areas_with_sim_list, categories_with_count, \
         top_category, db_classification_areas, tokens = \
             analyse.get_classification_areas_esa_with_dbpedia_integrated(description, config.host, config.user,
