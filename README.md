@@ -103,11 +103,6 @@ The commando line depends on the language for the model you need
 
 - English: `python -m spacy download en_core_web_sm`
 
-### Dash visualizations
-
-When starting the Frontend of the analytics workbench the Dash application is also started. In order for Dash to work properly you need to add the inputs to the **analytics-workbench/Workbench-Frontend/application/cstrack_dash/** [(Input documentation)](davidrol6.github.io/CSTrack_Docs/inputs.html).
-
-Once the frontend starts, you can access the visualizations by navigating to **http://frontend_url/dashapp/**.
 
 ### Backend Mercury Web Parser <a name="text_extraction"></a>
 The text extraction is facilitated using the Mercury Web Parser.
@@ -117,6 +112,12 @@ You need to have node.js installed on your machine (https://nodejs.org/en/).
 Next you will have to install the required modules via the console. For this you navigate to this projects folder
 `/web_text_extraction/mercury_web_parser` and run `npm i`.
 As soon as this is done you can run the server by running `node app.js` in the same directory.
+
+### Dash visualizations
+
+When starting the Frontend of the analytics workbench the Dash application is also started. In order for Dash to work properly you need to add the inputs to the **analytics-workbench/Workbench-Frontend/application/cstrack_dash/** [(Input documentation)](davidrol6.github.io/CSTrack_Docs/inputs.html).
+
+Once the frontend starts, you can access the visualizations by navigating to **http://frontend_url/dashapp/**.
 
 ## First Run
 Please check if the addresses and user data in all config files are correct
