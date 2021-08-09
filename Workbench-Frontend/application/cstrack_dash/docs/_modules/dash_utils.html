@@ -1,0 +1,986 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>dash_utils &mdash; CSTrack 05-08-2021 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CSTrack
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Project documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../environment.html">Inline Columns</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dash_cs.html">Main application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../berttopic_utils.html">Bertopic utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communities_utils.html">Community calculation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dash_utils.html">Figure generation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generate_utils.html">Input formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../map_utils.html">Geomap utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../style.html">Style configuration module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../about.html#acknowledgements">Acknowledgements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about.html#contact">Contact</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../institutions.html">Participating institutions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CSTrack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>dash_utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for dash_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;  This module is used mainly to generate Dash components, such as filters or figures.</span>
+<span class="sd">It also provides some extra functionality to anonymize usernames and accessing data located in a database.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">generate_utils</span> <span class="k">as</span> <span class="nn">utils</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+<span class="kn">import</span> <span class="nn">dash_bootstrap_components</span> <span class="k">as</span> <span class="nn">dbc</span>
+<span class="kn">import</span> <span class="nn">dash_core_components</span> <span class="k">as</span> <span class="nn">dcc</span>
+<span class="kn">import</span> <span class="nn">dash_html_components</span> <span class="k">as</span> <span class="nn">html</span>
+<span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span><span class="p">,</span> <span class="n">STOPWORDS</span><span class="p">,</span> <span class="n">ImageColorGenerator</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">pymongo</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="kn">import</span> <span class="nn">networkit</span> <span class="k">as</span> <span class="nn">nk</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+
+
+<div class="viewcode-block" id="get_hash_name_list"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_hash_name_list">[docs]</a><span class="k">def</span> <span class="nf">get_hash_name_list</span><span class="p">(</span><span class="n">nodes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to anonymize a list of users.</span>
+
+<span class="sd">    :param nodes: list with the user names</span>
+<span class="sd">    :return: list with the user names anonymized</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dict_names</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="n">dict_names</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">md5</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">node</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">dict_names</span></div>
+
+
+<div class="viewcode-block" id="get_community_graph"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_community_graph">[docs]</a><span class="k">def</span> <span class="nf">get_community_graph</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">communities</span><span class="p">,</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to create a graph given a list of users (communities) that are connected.</span>
+
+<span class="sd">    :param g: The graph that contains the information of the whole network</span>
+<span class="sd">    :param communities: A list of communities. Each community contains a list of user names</span>
+<span class="sd">    :param i: The community for which we want to create a graph</span>
+<span class="sd">    :return: The graph that represents the requested community</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">communities</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+        <span class="n">list_edges</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="n">list_edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">edge</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">list_edges</span> <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">communities</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">list_edges</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="n">dict_names</span> <span class="o">=</span> <span class="n">get_hash_name_list</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dict_names</span><span class="p">)</span>
+    <span class="c1">#c = nx.relabel_nodes(c, dict_names)</span>
+    <span class="k">return</span> <span class="n">c</span></div>
+
+<div class="viewcode-block" id="get_communities"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_communities">[docs]</a><span class="k">def</span> <span class="nf">get_communities</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s2">&quot;louvain&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to calculate the communities of a given network.</span>
+
+<span class="sd">    :param g: Graph that represents the network</span>
+<span class="sd">    :param algorithm: The algorithm to create the communities (louvain or propagation)</span>
+<span class="sd">    :return: A list of communities. Each community is represented as a list of user names</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_g</span> <span class="o">=</span> <span class="n">nk</span><span class="o">.</span><span class="n">nxadapter</span><span class="o">.</span><span class="n">nx2nk</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">idmap</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="nb">id</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">nodes</span><span class="p">(),</span> <span class="nb">range</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">())))</span>
+    <span class="k">if</span> <span class="n">algorithm</span> <span class="o">==</span> <span class="s2">&quot;louvain&quot;</span><span class="p">:</span>
+        <span class="n">communities</span> <span class="o">=</span> <span class="n">nk</span><span class="o">.</span><span class="n">community</span><span class="o">.</span><span class="n">detectCommunities</span><span class="p">(</span><span class="n">n_g</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">communities</span> <span class="o">=</span> <span class="n">nk</span><span class="o">.</span><span class="n">community</span><span class="o">.</span><span class="n">detectCommunities</span><span class="p">(</span><span class="n">n_g</span><span class="p">,</span> <span class="n">algo</span><span class="o">=</span><span class="n">nk</span><span class="o">.</span><span class="n">community</span><span class="o">.</span><span class="n">PLP</span><span class="p">(</span><span class="n">n_g</span><span class="p">))</span>
+    <span class="n">list_communities</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">communities</span><span class="o">.</span><span class="n">numberOfSubsets</span><span class="p">()):</span>
+        <span class="n">list_members</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">communities</span><span class="o">.</span><span class="n">getMembers</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+            <span class="n">list_members</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idmap</span><span class="p">[</span><span class="n">member</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_members</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">list_communities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">list_members</span><span class="p">)</span>
+    <span class="n">list_communities</span> <span class="o">=</span> <span class="p">[</span><span class="n">community</span> <span class="k">for</span> <span class="n">community</span> <span class="ow">in</span> <span class="n">list_communities</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">community</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">list_communities</span></div>
+
+<div class="viewcode-block" id="kcore_graph"><a class="viewcode-back" href="../dash_utils.html#dash_utils.kcore_graph">[docs]</a><span class="k">def</span> <span class="nf">kcore_graph</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stopwords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">interest</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">anonymize</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a dataframe with tweets, users... creates a graph of retweets.</span>
+
+<span class="sd">    :param df: The dataframe containing the information</span>
+<span class="sd">    :param keywords: A list of words to get the tweets that contain those words</span>
+<span class="sd">    :param stopwords: A list of words to remove tweets that contain those words</span>
+<span class="sd">    :param interest: The interest (Lynguo filter)</span>
+<span class="sd">    :param anonymize: False if we want to get the user names and false if we want to anonymize them</span>
+<span class="sd">    :return: The graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">filter_by_interest</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">interest</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">filter_by_topic</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="p">,</span> <span class="n">stopwords</span><span class="p">)</span>
+    <span class="n">dfRT</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Usuario&#39;</span><span class="p">,</span> <span class="s1">&#39;Texto&#39;</span><span class="p">]]</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">dfRT</span><span class="p">[</span><span class="s1">&#39;Texto&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;RT @&#39;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">dfRT</span> <span class="o">=</span> <span class="n">dfRT</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+    <span class="n">rt_edges_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dfRT</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()]</span>
+
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rt_edges_list</span><span class="p">:</span>
+        <span class="n">reg</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="s1">&#39;@(\w+)&#39;</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">reg</span><span class="p">:</span>
+            <span class="n">matchRT</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">matchRT</span>
+            <span class="c1">#row[1] = hashlib.md5(matchRT.encode()).hexdigest()</span>
+            <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="n">G</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">make_weightedDiGraph</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">remove_edges_from</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">selfloop_edges</span><span class="p">(</span><span class="n">G</span><span class="p">))</span>
+    <span class="n">core_number</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">core_number</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">core_number</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">degree_count</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="n">G_kcore</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">k_core</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">anonymize</span><span class="p">:</span>
+        <span class="n">dict_labels</span> <span class="o">=</span> <span class="n">get_hash_name_list</span><span class="p">(</span><span class="n">G_kcore</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
+        <span class="n">G_kcore</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">relabel_nodes</span><span class="p">(</span><span class="n">G_kcore</span><span class="p">,</span> <span class="n">mapping</span><span class="o">=</span><span class="n">dict_labels</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">G_kcore</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span>
+    <span class="sd">&quot;&quot;&quot;G_kcore_undirected = nx.to_undirected(G_kcore)</span>
+<span class="sd">    subgraphs = utils.get_subgraphs(G_kcore_undirected)</span>
+<span class="sd">    subgraphs = [graph for graph in subgraphs if len(graph.nodes) &gt; 5]</span>
+<span class="sd">    subgraphs = utils.direct_subgraphs(subgraphs)&quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">G_kcore</span></div>
+
+
+<div class="viewcode-block" id="get_single_counts"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_single_counts">[docs]</a><span class="k">def</span> <span class="nf">get_single_counts</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a dataframe with the columns Date and Number it counts the increment (Tweets and Follows). For instance,</span>
+<span class="sd">    having 10-03-2021, 11-03-2021 as Dates and 10, 12 as counts it will return (10-03-2021, 10; 11-03-2021, 2).</span>
+
+<span class="sd">    :param df: A dataframe that must have the columns Date and Number</span>
+<span class="sd">    :return: A dataframe counting the increments</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">base_count</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">base_count</span>
+        <span class="n">base_count</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;Date&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="s2">&quot;Number&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="acumulate_retweets"><a class="viewcode-back" href="../dash_utils.html#dash_utils.acumulate_retweets">[docs]</a><span class="k">def</span> <span class="nf">acumulate_retweets</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a dataframe with the columns Number and Date it accumulates the number (Counting total retweets).</span>
+
+<span class="sd">    :param df: A dataframe with the columns Date and Number</span>
+<span class="sd">    :return: A dataframe with the accumulated result per date.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">base_count</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">base_count</span>
+        <span class="n">base_count</span> <span class="o">=</span> <span class="n">count</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;Date&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="s2">&quot;Number&quot;</span><span class="p">:</span> <span class="n">count</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_figure"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_figure">[docs]</a><span class="k">def</span> <span class="nf">get_figure</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a dataframe where the appearance of each hashtag is counted, it creates a barplot to represent the results.</span>
+
+<span class="sd">    :param df: A dataframe with the columns Hashtags and Count</span>
+<span class="sd">    :return: A barplot representing the dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Hashtags&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Count&quot;</span><span class="p">,</span> <span class="n">barmode</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">tickangle</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="get_temporal_figure"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_temporal_figure">[docs]</a><span class="k">def</span> <span class="nf">get_temporal_figure</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_hashtags</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a dataframe that contains the number of appearances of each hashtag in each day it creates a time series</span>
+<span class="sd">    figure to represent the results.</span>
+
+<span class="sd">    :param df: A dataframe with the name of the hastags, the date, and the number of appearances</span>
+<span class="sd">    :param n_hashtags: The number of hashtags that are wanted to be shown</span>
+<span class="sd">    :return: A time series figure representing the dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="n">n_hashtags</span><span class="p">])</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">xaxis_tick0</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">xaxis_dtick</span><span class="o">=</span><span class="mi">86400000</span> <span class="o">*</span> <span class="mi">15</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="get_cstrack_graph"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_cstrack_graph">[docs]</a><span class="k">def</span> <span class="nf">get_cstrack_graph</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">type</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A function to create the different graphs for the cstrackproject twitter account.</span>
+
+<span class="sd">    :param df: A dataframe with the data</span>
+<span class="sd">    :param type: The type of graph that is wanted to be drawn (Retweets, Tweets, Followers)</span>
+<span class="sd">    :param title: The title of the graph</span>
+<span class="sd">    :return: A figure representing the results according to the given parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_retweets</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">type</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;Retweets&quot;</span><span class="p">:</span>
+        <span class="n">df_retweets</span> <span class="o">=</span> <span class="n">df_retweets</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;Date&quot;</span><span class="p">],</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">df_retweets</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_retweets</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">)</span>
+        <span class="n">df_retweets</span> <span class="o">=</span> <span class="n">df_retweets</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+        <span class="n">df_accumulated</span> <span class="o">=</span> <span class="n">acumulate_retweets</span><span class="p">(</span><span class="n">df_retweets</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">df_accumulated</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Number&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_retweets</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">y</span><span class="o">=</span><span class="n">df_accumulated</span><span class="p">[</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                                 <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers&quot;</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;top center&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Retweets per day&quot;</span><span class="p">,</span>
+                                 <span class="n">text</span><span class="o">=</span><span class="n">df_retweets</span><span class="p">[</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+    <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;Tweets&quot;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">df_retweets</span><span class="o">.</span><span class="n">dtypes</span><span class="p">)</span>
+        <span class="n">df_retweets</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_retweets</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span>
+        <span class="n">df_retweets</span> <span class="o">=</span> <span class="n">df_retweets</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
+        <span class="n">df_retweets</span> <span class="o">=</span> <span class="n">get_single_counts</span><span class="p">(</span><span class="n">df_retweets</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]))</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">df_retweets</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Number&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;Followers&quot;</span><span class="p">:</span>
+        <span class="n">single_follow_count</span> <span class="o">=</span> <span class="n">get_single_counts</span><span class="p">(</span><span class="n">df_retweets</span><span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">df_retweets</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;Date&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;Number&quot;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">df_retweets</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">y</span><span class="o">=</span><span class="n">df_retweets</span><span class="p">[</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                                 <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;markers+text&quot;</span><span class="p">,</span> <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;top center&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;New followers&quot;</span><span class="p">,</span>
+                                 <span class="n">text</span><span class="o">=</span><span class="n">single_follow_count</span><span class="p">[</span><span class="s2">&quot;Number&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+
+    <span class="k">return</span> <span class="n">fig</span></div>
+
+
+<div class="viewcode-block" id="get_df_ts"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_df_ts">[docs]</a><span class="k">def</span> <span class="nf">get_df_ts</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">days</span><span class="p">,</span> <span class="n">hashtags</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a DataFrame, a list of days and a list of hashtags it returns a Dataframe with the appearance of each hashtag</span>
+<span class="sd">    each day</span>
+
+<span class="sd">    :param df: Input Dataframe</span>
+<span class="sd">    :param days: A list of dates</span>
+<span class="sd">    :param elements: A list of hashtags</span>
+<span class="sd">    :return: DataFrame with the count for each hashtag each day</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">numHashtag</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">hashtag</span> <span class="ow">in</span> <span class="n">hashtags</span><span class="p">[:</span><span class="mi">100</span><span class="p">]:</span>
+        <span class="n">numPerDay</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">day</span> <span class="ow">in</span> <span class="n">days</span><span class="p">:</span>
+            <span class="n">dfOneDay</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Fecha&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">day</span><span class="p">]</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">dfOneDay</span><span class="p">[</span><span class="s1">&#39;Texto&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">hashtag</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">numPerDay</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+        <span class="n">numHashtag</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">numPerDay</span><span class="p">)</span>
+    <span class="n">ts_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">numHashtag</span><span class="p">)):</span>
+        <span class="n">ts_df</span><span class="p">[</span><span class="n">hashtags</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">numHashtag</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="n">ts_df</span> <span class="o">=</span> <span class="n">ts_df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">date</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ts_df</span></div>
+
+
+<div class="viewcode-block" id="get_rt_hashtags"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_rt_hashtags">[docs]</a><span class="k">def</span> <span class="nf">get_rt_hashtags</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stopwords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_hashtags</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a DataFrame with Tweets it returns a DataFrame with the Hashtags and the number of times (Count) they have</span>
+<span class="sd">    been retweeted</span>
+
+<span class="sd">    :param df: A DataFrame with all the tweets</span>
+<span class="sd">    :param keywords: A list of words to filter the tweets</span>
+<span class="sd">    :param stopwords:  A list of words to filter the tweets</span>
+<span class="sd">    :param n_hashtags:  Number of hashtags to get</span>
+<span class="sd">    :return: A DataFrame counting the hashtags and the number of times they have been retweeted</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">listHashtagsRT2</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_hashtagsRT</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span> <span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_edgesHashRT</span><span class="p">(</span><span class="n">listHashtagsRT2</span><span class="p">)</span>
+    <span class="c1"># Con las stopwords eliminamos el bot:</span>
+    <span class="n">sortedNumberHashtags</span><span class="p">,</span> <span class="n">sortedHashtagsmain</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">prepare_hashtags</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">df_hashtags</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">sortedHashtagsmain</span><span class="p">,</span> <span class="n">sortedNumberHashtags</span><span class="p">)),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Hashtags&quot;</span><span class="p">,</span> <span class="s2">&quot;Count&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">df_hashtags</span></div>
+
+
+<div class="viewcode-block" id="get_all_hashtags"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_all_hashtags">[docs]</a><span class="k">def</span> <span class="nf">get_all_hashtags</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stopwords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a DataFrame with Tweets it returns a DataFrame with the Hashtags and the number of times (Count) they appear.</span>
+
+<span class="sd">    :param df: A DataFrame with all the tweets</span>
+<span class="sd">    :param keywords: A list of words to filter the tweets</span>
+<span class="sd">    :param stopwords:  A list of words to filter the tweets</span>
+<span class="sd">    :return: A DataFrame counting the hashtags and the number of times they have appeared.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hashmain</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_hashtagsmain</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">,</span> <span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_edgesMain</span><span class="p">(</span><span class="n">hashmain</span><span class="p">)</span>
+    <span class="c1"># Con las stopwords eliminamos el bot:</span>
+    <span class="n">sortedNumberHashtags</span><span class="p">,</span> <span class="n">sortedHashtagsmain</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">prepare_hashtagsmain</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">stopwords</span><span class="o">=</span><span class="n">stopwords</span><span class="p">)</span>
+    <span class="n">df_hashtags</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">sortedHashtagsmain</span><span class="p">,</span> <span class="n">sortedNumberHashtags</span><span class="p">)),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Hashtags&quot;</span><span class="p">,</span> <span class="s2">&quot;Count&quot;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">df_hashtags</span></div>
+
+
+<div class="viewcode-block" id="get_all_temporalseries"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_all_temporalseries">[docs]</a><span class="k">def</span> <span class="nf">get_all_temporalseries</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a DataFrame containing all the tweets the function returns a DataFrame with the hashtags and dates, a list</span>
+<span class="sd">    of dates and the hashtags sorted by number of appearances</span>
+
+<span class="sd">    :param df: DataFrame with all the tweets</span>
+<span class="sd">    :param keywords: Keywords to filter the DataFrame</span>
+<span class="sd">    :return: DataFrame with hastags and dates, a list of days and hashtags sorted by appearance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Usuario&#39;</span><span class="p">,</span> <span class="s1">&#39;Texto&#39;</span><span class="p">,</span> <span class="s1">&#39;Fecha&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Fecha&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\s[0-9][0-9]:[0-9][0-9]:[0-9][0-9]&#39;</span><span class="p">)]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Fecha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Fecha&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">getDays</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">listHt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_hashtagsmain</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_edgesMain</span><span class="p">(</span><span class="n">listHt</span><span class="p">)</span>
+    <span class="n">sortedNH</span><span class="p">,</span> <span class="n">sortedMH</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">prepare_hashtagsmain</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">days</span><span class="p">,</span> <span class="n">sortedMH</span></div>
+
+
+<div class="viewcode-block" id="get_rt_temporalseries"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_rt_temporalseries">[docs]</a><span class="k">def</span> <span class="nf">get_rt_temporalseries</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a DataFrame containing all the tweets the function returns a DataFrame with the retweeted hashtags and dates, a list</span>
+<span class="sd">    of dates and the hashtags sorted by number of appearances</span>
+
+<span class="sd">    :param df: DataFrame with all the tweets</span>
+<span class="sd">    :param k: Keywords to filter the DataFrame</span>
+<span class="sd">    :return: DataFrame with hashtags and dates, a list of days and hashtags sorted by appearance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Usuario&#39;</span><span class="p">,</span> <span class="s1">&#39;Texto&#39;</span><span class="p">,</span> <span class="s1">&#39;Fecha&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Fecha&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]\s[0-9][0-9]:[0-9][0-9]:[0-9][0-9]&#39;</span><span class="p">)]</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Fecha&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Fecha&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">date</span>
+    <span class="n">dias</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">getDays</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">listHt</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_hashtagsRT</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_edgesHashRT</span><span class="p">(</span><span class="n">listHt</span><span class="p">)</span>
+    <span class="n">sortedNH</span><span class="p">,</span> <span class="n">sortedMH</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">prepare_hashtags</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">dias</span><span class="p">,</span> <span class="n">sortedMH</span></div>
+
+
+<div class="viewcode-block" id="wordcloudmain"><a class="viewcode-back" href="../dash_utils.html#dash_utils.wordcloudmain">[docs]</a><span class="k">def</span> <span class="nf">wordcloudmain</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stopwords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">interest</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a DataFrame with all the tweets the function creates a Wordcloud with the words that appear the most.</span>
+
+<span class="sd">    :param df:  A DataFrame with all the tweets</span>
+<span class="sd">    :param keywords: A  list of words to filter the DataFrame</span>
+<span class="sd">    :param stopwords: A list of words to filter the DataFrame</span>
+<span class="sd">    :param interest: The interest to filter the DataFrame (Lynguo)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hashtags</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">stop_words</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;citizenscience&#39;</span><span class="p">,</span> <span class="s1">&#39;rt&#39;</span><span class="p">,</span> <span class="s1">&#39;citizen&#39;</span><span class="p">,</span> <span class="s1">&#39;science&#39;</span><span class="p">,</span> <span class="s1">&#39;citsci&#39;</span><span class="p">,</span> <span class="s1">&#39;cienciaciudadana&#39;</span><span class="p">,</span> <span class="s1">&#39;CitizenScience&#39;</span><span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Usuario&#39;</span><span class="p">,</span> <span class="s1">&#39;Texto&#39;</span><span class="p">]]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Texto&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;RT @&#39;</span><span class="p">)]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">idx</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Texto&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;#(\w+)&#39;</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">hashtag</span> <span class="ow">in</span> <span class="n">match</span><span class="p">:</span>
+            <span class="n">hashtags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hashtag</span><span class="p">)</span>
+    <span class="n">unique_string</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hashtags</span><span class="p">)</span>
+    <span class="n">wordcloud</span> <span class="o">=</span> <span class="n">WordCloud</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">background_color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">stopwords</span><span class="o">=</span><span class="n">stop_words</span><span class="p">,</span>
+                          <span class="n">min_font_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_words</span><span class="o">=</span><span class="mi">10405</span><span class="p">,</span> <span class="n">collocations</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;winter&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span>
+        <span class="n">unique_string</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">facecolor</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wordcloud</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;./assets/wc2.png&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_graph_rt"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_graph_rt">[docs]</a><span class="k">def</span> <span class="nf">get_graph_rt</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a Dataframe with Tweets and users it creates a Graph of retweets</span>
+
+<span class="sd">    :param df: A Dataframe containing the tweets and users</span>
+<span class="sd">    :return: A graph representing the network of retweets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">retweetList</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_retweets</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">retweetEdges</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_edges</span><span class="p">(</span><span class="n">retweetList</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">retweetEdges</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">G</span></div>
+
+
+<div class="viewcode-block" id="get_degrees"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_degrees">[docs]</a><span class="k">def</span> <span class="nf">get_degrees</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a DataFrame with tweets and users it calculates different centrality measures.</span>
+
+<span class="sd">    :param df: A DataFrame with tweets and users</span>
+<span class="sd">    :return: A Dataframe with the centrality measures of the users</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+    <span class="kn">import</span> <span class="nn">datetime</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">retweetList</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_retweets</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">retweetEdges</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_edges</span><span class="p">(</span><span class="n">retweetList</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+    <span class="n">G</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">retweetEdges</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FINALIZA,&quot;</span><span class="p">,</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_degrees</span><span class="p">(</span><span class="n">G</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_twitter_info_df"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_twitter_info_df">[docs]</a><span class="k">def</span> <span class="nf">get_twitter_info_df</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A function to return the cstrackproject Twitter user stats</span>
+
+<span class="sd">    :return: A Dataframe with information about followers, retweets and tweets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">MongoClient</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;f-l2108-pc09.aulas.etsit.urjc.es&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">21000</span><span class="p">)</span>
+    <span class="n">twitter_data</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s2">&quot;cstrack&quot;</span><span class="p">][</span><span class="s2">&quot;cstrack_stats&quot;</span><span class="p">]</span>
+    <span class="n">twitter_dict_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">twitter_data</span><span class="o">.</span><span class="n">find</span><span class="p">())</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">twitter_dict_list</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+<div class="viewcode-block" id="get_two_mode_graph"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_two_mode_graph">[docs]</a><span class="k">def</span> <span class="nf">get_two_mode_graph</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a DataFrame containing all the tweets the function returns a two-mode graph connecting users with tweets</span>
+
+<span class="sd">    :param df:  A DataFrame with all the information</span>
+<span class="sd">    :param keywords: A list of words to filter the DataFrame</span>
+<span class="sd">    :return: A two-mode graph connecting users with tweets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_twomodeRT</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="get_controls_community2"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_controls_community2">[docs]</a><span class="k">def</span> <span class="nf">get_controls_community2</span><span class="p">(</span><span class="n">communities</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a list of communities, being each community a list of users, the function creates the filtering options for</span>
+<span class="sd">    the Dash visualization.</span>
+
+<span class="sd">    :param communities: A list of communities, being each community a list of usernames</span>
+<span class="sd">    :return: The filtering options for the Dash visualization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dropdown_options</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dropdown_options</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">})</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">communities</span><span class="p">)):</span>
+        <span class="n">dropdown_options</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span>
+
+    <span class="n">controls</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Form</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Community:&quot;</span><span class="p">),</span>
+                    <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;com_number2&quot;</span><span class="p">,</span>
+                        <span class="n">options</span><span class="o">=</span><span class="n">dropdown_options</span><span class="p">,</span>
+                        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                        <span class="n">clearable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;margin-left&quot;</span><span class="p">:</span> <span class="s2">&quot;2px&quot;</span><span class="p">}</span>
+                    <span class="p">)</span>
+                <span class="p">],</span>
+                <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mr-3&quot;</span><span class="p">,</span>
+            <span class="p">),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Algorithm:&quot;</span><span class="p">),</span>
+                    <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;com_algorithm2&quot;</span><span class="p">,</span>
+                        <span class="n">options</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Louvain&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;louvain&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Label propagation&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;propagation&quot;</span><span class="p">}],</span>
+                        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;louvain&quot;</span><span class="p">,</span>
+                        <span class="n">clearable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;200px&quot;</span><span class="p">,</span> <span class="s2">&quot;margin-left&quot;</span><span class="p">:</span> <span class="s2">&quot;2px&quot;</span><span class="p">}</span>
+                    <span class="p">)</span>
+                <span class="p">],</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">inline</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">controls</span></div>
+
+<div class="viewcode-block" id="get_controls_activity"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_controls_activity">[docs]</a><span class="k">def</span> <span class="nf">get_controls_activity</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to create the filtering options for the Geomap visualizations in Dash</span>
+
+<span class="sd">    :return: The filtering options for the Geomap visualizations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">controls</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Form</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Activity:&quot;</span><span class="p">),</span>
+                    <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+                        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;activity_type&quot;</span><span class="p">,</span>
+                        <span class="n">options</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Tweets&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;tweets&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Followers&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;followers&quot;</span><span class="p">}],</span>
+                        <span class="n">value</span><span class="o">=</span><span class="s2">&quot;tweets&quot;</span><span class="p">,</span>
+                        <span class="n">clearable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;200px&quot;</span><span class="p">,</span> <span class="s2">&quot;margin-left&quot;</span><span class="p">:</span> <span class="s2">&quot;2px&quot;</span><span class="p">}</span>
+                    <span class="p">)</span>
+                <span class="p">],</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">inline</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">controls</span></div>
+
+<div class="viewcode-block" id="get_controls_rt"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_controls_rt">[docs]</a><span class="k">def</span> <span class="nf">get_controls_rt</span><span class="p">(</span><span class="n">number_id</span><span class="p">,</span> <span class="n">keyword_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given two ids, the function creates the filtering options for several Dash Visualizations</span>
+
+<span class="sd">    :param number_id: Id for the number input</span>
+<span class="sd">    :param keyword_id: Id for the text input</span>
+<span class="sd">    :return: The filtering options for the Dash visualization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+
+    <span class="n">controls</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Form</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">([</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Number hashtags:&quot;</span><span class="p">),</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">number_id</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;100px&quot;</span><span class="p">},</span> <span class="n">n_submit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                      <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">debounce</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                        <span class="p">]</span>
+                    <span class="p">),</span> <span class="n">md</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Keywords:&quot;</span><span class="p">),</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">keyword_id</span><span class="p">,</span> <span class="n">n_submit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">debounce</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                        <span class="p">],</span>
+                    <span class="p">)),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Keywords:&quot;</span><span class="p">),</span>
+                            <span class="n">get_topic_file</span><span class="p">(</span><span class="n">keyword_id</span> <span class="o">+</span> <span class="s2">&quot;-upload&quot;</span><span class="p">)</span>
+                        <span class="p">],</span>
+                    <span class="p">))</span>
+            <span class="p">]),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">([</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">([</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Dates:&quot;</span><span class="p">),</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">DatePickerRange</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;sessions_date&#39;</span><span class="p">,</span>
+                                <span class="n">min_date_allowed</span><span class="o">=</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">29</span><span class="p">),</span>
+                                <span class="n">max_date_allowed</span><span class="o">=</span><span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="p">),</span>
+                                <span class="n">display_format</span><span class="o">=</span><span class="s2">&quot;DD-MM-Y&quot;</span><span class="p">,</span>
+                                <span class="n">clearable</span><span class="o">=</span><span class="kc">True</span>
+                            <span class="p">),</span>
+                        <span class="p">]</span>
+                    <span class="p">),</span>
+                <span class="p">])</span>
+            <span class="p">])</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">controls</span></div>
+
+<div class="viewcode-block" id="get_controls_rt_g"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_controls_rt_g">[docs]</a><span class="k">def</span> <span class="nf">get_controls_rt_g</span><span class="p">(</span><span class="n">keyword_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given and id it creates the filtering options for the graph of retweets in Dash</span>
+
+<span class="sd">    :param keyword_id: Id of the text input</span>
+<span class="sd">    :return: The filtering options for the graph of retweets</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">controls</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Form</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Keywords:&quot;</span><span class="p">),</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">keyword_id</span><span class="p">,</span> <span class="n">n_submit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">debounce</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                <span class="p">],</span>
+                <span class="n">className</span><span class="o">=</span><span class="s2">&quot;mr-3&quot;</span>
+            <span class="p">),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Topics:&quot;</span><span class="p">),</span>
+                    <span class="n">get_topic_file</span><span class="p">(</span><span class="n">keyword_id</span> <span class="o">+</span> <span class="s2">&quot;-upload&quot;</span><span class="p">)</span>
+                <span class="p">],</span>
+            <span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">inline</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">controls</span></div>
+
+<div class="viewcode-block" id="get_topic_file"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_topic_file">[docs]</a><span class="k">def</span> <span class="nf">get_topic_file</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given an id it creates a dropbox to upload a file containing keywords (One keyword in each line)</span>
+
+<span class="sd">    :param id: The id of the button</span>
+<span class="sd">    :return: The button to upload a file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">upload_html</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Upload</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">([</span>
+            <span class="s1">&#39;Upload &#39;</span><span class="p">,</span>
+            <span class="n">html</span><span class="o">.</span><span class="n">A</span><span class="p">(</span><span class="s1">&#39;File&#39;</span><span class="p">)</span>
+        <span class="p">]),</span>
+        <span class="n">style</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;100%&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s2">&quot;calc(1.5em + .75rem + 2px)&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;lineHeight&#39;</span><span class="p">:</span> <span class="s1">&#39;35px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borderWidth&#39;</span><span class="p">:</span> <span class="s1">&#39;1px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borderStyle&#39;</span><span class="p">:</span> <span class="s1">&#39;dashed&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;borderRadius&#39;</span><span class="p">:</span> <span class="s1">&#39;5px&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;textAlign&#39;</span><span class="p">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="c1"># Allow multiple files to be uploaded</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">upload_html</span></div>
+
+<div class="viewcode-block" id="get_controls_ts"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_controls_ts">[docs]</a><span class="k">def</span> <span class="nf">get_controls_ts</span><span class="p">(</span><span class="n">number_id</span><span class="p">,</span> <span class="n">keyword_id</span><span class="p">,</span> <span class="n">dc_id</span><span class="p">,</span> <span class="n">df_ts</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given the ids for the different inputs, it creates the different filters for the time series visualization</span>
+
+<span class="sd">    :param number_id: Id for the number input (Number of hashtags to show)</span>
+<span class="sd">    :param keyword_id: Id for the list of keywords</span>
+<span class="sd">    :param dc_id: Id for the dropdown options (Search specific hashtags to show)</span>
+<span class="sd">    :param df_ts: The DataFrame with the hashtag count</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">options</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df_ts</span><span class="o">.</span><span class="n">columns</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">options</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">})</span>
+
+    <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+
+    <span class="n">controls</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Form</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">([</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Number hashtags:&quot;</span><span class="p">),</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">number_id</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;100px&quot;</span><span class="p">},</span> <span class="n">n_submit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">debounce</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                        <span class="p">]</span>
+                    <span class="p">),</span> <span class="n">md</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Keywords:&quot;</span><span class="p">),</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">keyword_id</span><span class="p">,</span> <span class="n">n_submit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">debounce</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                        <span class="p">],</span>
+                    <span class="p">)),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Keywords:&quot;</span><span class="p">),</span>
+                            <span class="n">get_topic_file</span><span class="p">(</span><span class="n">dc_id</span> <span class="o">+</span> <span class="s2">&quot;-upload&quot;</span><span class="p">)</span>
+                        <span class="p">],</span>
+                    <span class="p">))</span>
+            <span class="p">]),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">([</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">([</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Dates:&quot;</span><span class="p">),</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">DatePickerRange</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;sessions_date&#39;</span><span class="p">,</span>
+                                <span class="n">min_date_allowed</span><span class="o">=</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">29</span><span class="p">),</span>
+                                <span class="n">display_format</span><span class="o">=</span><span class="s2">&quot;DD-MM-Y&quot;</span><span class="p">,</span>
+                                <span class="n">max_date_allowed</span><span class="o">=</span><span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="p">),</span>
+                                <span class="n">clearable</span><span class="o">=</span><span class="kc">True</span>
+                            <span class="p">),</span>
+                        <span class="p">]</span>
+                    <span class="p">),</span>
+                <span class="p">]),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Hashtags:&quot;</span><span class="p">),</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">dc_id</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="n">multi</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;200px&quot;</span><span class="p">}),</span>
+                        <span class="p">],</span>
+                    <span class="p">))</span>
+            <span class="p">])</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">controls</span></div>
+
+
+
+
+<div class="viewcode-block" id="set_loading"><a class="viewcode-back" href="../dash_utils.html#dash_utils.set_loading">[docs]</a><span class="k">def</span> <span class="nf">set_loading</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">dcc_graph</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to create a loading effect when filtering a graph</span>
+
+<span class="sd">    :param controls: The filters</span>
+<span class="sd">    :param dcc_graph: The figure that is being updated</span>
+<span class="sd">    :return: The element to embed the figure in in order to apply the loading effect</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">SPINER_STYLE</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;margin-top&quot;</span><span class="p">:</span> <span class="s2">&quot;25%&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;99%&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="s2">&quot;20vh&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;text-align&quot;</span><span class="p">:</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;font-size&quot;</span><span class="p">:</span> <span class="s2">&quot;50px&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;margin-left&quot;</span><span class="p">:</span> <span class="s2">&quot;1%&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;z-index&quot;</span><span class="p">:</span> <span class="s2">&quot;1000&quot;</span>
+    <span class="p">}</span>
+    <span class="n">loading</span> <span class="o">=</span> <span class="n">dcc</span><span class="o">.</span><span class="n">Loading</span><span class="p">(</span>
+        <span class="c1"># style={&quot;height&quot;:&quot;200px&quot;,&quot;font-size&quot;:&quot;100px&quot;,&quot;margin-top&quot;:&quot;500px&quot;, &quot;z-index&quot;:&quot;1000000&quot;},</span>
+        <span class="n">style</span><span class="o">=</span><span class="n">SPINER_STYLE</span><span class="p">,</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#000000&quot;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;loading-1&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">children</span><span class="o">=</span><span class="n">html</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;loading-output&quot;</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">(</span>
+                <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">dcc_graph</span><span class="p">],</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span>
+            <span class="p">)</span>
+        <span class="p">])</span>
+    <span class="p">),</span>
+    <span class="k">return</span> <span class="n">loading</span></div>
+
+<div class="viewcode-block" id="get_map_df"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_map_df">[docs]</a><span class="k">def</span> <span class="nf">get_map_df</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to get the information to create geomap visualizations</span>
+
+<span class="sd">    :return: A DataFrame with geographical information</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">con</span> <span class="o">=</span> <span class="n">pymongo</span><span class="o">.</span><span class="n">MongoClient</span><span class="p">(</span><span class="s2">&quot;f-l2108-pc09.aulas.etsit.urjc.es&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">21000</span><span class="p">)</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="n">con</span><span class="p">[</span><span class="s2">&quot;cstrack&quot;</span><span class="p">][</span><span class="s2">&quot;geomap_full&quot;</span><span class="p">]</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">col</span><span class="o">.</span><span class="n">find</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">info</span></div>
+
+<div class="viewcode-block" id="get_controls_topics"><a class="viewcode-back" href="../dash_utils.html#dash_utils.get_controls_topics">[docs]</a><span class="k">def</span> <span class="nf">get_controls_topics</span><span class="p">(</span><span class="n">number_id</span><span class="p">,</span> <span class="n">keyword_id</span><span class="p">,</span> <span class="n">topics</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to create the filtering options for the topic modelling visualization</span>
+
+<span class="sd">    :param number_id: The id for the number input (Number of topics to create)</span>
+<span class="sd">    :param keyword_id: The id for the text input (List of words to filter the dataframe)</span>
+<span class="sd">    :param topics: The number of topics.</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">today</span> <span class="o">=</span> <span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
+
+    <span class="n">controls</span> <span class="o">=</span> <span class="n">dbc</span><span class="o">.</span><span class="n">Form</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">([</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Number topics:&quot;</span><span class="p">),</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">number_id</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="s2">&quot;100px&quot;</span><span class="p">},</span> <span class="n">n_submit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">topics</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">debounce</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                        <span class="p">]</span>
+                    <span class="p">),</span> <span class="n">md</span><span class="o">=</span><span class="mi">4</span><span class="p">),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Keywords:&quot;</span><span class="p">),</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">keyword_id</span><span class="p">,</span> <span class="n">n_submit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">debounce</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                        <span class="p">],</span>
+                    <span class="p">)),</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">(</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Topics:&quot;</span><span class="p">),</span>
+                            <span class="n">get_topic_file</span><span class="p">(</span><span class="n">keyword_id</span> <span class="o">+</span> <span class="s2">&quot;-upload&quot;</span><span class="p">)</span>
+                        <span class="p">],</span>
+                    <span class="p">))</span>
+            <span class="p">]),</span>
+            <span class="n">dbc</span><span class="o">.</span><span class="n">Row</span><span class="p">([</span>
+                <span class="n">dbc</span><span class="o">.</span><span class="n">Col</span><span class="p">([</span>
+                    <span class="n">dbc</span><span class="o">.</span><span class="n">FormGroup</span><span class="p">(</span>
+                        <span class="p">[</span>
+                            <span class="n">dbc</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Dates:&quot;</span><span class="p">),</span>
+                            <span class="n">dcc</span><span class="o">.</span><span class="n">DatePickerRange</span><span class="p">(</span>
+                                <span class="nb">id</span><span class="o">=</span><span class="s1">&#39;sessions_date&#39;</span><span class="p">,</span>
+                                <span class="n">min_date_allowed</span><span class="o">=</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">29</span><span class="p">),</span>
+                                <span class="n">display_format</span><span class="o">=</span><span class="s2">&quot;DD-MM-Y&quot;</span><span class="p">,</span>
+                                <span class="n">max_date_allowed</span><span class="o">=</span><span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="p">),</span>
+                                <span class="n">clearable</span><span class="o">=</span><span class="kc">True</span>
+                            <span class="p">),</span>
+                        <span class="p">]</span>
+                    <span class="p">),</span>
+                <span class="p">])</span>
+            <span class="p">])</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">controls</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, David Roldan and Fernando Martinez.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -24,7 +24,8 @@ def create_app():
         from .data_blueprint import routes as data_routes
         from .external_access_blueprint import routes as ext_routes
         from .a_testing_blueprint import routes as test_routes
-
+        from .cstrack_dash import dash_cs as dcs
+        app, server = dcs.create_dashboard(app)
         # Register Blueprints
         app.register_blueprint(home.home_bp)
         app.register_blueprint(project_analysis.project_analysis_bp)
