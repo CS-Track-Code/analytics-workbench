@@ -84,7 +84,7 @@ def external_get_sdgs():
     return response
 
 
-@ex_ac_bp.route("/ex/getNEs", methods=['POST'])
+@ex_ac_bp.route("/ex/getNamedEntities", methods=['POST'])
 def external_get_ner():
     name = request.form["name"]
     link = request.form["link"]
