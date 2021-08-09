@@ -35,6 +35,12 @@ def results():
         except ValueError:
             similarity_cutoff = None
 
+    if tfidf_cutoff is not None:
+        try:
+            tfidf_cutoff = float(tfidf_cutoff)
+        except ValueError:
+            tfidf_cutoff = None
+
     result = get_esa_results(description, classification_scheme, tfidf_cutoff, similarity_cutoff)
 
 
