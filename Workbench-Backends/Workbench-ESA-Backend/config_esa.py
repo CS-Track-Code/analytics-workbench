@@ -17,3 +17,14 @@ esa_tf_proportion = 0.2
 esa_sort = True
 esa_cutoff_in_relation_to_max = 0.75
 esa_db_path = "application/esa_blueprint/static/esa/esa_data/esa.db"
+
+esa_cutoffs = {
+    "esa_research_areas": {
+        "esa_tf_proportion": 0.2,
+        "esa_cutoff_in_relation_to_max": 0.75
+    },
+    "esa_sdgs": {
+        "esa_tf_proportion": 0.2,
+        "esa_cutoff_in_relation_to_max": 0.9
+    }
+}
