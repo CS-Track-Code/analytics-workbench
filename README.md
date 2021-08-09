@@ -103,6 +103,11 @@ The commando line depends on the language for the model you need
 
 - English: `python -m spacy download en_core_web_sm`
 
+### Dash visualizations
+
+When starting the Frontend of the analytics workbench the Dash application is also started. In order for Dash to work properly you need to add the inputs to the **analytics-workbench/Workbench-Frontend/application/cstrack_dash/** [(Input documentation)](davidrol6.github.io/CSTrack_Docs/inputs.html).
+
+Once the frontend starts, you can access the visualizations by navigating to **http://frontend_url/dashapp/**.
 
 ### Backend Mercury Web Parser <a name="text_extraction"></a>
 The text extraction is facilitated using the Mercury Web Parser.
@@ -131,7 +136,8 @@ Please check if the addresses and user data in all config files are correct
 	- check if user, password and database for MySQL are
 - `/Worbench-Backends/Workbench-NER-Backend/config.py`
 	- correct host_ip_address (and host_port)
-	
+
+
 
 ## Runtime
 Start MySQL and MongoDB Databases (if not running)
