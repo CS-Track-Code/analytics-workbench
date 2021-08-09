@@ -29,6 +29,12 @@ def results():
 
     print("## ANALYSE ##\n" + name)
 
+    if similarity_cutoff is not None:
+        try:
+            similarity_cutoff = float(similarity_cutoff)
+        except ValueError:
+            similarity_cutoff = None
+
     result = get_esa_results(description, classification_scheme, tfidf_cutoff, similarity_cutoff)
 
 
