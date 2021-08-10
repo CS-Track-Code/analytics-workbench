@@ -14,7 +14,7 @@ ex_ac_bp = Blueprint(
 )
 
 
-@ex_ac_bp.route("/ex/getAnalysisResults", methods=['POST'])
+@ex_ac_bp.route("/api/getAnalysisResults", methods=['POST'])
 def analyse():
     name = request.form["name"]
     link = request.form["link"]
@@ -36,7 +36,7 @@ def analyse():
     return response
 
 
-@ex_ac_bp.route("/ex/getResearchAreas", methods=['POST'])
+@ex_ac_bp.route("/api/getResearchAreas", methods=['POST'])
 def external_get_esa():
     name = request.form["name"]
     link = request.form["link"]
@@ -62,7 +62,7 @@ def external_get_esa():
     return response
 
 
-@ex_ac_bp.route("/ex/getSDGs", methods=['POST'])
+@ex_ac_bp.route("/api/getSDGs", methods=['POST'])
 def external_get_sdgs():
     name = request.form["name"]
     link = request.form["link"]
@@ -89,7 +89,7 @@ def external_get_sdgs():
     return response
 
 
-@ex_ac_bp.route("/ex/getNamedEntities", methods=['POST'])
+@ex_ac_bp.route("/api/getNamedEntities", methods=['POST'])
 def external_get_ner():
     name = request.form["name"]
     link = request.form["link"]
@@ -110,7 +110,7 @@ def external_get_ner():
     return response
 
 
-@ex_ac_bp.route("/ex/addProjectsToDatabase", methods=['POST'])
+@ex_ac_bp.route("/api/addProjectsToDatabase", methods=['POST'])
 def external_add_to_db():
     project_list = request.form.getlist("projects")
     url = config.middleware + "external/addProjectsToDatabase"
@@ -125,7 +125,7 @@ def external_add_to_db():
     return response
 
 
-@ex_ac_bp.route("/ex/addSingleProjectToDatabase", methods=['POST'])
+@ex_ac_bp.route("/api/addSingleProjectToDatabase", methods=['POST'])
 def external_add_one_to_db():
     name = request.form["name"]
     link = request.form["link"]
