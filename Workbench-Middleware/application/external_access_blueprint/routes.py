@@ -37,7 +37,7 @@ def analyse():
         "name": name,
         "link": link,
         "description": description,
-        "esa_results": res_areas,
+        "ra_results": res_areas,
         "sdg_results": sdg,
         "ner_results": ner
     }
@@ -74,7 +74,7 @@ def external_get_esa():
     #     "name": name,
     #     "link": link,
     #     "description": description,
-    #     "esa_results": content
+    #     "ra_results": content
     # }
     # data_response = py_requests.post(url_data, data=data)
     # """
@@ -171,7 +171,7 @@ def add_project_to_database(name, link, description, tfidf_cutoff, similarity_cu
         "name": name,
         "link": link,
         "description": description,
-        "esa_results": res_areas,
+        "ra_results": res_areas,
         "sdg_results": sdgs,
         "ner_results": ner
     }

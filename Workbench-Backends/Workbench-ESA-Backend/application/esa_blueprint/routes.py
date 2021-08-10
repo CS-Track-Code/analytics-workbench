@@ -121,18 +121,12 @@ def get_esa_results(description, classification_scheme, tfidf_cutoff, similarity
                                                                      config.tfidf_extractor, classification_esa,
                                                                      similarity_cutoff)
 
-    if classification_scheme == "sdgs":
-        result = {
-            "top_classification_areas_with_sim": classification_areas_similarity_shortlist,
-            "classification_areas_with_sim_list": classification_areas_with_sim_list,
-            "used_tokens": tokens
-        }
-    else:
-        result = {
-            "top_research_areas_with_sim": classification_areas_similarity_shortlist,
-            "research_areas_with_sim_list": classification_areas_with_sim_list,
-            "used_tokens": tokens
-        }
+    result = {
+        "top_classification_areas_with_sim": classification_areas_similarity_shortlist,
+        "classification_areas_with_sim_list": classification_areas_with_sim_list,
+        "used_tokens": tokens,
+        "classification_scheme": classification_scheme
+    }
 
     return result
 

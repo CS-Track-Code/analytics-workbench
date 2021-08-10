@@ -45,7 +45,7 @@ class Safe:
             analyzed_projects = []
             tba_projects = []
             for project in all_projects:
-                if project["esa_results"] is None:
+                if project["ra_results"] is None:
                     tba_projects.append(project)
                 else:
                     analyzed_projects.append(project)
@@ -81,8 +81,8 @@ class Safe:
         ra_occurances = {}
         self.split_lists()
         for project in self.analyzed_projects:
-            if project["esa_results"] is not None and "top_research_areas_with_sim" in project["esa_results"]:
-                for ra in project["esa_results"]["top_research_areas_with_sim"]:
+            if project["ra_results"] is not None and "top_classification_areas_with_sim" in project["ra_results"]:
+                for ra in project["ra_results"]["top_classification_areas_with_sim"]:
                     if ra[1] in ra_occurances:
                         ra_occurances[ra[1]] += 1
                     else:

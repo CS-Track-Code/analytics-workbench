@@ -44,11 +44,11 @@
                 <h3>Research Areas - ESA results</h3>
                 <div class="btn-group btn_send2" role="group">
                     <button type="button" class="btn btn-outline-secondary" id="whats_esa_button">What is ESA?</button>
-                    <button type="button" class="btn btn-outline-dark" id="mod_esa_button">Modify Results</button>
+                    <button type="button" class="btn btn-outline-dark" id="mod_ra_button">Modify Results</button>
                 </div>
             </div>
 
-            <table class="table result_table" id="esa_results">
+            <table class="table result_table" id="ra_results">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -56,7 +56,7 @@
                         <th scope="col">Similarity</th>
                     </tr>
                 </thead>
-                <tbody id="esa_best_rows">
+                <tbody id="ra_best_rows">
 
                 </tbody>
             </table>
@@ -101,7 +101,7 @@
         var all_descriptors = null
 
         function update_research_areas(){
-            endloading("esa_best_rows")
+            endloading("ra_best_rows")
             if (best_research_areas != null){
                 for (var i=0; i<best_research_areas.length; i++){
                     var newRow = document.createElement("tr");
@@ -118,7 +118,7 @@
                     var sim = Math.round(parseFloat(best_research_areas[i][2]) * 100000 + Number.EPSILON) / 100000
                     simCell.innerHTML = sim.toString();
                     newRow.append(simCell);
-                    document.getElementById("esa_best_rows").appendChild(newRow);
+                    document.getElementById("ra_best_rows").appendChild(newRow);
                 }
             } else {
                 var newRow = document.createElement("tr");
@@ -133,7 +133,7 @@
                 typeCell.innerHTML = ""
                 newRow.append(typeCell);
 
-                document.getElementById("esa_best_rows").appendChild(newRow);
+                document.getElementById("ra_best_rows").appendChild(newRow);
             }
         }
 
@@ -174,7 +174,7 @@
         }
 
         $j(document).ready(function (){
-            loading("esa_best_rows")
+            loading("ra_best_rows")
             loading("ner_rows")
             if ("project-link" in localStorage && "project-description" in localStorage){
                 var project_name = localStorage["project_name"]
@@ -184,20 +184,20 @@
                 $j("#project_link_input").val(link);
                 $j("#project_description").val(description);
 
-                if (localStorage.getItem("esa_res") === null){
+                if (localStorage.getItem("ra_res") === null){
                     $j.post("/analyse/project/esa", {"name": project_name, "link":link, "description":description}).done(function (res){
-                        localStorage["esa_res"] = res
+                        localStorage["ra_res"] = res
                         res = JSON.parse(res)
-                        best_research_areas = res["top_research_areas_with_sim"]
-                        all_research_areas_with_sim = res["research_areas_with_sim_list"]
+                        best_research_areas = res["top_classification_areas_with_sim"]
+                        all_research_areas_with_sim = res["classification_areas_with_sim_list"]
                         used_tokens = res["used_tokens"]
                         update_research_areas();
                         localStorage["changed_project_lists"] = true
                     })
                 } else {
-                    var res = JSON.parse(localStorage["esa_res"])
-                    best_research_areas = res["top_research_areas_with_sim"]
-                    all_research_areas_with_sim = res["research_areas_with_sim_list"]
+                    var res = JSON.parse(localStorage["ra_res"])
+                    best_research_areas = res["top_classification_areas_with_sim"]
+                    all_research_areas_with_sim = res["classification_areas_with_sim_list"]
                     used_tokens = res["used_tokens"]
                     update_research_areas();
                 }
@@ -224,7 +224,7 @@
                     res = JSON.parse(res)
                     var link = res["project_link"]
                     var description = res["project_description"]
-                    var esa_res = res["esa_results"]
+                    var ra_res = res["ra_results"]
                     var ner_res = res["ner_results"]
 
                     localStorage["project-link"] = link
@@ -232,10 +232,10 @@
                     $j("#project_link_input").val(link);
                     $j("#project_description").val(description);
 
-                    localStorage["esa_res"] = JSON.stringify(esa_res)
-                    best_research_areas = esa_res["top_research_areas_with_sim"]
-                    all_research_areas_with_sim = esa_res["research_areas_with_sim_list"]
-                    used_tokens = esa_res["used_tokens"]
+                    localStorage["ra_res"] = JSON.stringify(ra_res)
+                    best_research_areas = ra_res["top_classification_areas_with_sim"]
+                    all_research_areas_with_sim = ra_res["classification_areas_with_sim_list"]
+                    used_tokens = ra_res["used_tokens"]
                     update_research_areas();
 
                     localStorage["ner_res"] = JSON.stringify(ner_res)
@@ -257,12 +257,12 @@
             localStorage.removeItem("project_name")
             localStorage.removeItem("project-link")
             localStorage.removeItem("project-description")
-            localStorage.removeItem("esa_res")
+            localStorage.removeItem("ra_res")
             localStorage.removeItem("ner_res")
             window.location.href = "/analyse"
         })
 
-        $j("#mod_esa_button").click(function (){
+        $j("#mod_ra_button").click(function (){
             window.location.href = "/analyse/project/modify_esa"
         })
 

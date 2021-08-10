@@ -66,9 +66,9 @@
         var unsaved_changes = false
 
         $j(document).ready(function (){
-            var res = JSON.parse(localStorage["esa_res"])
-            best_research_areas = res["top_research_areas_with_sim"]
-            all_research_areas_with_sim = res["research_areas_with_sim_list"]
+            var res = JSON.parse(localStorage["ra_res"])
+            best_research_areas = res["top_classification_areas_with_sim"]
+            all_research_areas_with_sim = res["classification_areas_with_sim_list"]
             used_tokens = res["used_tokens"]
 
             research_areas_alph = []
@@ -280,12 +280,12 @@
             var project_name = localStorage["project_name"]
             var link = localStorage["project-link"];
             var description = localStorage["project-description"];
-            var res = JSON.parse(localStorage["esa_res"]);
-            res["top_research_areas_with_sim"] = best_research_areas;
-            $j.post("/analyse/project/modify_esa", {"name": project_name, "link":link, "description":description, "esa_res": JSON.stringify(res)}).done(function(res_save){
+            var res = JSON.parse(localStorage["ra_res"]);
+            res["top_classification_areas_with_sim"] = best_research_areas;
+            $j.post("/analyse/project/modify_esa", {"name": project_name, "link":link, "description":description, "ra_res": JSON.stringify(res)}).done(function(res_save){
                 var res_save_success = JSON.parse(res_save)["success"]
                 if (res_save_success === true){
-                    localStorage["esa_res"] = JSON.stringify(res);
+                    localStorage["ra_res"] = JSON.stringify(res);
                     unsaved_changes = false;
                 } else {
                     //TODO: Reaktion?

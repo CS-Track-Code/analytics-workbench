@@ -91,14 +91,14 @@ def mod_esa():
         name = request.form["name"]
         link = request.form["link"]
         description = request.form["description"]
-        esa_res = request.form["esa_res"]
+        ra_res = request.form["ra_res"]
 
         url_data = config.middleware + "esa/changes"
         data = {
             "name": name,
             "link": link,
             "description": description,
-            "esa_results": esa_res
+            "ra_results": ra_res
         }
         data_response = py_requests.post(url_data, data=data)
         content = data_response.content

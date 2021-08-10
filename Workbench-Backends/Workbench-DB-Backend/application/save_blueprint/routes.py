@@ -19,7 +19,7 @@ def get_project_data():
     mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
     if "whole_data" in request.form:
         whole_data = request.form["whole_data"]
-        project_description, project_link, esa_res, ner_res = mongo.get_project_data(project_name,
+        project_description, project_link, ra_res, ner_res = mongo.get_project_data(project_name,
                                                                                      whole_data=whole_data)
     else:
         project_link = request.form["link"]
@@ -27,14 +27,14 @@ def get_project_data():
         if "description" in request.form:
             project_description = request.form["description"]
         project_description, project_link, \
-        esa_res, ner_res = mongo.get_project_data(project_name, project_link=project_link,
+        ra_res, ner_res = mongo.get_project_data(project_name, project_link=project_link,
                                                   project_description=project_description)
 
     result = {
         "project_name": project_name,
         "project_link": project_link,
         "project_description": project_description,
-        "esa_results": esa_res,
+        "ra_results": ra_res,
         "ner_results": ner_res
     }
 
@@ -71,13 +71,13 @@ def get_project_analysis_results():
     project_link = request.form["link"]
     project_description = request.form["description"]
     mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
-    esa_res, ner_res = mongo.get_analysis_results(project_name, project_link, project_description)
+    ra_res, ner_res = mongo.get_analysis_results(project_name, project_link, project_description)
 
     result = {
         "name": project_name,
         "project_link": project_link,
         "project_description": project_description,
-        "esa_results": esa_res,
+        "ra_results": ra_res,
         "ner_results": ner_res
     }
 
@@ -118,16 +118,16 @@ def update_project_data():
         user_generated = False
         if "user_generated" in request.form:
             user_generated = request.form["user_generated"]
-        esa_results = None
-        if "esa_results" in request.form:
-            esa_results = json.loads(request.form["esa_results"])
+        ra_results = None
+        if "ra_results" in request.form:
+            ra_results = json.loads(request.form["ra_results"])
         ner_results = None
         if "ner_results" in request.form:
             ner_results = json.loads(request.form["ner_results"])
 
         mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
         mongo.update_project_data(project_name, project_link, user_generated, project_description,
-                                  esa_results, ner_results)
+                                  ra_results, ner_results)
 
         response = BaseResponse(status=200, headers=header)
     except OSError:
@@ -144,11 +144,11 @@ def save_complete_project():
         project_name = request.form["name"]
         project_link = request.form["link"]
         project_description = request.form["description"]
-        esa_results = json.loads(request.form["esa_results"])
+        ra_results = json.loads(request.form["ra_results"])
         ner_results = json.loads(request.form["ner_results"])
 
         mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
-        mongo.save_new_project_with_results(project_name, project_link, project_description, esa_results, ner_results)
+        mongo.save_new_project_with_results(project_name, project_link, project_description, ra_results, ner_results)
 
         response = BaseResponse(status=200, headers=header)
     except OSError:

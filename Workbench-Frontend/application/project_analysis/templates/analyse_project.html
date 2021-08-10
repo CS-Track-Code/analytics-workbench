@@ -111,7 +111,7 @@
             var name = $j("#project_name_input").val();
             var link = $j("#project_link_input").val();
 
-            localStorage.removeItem("esa_res")
+            localStorage.removeItem("ra_res")
             localStorage.removeItem("ner_res")
 
             $j.post("/analyse/description", {"name": name, "link":link}).done(function (res){
@@ -139,7 +139,7 @@
             localStorage["project-link"] = link
             localStorage["project-description"] = description
 
-            localStorage.removeItem("esa_res")
+            localStorage.removeItem("ra_res")
             localStorage.removeItem("ner_res")
 
             //TODO: request an python -> wenn Wortanzahl reicht und englisch dann weiterleitung, sonst popup
@@ -152,7 +152,7 @@
                 localStorage["project_name"] = project_name
                 localStorage.removeItem("project-link")
                 localStorage.removeItem("project-description")
-                localStorage.removeItem("esa_res")
+                localStorage.removeItem("ra_res")
                 localStorage.removeItem("ner_res")
             }
 
