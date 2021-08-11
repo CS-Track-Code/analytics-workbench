@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 import json
 
 from db_interaction.mongo_interface import MongoInterface
@@ -40,7 +40,7 @@ def get_project_data():
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, status=200, headers=header)
+    response = Response(json_result, status=200, headers=header)
 
     return response
 
@@ -60,7 +60,7 @@ def get_project_description():
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, status=200, headers=header)
+    response = Response(json_result, status=200, headers=header)
 
     return response
 
@@ -83,7 +83,7 @@ def get_project_analysis_results():
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, status=200, headers=header)
+    response = Response(json_result, status=200, headers=header)
 
     return response
 
@@ -100,9 +100,9 @@ def save_new_project():
         mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
         mongo.save_new_project(project_name, project_link, project_description)
 
-        response = BaseResponse(status=200, headers=header)
+        response = Response(status=200, headers=header)
     except OSError:
-        response = BaseResponse(headers=header)
+        response = Response(headers=header)
 
     return response
 
@@ -129,9 +129,9 @@ def update_project_data():
         mongo.update_project_data(project_name, project_link, user_generated, project_description,
                                   ra_results, ner_results)
 
-        response = BaseResponse(status=200, headers=header)
+        response = Response(status=200, headers=header)
     except OSError:
-        response = BaseResponse(headers=header)
+        response = Response(headers=header)
 
     return response
 
@@ -150,8 +150,8 @@ def save_complete_project():
         mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
         mongo.save_new_project_with_results(project_name, project_link, project_description, ra_results, ner_results)
 
-        response = BaseResponse(status=200, headers=header)
+        response = Response(status=200, headers=header)
     except OSError:
-        response = BaseResponse(headers=header)
+        response = Response(headers=header)
 
     return response

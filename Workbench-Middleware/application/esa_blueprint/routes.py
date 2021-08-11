@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request
-from flask import current_app as app
 import requests as py_requests
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 import json
 
 import config
@@ -48,7 +47,7 @@ def get_esa_results():
         data_response = py_requests.post(url_data, data=data)
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=200, headers=header)
+    response = Response(content, status=200, headers=header)
     return response
 
 
@@ -71,7 +70,7 @@ def update_esa_results():
     content = data_response.content
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=200, headers=header)
+    response = Response(content, status=200, headers=header)
     return response
 
 
@@ -82,5 +81,5 @@ def get_research_areas():
     data_response = py_requests.get(url_data, data=data)
     content = data_response.content
 
-    response = BaseResponse(content, status=200)
+    response = Response(content, status=200)
     return response

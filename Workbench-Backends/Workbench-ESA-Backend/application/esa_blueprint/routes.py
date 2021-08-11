@@ -1,6 +1,5 @@
 from flask import Blueprint, request
-import requests as py_requests
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 import json
 
 from esa_analysis import analyse
@@ -46,7 +45,7 @@ def results():
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, headers=header)
+    response = Response(json_result, headers=header)
     print(response)
 
     return response
@@ -66,7 +65,7 @@ def esa_results():
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, headers=header)
+    response = Response(json_result, headers=header)
     print(response)
 
     return response
@@ -86,7 +85,7 @@ def sdg_results():
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, headers=header)
+    response = Response(json_result, headers=header)
     print(response)
 
     return response
@@ -137,7 +136,7 @@ def get_research_areas():
 
     json_result = json.dumps(research_area_list)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, status=200, headers=header)
+    response = Response(json_result, status=200, headers=header)
     print(response)
 
     return response
@@ -149,7 +148,7 @@ def get_sdgs():
 
     json_result = json.dumps(sdg_area_list)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = BaseResponse(json_result, status=200, headers=header)
+    response = Response(json_result, status=200, headers=header)
     print(response)
 
     return response

@@ -1,6 +1,6 @@
 import pymongo
 from flask import Blueprint
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 
 import config
 
@@ -32,8 +32,8 @@ def drop_current():
             data_collection = db[config.projects_db]
             data_collection.delete_many({})
 
-        response = BaseResponse(status=200, headers=header)
+        response = Response(status=200, headers=header)
     except OSError:
-        response = BaseResponse(headers=header)
+        response = Response(headers=header)
 
     return response

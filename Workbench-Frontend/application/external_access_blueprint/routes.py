@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request
-from flask import current_app as app
 import requests as py_requests
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 import json
 
 import config
@@ -32,7 +31,7 @@ def analyse():
     content = response.content
     code = response.status_code
 
-    response = BaseResponse(content, status=code)
+    response = Response(content, status=code)
     return response
 
 
@@ -58,7 +57,7 @@ def external_get_esa():
     content = response.content
     code = response.status_code
 
-    response = BaseResponse(content, status=code)
+    response = Response(content, status=code)
     return response
 
 
@@ -85,7 +84,7 @@ def external_get_sdgs():
     content = response.content
     code = response.status_code
 
-    response = BaseResponse(content, status=code)
+    response = Response(content, status=code)
     return response
 
 
@@ -106,7 +105,7 @@ def external_get_ner():
     content = response.content
     code = response.status_code
 
-    response = BaseResponse(content, status=code)
+    response = Response(content, status=code)
     return response
 
 
@@ -121,7 +120,7 @@ def external_add_to_db():
     content = response.content
     code = response.status_code
 
-    response = BaseResponse(content, status=code)
+    response = Response(content, status=code)
     return response
 
 
@@ -146,5 +145,5 @@ def external_add_one_to_db():
     content = response.content
     code = response.status_code
 
-    response = BaseResponse(content, status=code)
+    response = Response(content, status=code)
     return response

@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 import requests as py_requests
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 import json
 
 import config
@@ -49,7 +49,7 @@ def analyse():
     # """
 
     json_data = json.dumps(output_data)
-    response = BaseResponse(json_data, status=code)
+    response = Response(json_data, status=code)
     return response
 
 
@@ -80,7 +80,7 @@ def external_get_esa():
     # """
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=code, headers=header)
+    response = Response(content, status=code, headers=header)
     return response
 
 
@@ -105,7 +105,7 @@ def external_get_ner():
     # """
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=code,  headers=header)
+    response = Response(content, status=code,  headers=header)
     return response
 
 
@@ -132,9 +132,9 @@ def external_add_to_db():
             if status_code != 200:
                 code = status_code
 
-        response = BaseResponse(status=code, headers=header)
+        response = Response(status=code, headers=header)
     except ConnectionError:
-        response = BaseResponse(headers=header)
+        response = Response(headers=header)
 
     return response
 
@@ -156,9 +156,9 @@ def external_add_one_to_db():
 
         code = add_project_to_database(name, link, description, tfidf_cutoff, similarity_cutoff, classification_scheme)
 
-        response = BaseResponse(status=code, headers=header)
+        response = Response(status=code, headers=header)
     except ConnectionError:
-        response = BaseResponse(headers=header)
+        response = Response(headers=header)
     return response
 
 

@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request
-from flask import current_app as app
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 import requests as py_requests
 import json
 
@@ -29,7 +28,7 @@ def get_dashboard_data():
     data_response = py_requests.get(url, data=data)
     content = data_response.content
 
-    response = BaseResponse(content, status=200)
+    response = Response(content, status=200)
     return response
 
 
@@ -53,7 +52,7 @@ def get_recommendations():
     data_response = py_requests.post(url, data=data)
     content = data_response.content
 
-    response = BaseResponse(content, status=200)
+    response = Response(content, status=200)
     return response
 
 
@@ -72,5 +71,5 @@ def get_research_areas():
     data_response = py_requests.get(url_data, data=data)
     content = data_response.content
 
-    response = BaseResponse(content, status=200)
+    response = Response(content, status=200)
     return response

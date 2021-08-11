@@ -1,8 +1,6 @@
 from flask import Blueprint, render_template, request
-from flask import current_app as app
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 import requests as py_requests
-import json
 
 import config
 
@@ -41,7 +39,7 @@ def get_description():
 
         esa_data = middleware_response.content
 
-        response = BaseResponse(esa_data, status=200)
+        response = Response(esa_data, status=200)
 
         return response
 
@@ -75,7 +73,7 @@ def get_esa():
 
     esa_data = middleware_response.content
 
-    response = BaseResponse(esa_data, status=200)
+    response = Response(esa_data, status=200)
 
     return response
 
@@ -103,7 +101,7 @@ def mod_esa():
         data_response = py_requests.post(url_data, data=data)
         content = data_response.content
 
-        response = BaseResponse(content, status=200)
+        response = Response(content, status=200)
         return response
 
 
@@ -124,7 +122,7 @@ def get_ner():
 
     ner_data = middleware_response.content
 
-    response = BaseResponse(ner_data, status=200)
+    response = Response(ner_data, status=200)
     return response
 
 
@@ -151,7 +149,7 @@ def mod_ner():
         data_response = py_requests.post(url_data, data=data)
         content = data_response.content
 
-        response = BaseResponse(content, status=200)
+        response = Response(content, status=200)
         return response
 
 
@@ -165,5 +163,5 @@ def project_data():
     data_response = py_requests.post(url_data, data=data)
     content = data_response.content
 
-    response = BaseResponse(content, status=200)
+    response = Response(content, status=200)
     return response

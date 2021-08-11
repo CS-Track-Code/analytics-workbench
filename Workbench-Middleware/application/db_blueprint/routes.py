@@ -1,8 +1,6 @@
 from flask import Blueprint, render_template, request
-from flask import current_app as app
 import requests as py_requests
-from werkzeug.wrappers import BaseResponse
-import json
+from werkzeug.wrappers import Response
 
 import config
 
@@ -22,7 +20,7 @@ def get_project_names():
     content = data_response.content
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=200, headers=header)
+    response = Response(content, status=200, headers=header)
     return response
 
 
@@ -34,7 +32,7 @@ def get_tba_project_names():
     content = data_response.content
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=200, headers=header)
+    response = Response(content, status=200, headers=header)
     return response
 
 
@@ -51,7 +49,7 @@ def get_project_data():
     data_response = py_requests.post(url_data, data=data)
     content = data_response.content
 
-    response = BaseResponse(content, status=200)
+    response = Response(content, status=200)
     return response
 
 
@@ -75,7 +73,7 @@ def get_recommendations():
     data_response = py_requests.post(url_data, data=data)
     content = data_response.content
 
-    response = BaseResponse(content, status=200)
+    response = Response(content, status=200)
     return response
 
 
@@ -87,6 +85,6 @@ def get_evaluation_data():
     content = data_response.content
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-    response = BaseResponse(content, status=200, headers=header)
+    response = Response(content, status=200, headers=header)
     return response
 

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, abort
-from werkzeug.wrappers import BaseResponse
+from werkzeug.wrappers import Response
 import requests as py_requests
 import json
 
@@ -43,7 +43,7 @@ def get_project_text():
             data_response = py_requests.post(url_data, data=data)
 
         header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
-        response = BaseResponse(website_text, status=200, headers=header)
+        response = Response(website_text, status=200, headers=header)
         return response
     else:
         abort(404)
