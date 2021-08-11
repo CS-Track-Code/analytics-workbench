@@ -24,10 +24,10 @@ def build_networks(project_list):
             ra_network.add_node(project["project_name"], group="project")
             ra_count = len(project["ra_results"]["top_classification_areas_with_sim"])
             ra_total += ra_count
-            ra_min = ra_count if ra_count < ra_min else ra_min
             trouble_shooting_ra_min = project["project_name"] if ra_count < ra_min else trouble_shooting_ra_min
-            ra_max = ra_count if ra_count > ra_max else ra_max
+            ra_min = ra_count if ra_count < ra_min else ra_min
             trouble_shooting_ra_max = project["project_name"] if ra_count < ra_min else trouble_shooting_ra_max
+            ra_max = ra_count if ra_count > ra_max else ra_max
 
             for ra in project["ra_results"]["top_classification_areas_with_sim"]:
                 ra_network.add_node(ra[1], group="research-area")
