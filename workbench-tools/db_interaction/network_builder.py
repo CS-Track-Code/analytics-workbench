@@ -75,8 +75,8 @@ def build_networks(project_list):
         "average": ra_avg
     }
 
-    print("Maximal Research Areas at '" + trouble_shooting_ra_max + "' with " + ra_max)
-    print("Minimal Research Areas at '" + trouble_shooting_ra_min + "' with " + ra_min)
+    print("Maximal Research Areas at '" + str(trouble_shooting_ra_max) + "' with " + str(ra_max))
+    print("Minimal Research Areas at '" + str(trouble_shooting_ra_min) + "' with " + str(ra_min))
 
     return ra_network, ne_network, complete_network, named_entities_in_num, research_areas_in_num  # , vis_nodes, vis_edges
 
