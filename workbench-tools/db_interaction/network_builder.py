@@ -9,6 +9,8 @@ def build_networks(project_list):
     ra_min = 100
     ra_max = 0
     ra_total = 0
+    trouble_shooting_ra_min = None
+    trouble_shooting_ra_max = None
 
     ne_min = 100
     ne_max = 0
@@ -23,7 +25,9 @@ def build_networks(project_list):
             ra_count = len(project["ra_results"]["top_classification_areas_with_sim"])
             ra_total += ra_count
             ra_min = ra_count if ra_count < ra_min else ra_min
+            trouble_shooting_ra_min = project["project_name"] if ra_count < ra_min else trouble_shooting_ra_min
             ra_max = ra_count if ra_count > ra_max else ra_max
+            trouble_shooting_ra_max = project["project_name"] if ra_count < ra_min else trouble_shooting_ra_max
 
             for ra in project["ra_results"]["top_classification_areas_with_sim"]:
                 ra_network.add_node(ra[1], group="research-area")
@@ -70,6 +74,9 @@ def build_networks(project_list):
         "maximum": ra_max,
         "average": ra_avg
     }
+
+    print("Maximal Research Areas at '" + trouble_shooting_ra_max + "' with " + ra_max)
+    print("Minimal Research Areas at '" + trouble_shooting_ra_min + "' with " + ra_min)
 
     return ra_network, ne_network, complete_network, named_entities_in_num, research_areas_in_num  # , vis_nodes, vis_edges
 
