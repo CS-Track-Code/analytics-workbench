@@ -69,7 +69,7 @@ def get_esa():
         "description": description
     }
 
-    middleware_response = py_requests.post(url, data=data)
+    middleware_response = py_requests.post(url, data=data, timeout=65)
 
     esa_data = middleware_response.content
 

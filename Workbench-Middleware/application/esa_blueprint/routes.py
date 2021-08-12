@@ -34,7 +34,7 @@ def get_esa_results():
         content = json.dumps(content_loaded["ra_results"])
 
     else:
-        backend_response = py_requests.post(url_new, data=data)
+        backend_response = py_requests.post(url_new, data=data, timeout=65)
         content = backend_response.content
 
         url_data = config.backend_data + "data/save-updates"
