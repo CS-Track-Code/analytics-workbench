@@ -12,11 +12,6 @@ evaluation_bp = Blueprint(
 )
 
 
-@evaluation_bp.route("/evaluation/vis-network")
-def get_vis_network():
-    safe = config.safe_for_list_and_networks
-
-
 @evaluation_bp.route("/evaluation/project-names")
 def get_project_names():
     safe = config.safe_for_list_and_networks

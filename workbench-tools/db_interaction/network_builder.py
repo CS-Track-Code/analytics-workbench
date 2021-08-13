@@ -24,9 +24,7 @@ def build_networks(project_list):
             ra_network.add_node(project["project_name"], group="project")
             ra_count = len(project["ra_results"]["top_classification_areas_with_sim"])
             ra_total += ra_count
-            trouble_shooting_ra_min = project["project_name"] if ra_count < ra_min else trouble_shooting_ra_min
             ra_min = ra_count if ra_count < ra_min else ra_min
-            trouble_shooting_ra_max = project["project_name"] if ra_count < ra_min else trouble_shooting_ra_max
             ra_max = ra_count if ra_count > ra_max else ra_max
 
             for ra in project["ra_results"]["top_classification_areas_with_sim"]:
@@ -34,9 +32,6 @@ def build_networks(project_list):
                 ra_network.add_edge(project["project_name"], ra[1], weight=ra[2])
                 complete_network.add_node(ra[1], group="research-area")
                 complete_network.add_edge(project["project_name"], ra[1])
-
-        else:
-            ra_min = 0
 
         if project["ner_results"] is not None:
             ne_network.add_node(project["project_name"], group="project")
