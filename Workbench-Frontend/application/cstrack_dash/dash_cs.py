@@ -49,7 +49,7 @@ def create_dashboard(server=None):
     bert_topics = bt.load_topics(config.BERT_TOPICS)"""
     df_all_h = dash_utils.get_all_hashtags(df)
     df_rt_h = dash_utils.get_rt_hashtags(df)
-    """df_ts_raw, days, sortedMH = dash_utils.get_all_temporalseries(df)
+    df_ts_raw, days, sortedMH = dash_utils.get_all_temporalseries(df)
     df_ts = dash_utils.get_df_ts(df_ts_raw, days, sortedMH)
     df_ts_rt_raw, days_rt, sortedMH_rt = dash_utils.get_rt_temporalseries(df)
     df_ts_rt = dash_utils.get_df_ts(df_ts_rt_raw, days_rt, sortedMH_rt)
@@ -69,7 +69,7 @@ def create_dashboard(server=None):
 
     g_communities = cu.get_communities_representative_graph(G, communities)
     kcore_g = dash_utils.kcore_graph(df=df)
-    two_mode_g = dash_utils.get_two_mode_graph(df)"""
+    two_mode_g = dash_utils.get_two_mode_graph(df)
     
     submenu_1, submenu_2, submenu_3, submenu_4, submenu_5, submenu_6, submenu_7 = submenus.create_submenus(base_string)
     # link fontawesome to get the chevron icons
