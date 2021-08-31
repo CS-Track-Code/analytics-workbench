@@ -97,11 +97,7 @@ def get_esa_results(description, classification_scheme, tfidf_cutoff, similarity
     else:
         database = config.database_research_areas
 
-    classification_areas = config.preloaded[database]["classification_areas"]
-    classification_wikis = config.preloaded[database]["classification_area_wikis"]
-    classification_area_vectors = config.preloaded[database]["classification_area_vectors"]
-    classification_esa = ClassificationESA(config.esa_db_path, config.host, config.user, config.password, database,
-                                           classification_areas, classification_wikis, classification_area_vectors)
+    classification_esa = config.get_classification_esa(database)
 
     tfidf_cutoff = tfidf_cutoff if isinstance(tfidf_cutoff, float) and 0 <= tfidf_cutoff < 1 \
         else config.esa_cutoffs[database]["esa_tf_proportion"]
