@@ -64,8 +64,9 @@ def get_evaluation_data():
     safe.check_if_current()
 
     project_count = safe.get_project_count()
-    ra_numbers, ne_numbers = safe.get_numbers_of_ra_ne()
+    ra_numbers, sdg_numbers, ne_numbers = safe.get_numbers_of_ra_sdg_ne()
     ra_occurances = safe.get_ra_occurances()
+    sdg_occurances = safe.get_sdg_occurances()
     ne_occurances = safe.get_ne_occurances()
     vis_projects = safe.convert_network_to_vis(safe.get_folded_project_network())
     vis_p_ra = safe.convert_network_to_vis(safe.get_ra_network())
@@ -75,8 +76,10 @@ def get_evaluation_data():
     result = {
         "project_count": project_count,
         "ra_numbers": ra_numbers,
+        "sdg_numbers": sdg_numbers,
         "ne_numbers": ne_numbers,
         "ra_occurances": ra_occurances,
+        "sdg_occurances": sdg_occurances,
         "ne_occurances": ne_occurances,
         "vis_projects": vis_projects,
         "vis_projects_and_ras": vis_p_ra,

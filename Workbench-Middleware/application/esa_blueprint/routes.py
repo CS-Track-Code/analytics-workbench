@@ -19,8 +19,12 @@ def get_esa_results():
     link = request.form["link"]
     description = request.form["description"]
 
+    classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
+        else "research_areas"
+    if classification_scheme != "research_areas" and classification_scheme != "sdgs":
+        pass  # ToDo: error
+
     url_data = config.backend_data + "data/project-analysis"
-    url_new = config.backend_esa + "results"
     data = {
         "name": name,
         "link": link,
@@ -30,20 +34,26 @@ def get_esa_results():
     data_response = py_requests.post(url_data, data=data)
     content = data_response.content
     content_loaded = json.loads(content)
-    if content_loaded["ra_results"] is not None:
-        content = json.dumps(content_loaded["ra_results"])
 
+    if classification_scheme == "research_areas" and content_loaded["ra_results"] is not None:
+        content = json.dumps(content_loaded["ra_results"])
+    elif classification_scheme == "sdgs" and content_loaded["sdg_results"] is not None:
+        content = json.dumps(content_loaded["sdg_results"])
     else:
-        backend_response = py_requests.post(url_new, data=data, timeout=65)
-        content = backend_response.content
+        if classification_scheme == "research_areas":
+            url_new = config.backend_esa + "results"
+            backend_response = py_requests.post(url_new, data=data, timeout=125)
+            content = backend_response.content
+            data["ra_results"] = content
+        else:
+            url_new = config.backend_esa + "results"
+            data["classification_scheme"] = "sdgs"
+            backend_response = py_requests.post(url_new, data=data, timeout=125)
+            content = backend_response.content
+            data["sdg_results"] = content
 
         url_data = config.backend_data + "data/save-updates"
-        data = {
-            "name": name,
-            "link": link,
-            "description": description,
-            "ra_results": content
-        }
+
         data_response = py_requests.post(url_data, data=data)
 
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
@@ -56,16 +66,28 @@ def update_esa_results():
     name = request.form["name"]
     link = request.form["link"]
     description = request.form["description"]
-    ra_res = request.form["ra_results"]
 
-    url_data = config.backend_data + "data/save-updates"
+    classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
+        else "research_areas"
+    if classification_scheme != "research_areas" and classification_scheme != "sdgs":
+        pass  # ToDo: error
+
     data = {
         "name": name,
         "link": link,
         "description": description,
-        "ra_results": ra_res,
         "user_generated": True
     }
+
+    if classification_scheme == "research_areas":
+        ra_res = request.form["ra_results"]
+        data["ra_results"] = ra_res
+    else:
+        sdg_res = request.form["sdg_results"]
+        data["sdg_results"] = sdg_res
+
+    url_data = config.backend_data + "data/save-updates"
+
     data_response = py_requests.post(url_data, data=data)
     content = data_response.content
 
@@ -77,6 +99,17 @@ def update_esa_results():
 @esa_bp.route("/esa/research_areas")
 def get_research_areas():
     url_data = config.backend_esa + "research_areas"
+    data = {}
+    data_response = py_requests.get(url_data, data=data)
+    content = data_response.content
+
+    response = Response(content, status=200)
+    return response
+
+
+@esa_bp.route("/esa/sdgs")
+def get_sdgs():
+    url_data = config.backend_esa + "SDGs"
     data = {}
     data_response = py_requests.get(url_data, data=data)
     content = data_response.content

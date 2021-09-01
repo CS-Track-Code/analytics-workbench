@@ -11,14 +11,15 @@ class MongoInterface:
         self.user_prefix = user_prefix
 
     def check_for_description(self, project_name, project_link, user_generated=True):
-        description, link, ra_res, ner_res = self.get_project_data(project_name, project_link,
-                                                                    user_generated=user_generated)
+        description, link, ra_res, sdg_res, ner_res = self.get_project_data(project_name, project_link,
+                                                                            user_generated=user_generated)
         return description
 
     def get_analysis_results(self, project_name, project_link, project_description, user_generated=True):
-        description, link, ra_res, ner_res = self.get_project_data(project_name, project_link, project_description,
-                                                                    user_generated=user_generated)
-        return ra_res, ner_res
+        description, link, ra_res, sdg_res, ner_res = self.get_project_data(project_name, project_link,
+                                                                            project_description,
+                                                                            user_generated=user_generated)
+        return ra_res, sdg_res, ner_res
 
     def get_project_data(self, project_name, project_link="", project_description=None, user_generated=True,
                          whole_data=False):
@@ -41,15 +42,22 @@ class MongoInterface:
                 ra_res = result["ra_results"]
             else:
                 ra_res = None
+            if user_generated and self.user_prefix + "sdg_results" in result:
+                sdg_res = result[self.user_prefix + "sdg_results"]
+            elif "sdg_results" in result:
+                sdg_res = result["sdg_results"]
+            else:
+                sdg_res = None
             if user_generated and self.user_prefix + "ner_results" in result:
                 ner_res = result[self.user_prefix + "ner_results"]
             elif "ner_results" in result:
                 ner_res = result["ner_results"]
             else:
                 ner_res = None
-            return result["description"], result["project_link"], ra_res, ner_res
+            return result["description"], result["project_link"], ra_res, sdg_res, ner_res
 
-    def save_new_project_with_results(self, project_name, project_link, description, ra_results, ner_results):
+    def save_new_project_with_results(self, project_name, project_link, description, ra_results, sdg_results,
+                                      ner_results):
         if self.data_collection.find_one({"project_name": project_name}) is None and self.data_collection.\
                 find_one({"project_link": project_link}) is None:
             mongo_item = {
@@ -57,6 +65,7 @@ class MongoInterface:
                 "project_link": project_link,
                 "description": description,
                 "ra_results": ra_results,
+                "sdg_results": sdg_results,
                 "ner_results": ner_results
             }
 
@@ -76,7 +85,7 @@ class MongoInterface:
             self.data_collection.insert_one(mongo_item)
 
     def update_project_data(self, project_name, project_link, user_generated, project_description=None,
-                            ra_results=None, ner_results=None):
+                            ra_results=None, sdg_results=None, ner_results=None):
         existing_project_data = self.data_collection.find_one({"project_name": project_name})
         if existing_project_data is None:
             existing_project_data = self.data_collection.find_one({"project_link": project_link})
@@ -91,13 +100,16 @@ class MongoInterface:
         if project_description is not None and project_description != existing_project_data["description"]:
             self.data_collection.update_one({"_id": project_id}, {'$set': {"description": project_description}})
 
-        if ra_results is not None and ner_results is not None:
-            self.data_collection.update_one({"_id": project_id}, {'$set': {prefix + "ra_results": ra_results,
-                                                                           prefix + "ner_results": ner_results}})
-        elif ra_results is not None:
+        analysis_results = {}
+        if ra_results is not None:
             self.data_collection.update_one({"_id": project_id}, {'$set': {prefix + "ra_results": ra_results}})
-        elif ner_results is not None:
+        if sdg_results is not None:
+            self.data_collection.update_one({"_id": project_id}, {'$set': {prefix + "sdg_results": sdg_results}})
+        if ner_results is not None:
             self.data_collection.update_one({"_id": project_id}, {'$set': {prefix + "ner_results": ner_results}})
+
+        if len(analysis_results) > 0:
+            self.data_collection.update_one({"_id": project_id}, {'$set': analysis_results})
 
     def get_projects_with_user_generated_data(self):
         project_list = self.data_collection.find()
@@ -107,12 +119,21 @@ class MongoInterface:
                 project_name = project["project_name"]
             else:
                 project_name = project["project_link"]
+
             if self.user_prefix + "ra_results" in project:
                 ra_res = project[self.user_prefix + "ra_results"]
             elif "ra_results" in project:
                 ra_res = project["ra_results"]
             else:
                 ra_res = None
+
+            if self.user_prefix + "sdg_results" in project:
+                sdg_res = project[self.user_prefix + "sdg_results"]
+            elif "sdg_results" in project:
+                sdg_res = project["sdg_results"]
+            else:
+                sdg_res = None
+
             if self.user_prefix + "ner_results" in project:
                 ner_res = project[self.user_prefix + "ner_results"]
             elif "ner_results" in project:
@@ -123,6 +144,7 @@ class MongoInterface:
             simplified_project = {
                 "project_name": project_name,
                 "ra_results": ra_res,
+                "sdg_results": sdg_res,
                 "ner_results": ner_res
             }
 
@@ -133,7 +155,8 @@ class MongoInterface:
         project_list = self.data_collection.find()
         filtered_list = []
         for project in project_list:
-            if self.user_prefix + "ra_results" in project or self.user_prefix + "ner_results" in project:
+            if self.user_prefix + "ra_results" in project or self.user_prefix + "sdg_results" in project or \
+                    self.user_prefix + "ner_results" in project:
                 filtered_list.append(project)
         return filtered_list
 

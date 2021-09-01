@@ -12,6 +12,12 @@ def build_networks(project_list):
     trouble_shooting_ra_min = None
     trouble_shooting_ra_max = None
 
+    sdg_min = 100
+    sdg_max = 0
+    sdg_total = 0
+    trouble_shooting_sdg_min = None
+    trouble_shooting_sdg_max = None
+
     ne_min = 100
     ne_max = 0
     ne_total = 0
@@ -33,6 +39,16 @@ def build_networks(project_list):
                 complete_network.add_node(ra[1], group="research-area")
                 complete_network.add_edge(project["project_name"], ra[1])
 
+        if project["sdg_results"] is not None and "top_classification_areas_with_sim" in project["sdg_results"]:
+            sdg_count = len(project["sdg_results"]["top_classification_areas_with_sim"])
+            sdg_total += sdg_count
+            sdg_min = sdg_count if sdg_count < sdg_min else sdg_min
+            sdg_max = sdg_count if sdg_count > sdg_max else sdg_max
+
+            for sdg in project["sdg_results"]["top_classification_areas_with_sim"]:
+                complete_network.add_node(sdg[1], group="sdg")
+                complete_network.add_edge(project["project_name"], sdg[1])
+
         if project["ner_results"] is not None:
             ne_network.add_node(project["project_name"], group="project")
             ne_count = len(project["ner_results"]["ner_list"])
@@ -53,9 +69,11 @@ def build_networks(project_list):
             ne_min = 0
     if len(project_list) > 0:
         ra_avg = ra_total / len(project_list)
+        sdg_avg = sdg_total / len(project_list)
         ne_avg = ne_total / len(project_list)
     else:
         ra_avg = 0
+        sdg_avg = 0
         ne_avg = 0
 
     named_entities_in_num = {
@@ -70,8 +88,11 @@ def build_networks(project_list):
         "average": ra_avg
     }
 
-    print("Maximal Research Areas at '" + str(trouble_shooting_ra_max) + "' with " + str(ra_max))
-    print("Minimal Research Areas at '" + str(trouble_shooting_ra_min) + "' with " + str(ra_min))
+    sdgs_in_num = {
+        "minimum": sdg_min,
+        "maximum": sdg_max,
+        "average": sdg_avg
+    }
 
-    return ra_network, ne_network, complete_network, named_entities_in_num, research_areas_in_num  # , vis_nodes, vis_edges
+    return ra_network, ne_network, complete_network, named_entities_in_num, research_areas_in_num, sdgs_in_num  # , vis_nodes, vis_edges
 

@@ -21,6 +21,7 @@ class Safe:
         self.complete_network = None
         self.named_entities_in_num = None
         self.research_areas_in_num = None
+        self.sdgs_in_num = None
         self.time_of_networks = time.time()
         self.max_time = set_save_time
 
@@ -28,9 +29,11 @@ class Safe:
 
         self.time_ra_counter = time.time()
         self.ra_labels_and_counter = None
+        self.sdg_labels_and_counter = None
         self.ne_labels_and_counter = None
 
         self.build_ra_occurance_counter()
+        self.build_sdg_occurance_counter()
         self.build_ne_occurance_counter()
 
     def get_complete_project_list(self):
@@ -45,7 +48,7 @@ class Safe:
             analyzed_projects = []
             tba_projects = []
             for project in all_projects:
-                if project["ra_results"] is None:
+                if project["ra_results"] is None and project["sdg_results"] is None and project["ner_results"] is None:
                     tba_projects.append(project)
                 else:
                     analyzed_projects.append(project)
@@ -60,13 +63,14 @@ class Safe:
             self.split_lists()
             self.build_networks()
             self.build_ra_occurance_counter()
+            self.build_sdg_occurance_counter()
             self.build_ne_occurance_counter()
         else:
             print(" - not new")
 
     def build_networks(self):
         self.split_lists()
-        ra_network, ne_network, complete_network, named_entities_in_num, research_areas_in_num = \
+        ra_network, ne_network, complete_network, named_entities_in_num, research_areas_in_num, sdgs_in_num = \
             network_builder.build_networks(self.analyzed_projects)
         self.ra_network = ra_network
         self.ne_network = ne_network
@@ -74,6 +78,7 @@ class Safe:
 
         self.named_entities_in_num = named_entities_in_num
         self.research_areas_in_num = research_areas_in_num
+        self.sdgs_in_num = sdgs_in_num
 
         self.time_of_networks = time.time()
 
@@ -95,6 +100,28 @@ class Safe:
             values.append(v)
 
         self.ra_labels_and_counter = {
+            "labels": labels,
+            "values": values
+        }
+
+    def build_sdg_occurance_counter(self):
+        sdg_occurances = {}
+        self.split_lists()
+        for project in self.analyzed_projects:
+            if project["sdg_results"] is not None and "top_classification_areas_with_sim" in project["sdg_results"]:
+                for sdg in project["sdg_results"]["top_classification_areas_with_sim"]:
+                    if sdg[1] in sdg_occurances:
+                        sdg_occurances[sdg[1]] += 1
+                    else:
+                        sdg_occurances[sdg[1]] = 1
+
+        labels = []
+        values = []
+        for k, v in sorted(sdg_occurances.items(), key=lambda item: item[1])[-20:]:
+            labels.append(k)
+            values.append(v)
+
+        self.sdg_labels_and_counter = {
             "labels": labels,
             "values": values
         }
@@ -187,11 +214,14 @@ class Safe:
     def get_project_count(self):
         return len(self.analyzed_projects)
 
-    def get_numbers_of_ra_ne(self):
-        return self.research_areas_in_num, self.named_entities_in_num
+    def get_numbers_of_ra_sdg_ne(self):
+        return self.research_areas_in_num, self.sdgs_in_num, self.named_entities_in_num
 
     def get_ra_occurances(self):
         return self.ra_labels_and_counter
+
+    def get_sdg_occurances(self):
+        return self.sdg_labels_and_counter
 
     def get_ne_occurances(self):
         return self.ne_labels_and_counter

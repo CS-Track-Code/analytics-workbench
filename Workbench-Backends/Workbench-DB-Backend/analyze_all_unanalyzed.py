@@ -19,16 +19,17 @@ def analysis_results_exist(project):
     should check if the project object from the database contains ner and esa result
     and return a corresponding boolean value
     """
-    if "ner_results" in project and "ra_results" in project:
+    if "ner_results" in project and "ra_results" in project and "sdg_results" in project:
         return True
     return False
 
 
-def safe_analysis_results(mongo_collection, project, ra_results, ner_results):
+def safe_analysis_results(mongo_collection, project, ra_results, sdg_results, ner_results):
     """
     meant to save the newly acquired esa and ner results to the database
     """
     mongo_collection.update_one({"_id": project["_id"]}, {'$set': {"ra_results": ra_results,
+                                                                   "sdg_results": sdg_results,
                                                                    "ner_results": ner_results}})
     pass
 
@@ -61,5 +62,6 @@ for project in project_list:
         data_response = py_requests.post(API_address, data=data)  # Todo: catch 500 error (wait and retry? alert to error?)
         content = json.loads(data_response.content)
         ra_results = content["ra_results"]
+        sdg_result = content["sdg_result"]
         ner_results = content["ner_results"]
         safe_analysis_results(data_collection, project, ra_results, ner_results)

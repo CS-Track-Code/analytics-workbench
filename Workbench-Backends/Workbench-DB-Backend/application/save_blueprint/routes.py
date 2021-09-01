@@ -19,22 +19,24 @@ def get_project_data():
     mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
     if "whole_data" in request.form:
         whole_data = request.form["whole_data"]
-        project_description, project_link, ra_res, ner_res = mongo.get_project_data(project_name,
-                                                                                     whole_data=whole_data)
+        project_description, project_link, ra_res, sdg_res, ner_res = mongo.get_project_data(project_name,
+                                                                                             whole_data=whole_data)
     else:
         project_link = request.form["link"]
         project_description = None
         if "description" in request.form:
             project_description = request.form["description"]
-        project_description, project_link, \
-        ra_res, ner_res = mongo.get_project_data(project_name, project_link=project_link,
-                                                  project_description=project_description)
+        project_description, project_link, ra_res, sdg_res, ner_res = mongo.get_project_data(project_name,
+                                                                                             project_link=project_link,
+                                                                                             project_description=
+                                                                                             project_description)
 
     result = {
         "project_name": project_name,
         "project_link": project_link,
         "project_description": project_description,
         "ra_results": ra_res,
+        "sdg_results": sdg_res,
         "ner_results": ner_res
     }
 
@@ -71,13 +73,14 @@ def get_project_analysis_results():
     project_link = request.form["link"]
     project_description = request.form["description"]
     mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
-    ra_res, ner_res = mongo.get_analysis_results(project_name, project_link, project_description)
+    ra_res, sdg_res, ner_res = mongo.get_analysis_results(project_name, project_link, project_description)
 
     result = {
         "name": project_name,
         "project_link": project_link,
         "project_description": project_description,
         "ra_results": ra_res,
+        "sdg_results": sdg_res,
         "ner_results": ner_res
     }
 
@@ -121,13 +124,16 @@ def update_project_data():
         ra_results = None
         if "ra_results" in request.form:
             ra_results = json.loads(request.form["ra_results"])
+        sdg_results = None
+        if "sdg_results" in request.form:
+            sdg_results = json.loads(request.form["sdg_results"])
         ner_results = None
         if "ner_results" in request.form:
             ner_results = json.loads(request.form["ner_results"])
 
         mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
         mongo.update_project_data(project_name, project_link, user_generated, project_description,
-                                  ra_results, ner_results)
+                                  ra_results, sdg_results, ner_results)
 
         response = Response(status=200, headers=header)
     except OSError:
@@ -145,10 +151,12 @@ def save_complete_project():
         project_link = request.form["link"]
         project_description = request.form["description"]
         ra_results = json.loads(request.form["ra_results"])
+        sdg_results = json.loads(request.form["sdg_results"])
         ner_results = json.loads(request.form["ner_results"])
 
         mongo = MongoInterface(config.pymongo_clientport, config.pymongo_client_name, config.projects_db)
-        mongo.save_new_project_with_results(project_name, project_link, project_description, ra_results, ner_results)
+        mongo.save_new_project_with_results(project_name, project_link, project_description, ra_results, sdg_results,
+                                            ner_results)
 
         response = Response(status=200, headers=header)
     except OSError:

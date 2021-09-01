@@ -15,7 +15,7 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Research Area</th>
+                    <th scope="col" id="classification_area_sim">Classification Area</th>
                     <th scope="col">Similarity</th>
                     <th scope="col">Add</th>
                     <th scope="col">Remove</th>
@@ -32,7 +32,7 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Research Area</th>
+                    <th scope="col" id="classification_area_alpha">Classification Area</th>
                     <th scope="col">Similarity</th>
                     <th scope="col">Add</th>
                     <th scope="col">Remove</th>
@@ -54,8 +54,8 @@
     {% block more_script %}
         $j = jQuery.noConflict();
 
-        var best_research_areas = null
-        var all_research_areas_with_sim = null
+        var best_results_of_classification = null
+        var all_results_of_classification_with_sim = null
         var used_tokens = null
 
         var lookup = {}
@@ -65,16 +65,33 @@
 
         var unsaved_changes = false
 
+        var classification_scheme = null
+
         $j(document).ready(function (){
-            var res = JSON.parse(localStorage["ra_res"])
-            best_research_areas = res["top_classification_areas_with_sim"]
-            all_research_areas_with_sim = res["classification_areas_with_sim_list"]
+            classification_scheme = localStorage["classification_scheme_for_modify"]
+            if (classification_scheme !== "research_areas" && classification_scheme !== "sdgs"){
+                classification_scheme = "research_areas"
+            }
+
+            var res = ""
+            if (classification_scheme === "research_areas"){
+                res = JSON.parse(localStorage["ra_res"])
+                document.getElementById("classification_area_sim").innerText = "Research Areas"
+                document.getElementById("classification_area_alpha").innerText = "Research Areas"
+            } else {
+                res = JSON.parse(localStorage["sdg_res"])
+                document.getElementById("classification_area_sim").innerText = "SDGs"
+                document.getElementById("classification_area_alpha").innerText = "SDGs"
+            }
+
+            best_results_of_classification = res["top_classification_areas_with_sim"]
+            all_results_of_classification_with_sim = res["classification_areas_with_sim_list"]
             used_tokens = res["used_tokens"]
 
             research_areas_alph = []
             research_areas_cat = []
 
-            all_research_areas_with_sim.forEach(function (row, index){
+            all_results_of_classification_with_sim.forEach(function (row, index){
                 research_areas_alph.push(row)
                 research_areas_cat.push(row)
                 lookup[row[1]] = index
@@ -115,8 +132,8 @@
         })
 
         function check_if_best(research_area){
-            for( var i = 0, len = best_research_areas.length; i < len; i++ ) {
-                if( best_research_areas[i][1] === research_area ) {
+            for(var i = 0, len = best_results_of_classification.length; i < len; i++ ) {
+                if( best_results_of_classification[i][1] === research_area ) {
                     return true
                 }
             }
@@ -135,9 +152,13 @@
             var id_col = document.createElement("th");
             id_col.scope = "col"
             id_col.innerHTML = "#"
-            var ra_col = document.createElement("th");
-            ra_col.scope = "col"
-            ra_col.innerHTML = "Research Area"
+            var class_col = document.createElement("th");
+            class_col.scope = "col"
+            if (classification_scheme === "research_areas"){
+                class_col.innerHTML = "Research Area"
+            } else {
+                class_col.innerHTML = "SDG"
+            }
             var sim_col = document.createElement("th");
             sim_col.scope = "col"
             sim_col.innerHTML = "Similarity"
@@ -148,7 +169,7 @@
             remove_col.scope = "col"
             remove_col.innerHTML = "Remove"
             row.append(id_col)
-            row.append(ra_col)
+            row.append(class_col)
             row.append(sim_col)
             row.append(add_col)
             row.append(remove_col)
@@ -163,15 +184,15 @@
             document.getElementById(div).appendChild(table)
         }
 
-        function add_to_table (table, id, research_area, similarity, currently_best){
+        function add_to_table (table, id, classification_area, similarity, currently_best){
             var newRow = document.createElement("tr");
             var newCell = document.createElement("th");
             newCell.scope="row"
             newCell.innerHTML = id.toString()
             newRow.append(newCell);
-            var raCell = document.createElement("td");
-            raCell.innerHTML = research_area
-            newRow.append(raCell);
+            var caCell = document.createElement("td");
+            caCell.innerHTML = classification_area
+            newRow.append(caCell);
 
             var simCell = document.createElement("td");
             var sim = Math.round(parseFloat(similarity) * 100000 + Number.EPSILON) / 100000
@@ -183,7 +204,6 @@
             var removeCell = document.createElement("td");
             removeCell.id = table + "_row_" + id + "_remove"
 
-            var add, remove
             if (currently_best) {
                 removeButton = get_remove_button(id)
                 removeCell.appendChild(removeButton)
@@ -230,10 +250,10 @@
             } else {
                 id = e.target.parentNode.value
             }
-            var category = all_research_areas_with_sim[id][0]
+            var category = all_results_of_classification_with_sim[id][0]
 
-            best_research_areas.push(all_research_areas_with_sim[id])
-            best_research_areas = best_research_areas.sort(function (a,b){
+            best_results_of_classification.push(all_results_of_classification_with_sim[id])
+            best_results_of_classification = best_results_of_classification.sort(function (a, b){
                 if (a[2] > b[2]){return -1}
                 else if (a[2] < b[2]) {return 1}
                 return 0
@@ -257,10 +277,10 @@
             } else {
                 id = e.target.parentNode.value
             }
-            var topic = all_research_areas_with_sim[id][1]
-            var category = all_research_areas_with_sim[id][0]
+            var topic = all_results_of_classification_with_sim[id][1]
+            var category = all_results_of_classification_with_sim[id][0]
 
-            best_research_areas = best_research_areas.filter(function(item){
+            best_results_of_classification = best_results_of_classification.filter(function(item){
                 if (item[1] !== topic){
                     return item
                 }
@@ -280,12 +300,18 @@
             var project_name = localStorage["project_name"]
             var link = localStorage["project-link"];
             var description = localStorage["project-description"];
-            var res = JSON.parse(localStorage["ra_res"]);
-            res["top_classification_areas_with_sim"] = best_research_areas;
-            $j.post("/analyse/project/modify_esa", {"name": project_name, "link":link, "description":description, "ra_res": JSON.stringify(res)}).done(function(res_save){
+            var res_name = ""
+            if (classification_scheme === "research_area"){
+                res_name = "ra_res"
+            } else {
+                res_name = "sdg_res"
+            }
+            var res = JSON.parse(localStorage[res_name]);
+            res["top_classification_areas_with_sim"] = best_results_of_classification;
+            $j.post("/analyse/project/modify_esa", {"name": project_name, "link":link, "description":description, res_name: JSON.stringify(res)}).done(function(res_save){
                 var res_save_success = JSON.parse(res_save)["success"]
                 if (res_save_success === true){
-                    localStorage["ra_res"] = JSON.stringify(res);
+                    localStorage[res_name] = JSON.stringify(res);
                     unsaved_changes = false;
                 } else {
                     //TODO: Reaktion?

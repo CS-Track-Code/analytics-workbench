@@ -1,6 +1,6 @@
 from distutils.core import setup
 setup(name='workbench-tools',
-      version='0.3.7',
+      version='0.3.8',
       description='Analytics Workbench Tools',
       author='Cleo Schulten',
       author_email='cs@rias-institute.eu',

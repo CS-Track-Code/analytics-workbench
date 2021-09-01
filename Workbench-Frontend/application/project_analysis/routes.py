@@ -61,15 +61,18 @@ def get_esa():
     name = request.form["name"]
     link = request.form["link"]
     description = request.form["description"]
+    classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
+        else "research_areas"
 
     url = config.middleware + "esa"
     data = {
         "name": name,
         "link": link,
-        "description": description
+        "description": description,
+        "classification_scheme": classification_scheme
     }
 
-    middleware_response = py_requests.post(url, data=data, timeout=65)
+    middleware_response = py_requests.post(url, data=data, timeout=125)
 
     esa_data = middleware_response.content
 
