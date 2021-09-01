@@ -315,7 +315,7 @@
                     localStorage["project-link"] = link
                     localStorage["project-description"] = description
 
-                    if ("ra_results" in res) {
+                    if ("ra_results" in res && res["ra_results"] !== null) {
                         var ra_res = res["ra_results"]
                         localStorage["ra_res"] = JSON.stringify(ra_res)
                     }
@@ -323,7 +323,7 @@
                         var sdg_res = res["sdg_results"]
                         localStorage["sdg_res"] = JSON.stringify(sdg_res)
                     }
-                    if ("ner_results" in res) {
+                    if ("ner_results" in res && res["ner_results"] !== null) {
                         var ner_res = res["ner_results"]
                         localStorage["ner_res"] = JSON.stringify(ner_res)
                     }
