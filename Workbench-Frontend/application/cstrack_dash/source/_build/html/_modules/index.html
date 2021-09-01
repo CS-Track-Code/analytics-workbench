@@ -1,0 +1,239 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Overview: module code &mdash; CSTrack 05-08-2021 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> CSTrack
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Project documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../inputs.html">Input data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../inputs.html#tweet-dataset">Tweet dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../inputs.html#database-connections">Database connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../inputs.html#bert-model">BERT model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../inputs.html#final-considerations">Final considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#standard-deployment">Standard deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#docker-deployment">Docker deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation.html#running-the-application">Running the application</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../dash_cs.html">Main application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utilities.html">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../berttopic_utils.html">Bertopic utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../communities_utils.html">Community calculation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dash_utils.html">Figure generation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../generate_utils.html">Input formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../map_utils.html">Geomap utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../style.html">Style configuration module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../about.html#acknowledgements">Acknowledgements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../about.html#contact">Contact</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../institutions.html">Participating institutions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">CSTrack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Overview: module code</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>All modules for which code is available</h1>
+<ul><li><a href="dash_utils.html">dash_utils</a></li>
+</ul>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, David Roldan and Fernando Martinez.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

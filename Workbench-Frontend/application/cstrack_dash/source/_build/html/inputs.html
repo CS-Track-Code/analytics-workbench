@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Input data &mdash; CSTrack 05-08-2021 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" type="text/css" />
+  <link rel="stylesheet" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" type="text/css" />
+  <link rel="stylesheet" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installation" href="installation.html" />
+    <link rel="prev" title="Getting started" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> CSTrack
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Project documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Input data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tweet-dataset">Tweet dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database-connections">Database connections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bert-model">BERT model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#final-considerations">Final considerations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#standard-deployment">Standard deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#docker-deployment">Docker deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#running-the-application">Running the application</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Code</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dash_cs.html">Main application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">Modules</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="berttopic_utils.html">Bertopic utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="communities_utils.html">Community calculation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dash_utils.html">Figure generation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generate_utils.html">Input formatting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="map_utils.html">Geomap utilities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html">Style configuration module</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project information</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="about.html#acknowledgements">Acknowledgements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="about.html#contact">Contact</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="institutions.html">Participating institutions</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">CSTrack</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Input data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/inputs.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="input-data">
+<h1>Input data<a class="headerlink" href="#input-data" title="Permalink to this headline">¶</a></h1>
+<p>Before learning how to setup and run the CSTrack Dash application it is important to have at hand the dataset that the app
+is going to work with, the database connection and the BERT model needed in order to provide all the visualizations. This information can be
+provided through a .env file that needs to placed in the cstrack_dash folder.</p>
+<div class="section" id="tweet-dataset">
+<h2>Tweet dataset<a class="headerlink" href="#tweet-dataset" title="Permalink to this headline">¶</a></h2>
+<p>The CSTrack Dash application reads a .csv file in which the information of the tweets is written. Although we provide a basic
+dataset, it can be completed with more tweets or custom datasets may be used too. The name of the .csv file is defined in the variable
+TWEET_DATASET of the .env file.</p>
+<p>The .csv file must have the following columns:</p>
+<ul class="simple">
+<li><p>Fecha: The date of the tweet.</p></li>
+<li><p>Fuente: The source of the tweet.</p></li>
+<li><p>Texto: The text of the tweet.</p></li>
+<li><p>Enlace: The link of the tweet.</p></li>
+<li><p>Marca: The filter used for extracting the tweet.</p></li>
+<li><p>Usuario: The username of the person that wrote the tweet.</p></li>
+</ul>
+</div>
+<div class="section" id="database-connections">
+<h2>Database connections<a class="headerlink" href="#database-connections" title="Permalink to this headline">¶</a></h2>
+<p>The Geomap visualizations requires from data that is not present in the tweet dataset. This data has been previously stored in a Mongo
+database that is accessed by the Dash application in order to create these visualizations. The link of the connection must be supplied
+in the MONGODB_CONNECTION variable of the .env file. There needs to be a cstrack database with a “geomap_full” collection in it.
+Each document in that collection must contain the following fields:</p>
+<ul class="simple">
+<li><p>lat: The latitude.</p></li>
+<li><p>lon: The longitude.</p></li>
+<li><p>tweets: The number of tweets.</p></li>
+<li><p>followers: The number of followers.</p></li>
+<li><p>country_code: The 2 character country code.</p></li>
+<li><p>iso_3: The 3 character country code.</p></li>
+<li><p>country: The full name of the country.</p></li>
+<li><p>continent: The name of the continent.</p></li>
+</ul>
+</div>
+<div class="section" id="bert-model">
+<h2>BERT model<a class="headerlink" href="#bert-model" title="Permalink to this headline">¶</a></h2>
+<p>The application preloads a BERT model created with BERTopic (<a class="reference external" href="https://github.com/MaartenGr/BERTopic">Bertopic</a>) in order to carry out Topic Modelling tasks. By filtering tweets and training this model
+the Dash application creates visualizations that allow you to determine the themes of the discussions in Twitter (Depending on
+the tweet dataset). In order to provide this model to the application the variable BERT_MODEL must be supplied to the .env file.</p>
+<p>In addition it is advisable to provide a .json file that contains two keys:</p>
+<ul class="simple">
+<li><p>topics: A list with the topic assignments.</p></li>
+<li><p>documents: The list of tweets.</p></li>
+</ul>
+<p>This information should be saved when calling the fit_transform() method of the BERTopic module. Here you can see an example
+of how to use BERTopic to create models for topic modelling and how to create the topics.json file.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">bertopic</span> <span class="kn">import</span> <span class="n">BERTopic</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1">#Data loading</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;tweets.csv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;latin-1&quot;</span><span class="p">,</span> <span class="n">error_bad_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Texto&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Texto&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Texto&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Texto&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[,\.!?#]^¿¡&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Texto&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Texto&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+<span class="n">documents</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Texto&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="c1">#Model creatin</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">BERTopic</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;multilingual&quot;</span><span class="p">)</span>
+<span class="n">topics</span><span class="p">,</span> <span class="n">probs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;bert_model&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;topics.json&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span><span class="s2">&quot;topics&quot;</span><span class="p">:</span> <span class="n">topics</span><span class="p">,</span> <span class="s2">&quot;documents&quot;</span><span class="p">:</span> <span class="n">documents</span><span class="p">}))</span>
+</pre></div>
+</div>
+<p>This .json file needs to be defined in the variable BERT_TOPICS of the .env file.</p>
+</div>
+<div class="section" id="final-considerations">
+<h2>Final considerations<a class="headerlink" href="#final-considerations" title="Permalink to this headline">¶</a></h2>
+<p>The .env file should look as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TWEET_DATASET</span><span class="o">=</span><span class="s2">&quot;tweets.csv&quot;</span>
+<span class="n">MONGODB_CONNECTION</span><span class="o">=</span><span class="s2">&quot;localhost:27017&quot;</span>
+<span class="n">BERT_MODEL</span><span class="o">=</span><span class="s2">&quot;bert_preloaded_model&quot;</span>
+<span class="n">BERT_TOPICS</span><span class="o">=</span><span class="s2">&quot;topics.json&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Getting started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, David Roldan and Fernando Martinez.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

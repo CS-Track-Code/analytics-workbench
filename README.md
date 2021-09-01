@@ -113,6 +113,12 @@ Next you will have to install the required modules via the console. For this you
 `/web_text_extraction/mercury_web_parser` and run `npm i`.
 As soon as this is done you can run the server by running `node app.js` in the same directory.
 
+### Dash visualizations
+
+When starting the Frontend of the analytics workbench the Dash application is also started. In order for Dash to work properly you need to add the inputs to the **analytics-workbench/Workbench-Frontend/application/cstrack_dash/** [(Input documentation)](davidrol6.github.io/CSTrack_Docs/inputs.html).
+
+Once the frontend starts, you can access the visualizations by navigating to **http://frontend_url/dashapp/**.
+
 ## First Run
 Please check if the addresses and user data in all config files are correct
 - `/Worbench-Frontend/config.py` 
@@ -131,7 +137,8 @@ Please check if the addresses and user data in all config files are correct
 	- check if user, password and database for MySQL are
 - `/Worbench-Backends/Workbench-NER-Backend/config.py`
 	- correct host_ip_address (and host_port)
-	
+
+
 
 ## Runtime
 Start MySQL and MongoDB Databases (if not running)
