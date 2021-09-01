@@ -2,6 +2,7 @@ from collections import Counter
 import numpy as np
 import mysql.connector
 import time
+import gc
 
 from esa_analysis import esa as esa_class
 from esa_analysis.esa import ESA
@@ -137,6 +138,8 @@ class ResearchAreasESA:
                 max_sim = sim
 
             research_areas_similarity.append([res_area_category, res_area_topic, sim])
+            del vec
+            gc.collect()
 
         if self.cutoff_in_relation_to_max is not None:
             cutoff = max_sim * self.cutoff_in_relation_to_max
