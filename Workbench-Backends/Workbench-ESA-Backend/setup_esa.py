@@ -4,7 +4,7 @@ import gc
 
 import config_esa
 
-preload_vectors = True
+preload_vectors = False
 
 host = config_esa.host
 user = config_esa.user
@@ -68,5 +68,6 @@ def get_classification_esa(classification_scheme):
                                                preloaded[classification_scheme]["classification_area_wikis"],
                                                preloaded[classification_scheme]["classification_area_vectors"])
     else:
-        classification_esa = ClassificationESA(esa_db_path, host, user, password, databases[classification_scheme])
+        classification_esa = ClassificationESA(esa_db_path, host, user, password, databases[classification_scheme],
+                                               load_all_vectors=False)
     return classification_esa

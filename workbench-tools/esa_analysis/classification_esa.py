@@ -15,7 +15,7 @@ research areas -> classification areas
 class ClassificationESA:
     def __init__(self, esa_db_path, db_host, db_user, db_password, db_name, classification_areas=None,
                  classifiaction_area_wikis=None, classification_area_vectors=None, cutoff_in_relation_to_max=0.75,
-                 top=None, sort=True, tfidf_proportion=0.2, esa=None):
+                 top=None, sort=True, tfidf_proportion=0.2, esa=None, load_all_vectors=True):
         if esa is None:
             self.esa = ESA(esa_db_path)
         else:
@@ -52,6 +52,7 @@ class ClassificationESA:
         self.classification_areas = classification_areas
         self.classifiaction_area_wikis = classifiaction_area_wikis
         self.classification_area_vectors = classification_area_vectors
+        self.load_all_vectors = load_all_vectors
 
         self.mycursor.execute("SHOW TABLES")
 
@@ -99,15 +100,19 @@ class ClassificationESA:
             self.classification_area_vectors = {}
             for area in self.get_classification_areas():
                 area_id = area[0]
-                self.mycursor.execute(
-                    'SELECT article_id, tf_idf FROM research_areas_vec WHERE area_id = ' + str(area_id) + ';')
-
-                vec = {}
-                for pair in self.mycursor.fetchall():
-                    vec[pair[0]] = pair[1]
+                vec = self.get_vector_for_classification_area_id(area_id)
                 self.classification_area_vectors[area_id] = vec
             print("~~ got classification area vecs in: " + str(time.time() - start_time))
         return self.classification_area_vectors
+
+    def get_vector_for_classification_area_id(self, area_id):
+        self.mycursor.execute(
+            'SELECT article_id, tf_idf FROM research_areas_vec WHERE area_id = ' + str(area_id) + ';')
+
+        vec = {}
+        for pair in self.mycursor.fetchall():
+            vec[pair[0]] = pair[1]
+        return vec
 
     def get_classification_area_wikis(self, min_row_id=0):
         if self.classifiaction_area_wikis is None:
@@ -142,7 +147,7 @@ class ClassificationESA:
         i = 0
         max_sim = 0
 
-        if self.classification_area_vectors is None:
+        if self.classification_area_vectors is None and self.load_all_vectors:
             print("how'd i get here?")
             self.get_classification_area_vectors()
 
@@ -153,7 +158,10 @@ class ClassificationESA:
             classification_area_category = row[1]
             classification_area_topic = row[2]
 
-            vec = self.classification_area_vectors[area_id]
+            if not self.load_all_vectors:
+                vec = self.get_vector_for_classification_area_id(area_id)
+            else:
+                vec = self.classification_area_vectors[area_id]
 
             classification_area_vec_abs_val = self.get_abs_value_of_ca_vec(row[0], vec)
 
