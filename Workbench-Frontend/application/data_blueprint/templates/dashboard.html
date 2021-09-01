@@ -16,18 +16,34 @@
             Analysed Projects
         </div>
         <div id="number_of_ras" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-            <span class="medium_number" id="minimum_ras_in">-</span> to <span class="medium_number" id="maximum_ras_in">-</span> Research Areas per Project <br>
-            <span class="medium_number" id="average_ras_in">-</span> Research Areas on average
+            <span class="medium_number" id="minimum_ras_in">-</span> to <span class="medium_number" id="maximum_ras_in">-</span> <br>
+            Research Areas per Project <br>
+            <span class="medium_number" id="average_ras_in">-</span> <br>
+            Research Areas on average
+        </div>
+        <div id="number_of_sdgs" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+            <span class="medium_number" id="minimum_sdgs_in">-</span> to <span class="medium_number" id="maximum_sdgs_in">-</span> <br>
+            SDGs per Project <br>
+            <span class="medium_number" id="average_sdgs_in">-</span> <br>
+            SDGs on average
         </div>
         <div id="number_of_nes" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-            <span class="medium_number" id="minimum_nes_in">-</span> to <span class="medium_number" id="maximum_nes_in">-</span> Named Entities per Project <br>
-            <span class="medium_number" id="average_nes_in">-</span> Named Entities on average
+            <span class="medium_number" id="minimum_nes_in">-</span> to <span class="medium_number" id="maximum_nes_in">-</span> <br>
+            Named Entities per Project <br>
+            <span class="medium_number" id="average_nes_in">-</span> <br>
+            Named Entities on average
         </div>
 
         <div id="ra_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
             Top 20 Research Areas
             <div id="ra_dis_load"></div>
             <canvas id="ra_dist_chart_in" width="600" height="400"></canvas>
+        </div>
+
+        <div id="sdg_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+            Top 20 SDGs
+            <div id="sdg_dis_load"></div>
+            <canvas id="sdg_dist_chart_in" width="600" height="400"></canvas>
         </div>
 
         <div id="ne_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
@@ -57,6 +73,7 @@
                     <option value="NORP LAW LANGUAGE MISC">Others</option>
 
                     <option value="research-area">Research Areas</option>
+                    <option value="sdg">SDGs</option>
                 </select>
                 <button class="btn btn-outline-dark" type="button" id="buttonConnectorsApply" value="Apply">Apply</button>
 
@@ -97,7 +114,7 @@
 
         var project_list = []
 
-        var cards = ["ra_dis_load", "ne_dis_load", "network_in"]
+        var cards = ["ra_dis_load", "sdg_dis_load", "ne_dis_load", "network_in"]
 
         var vis_options = {
             configure: {
@@ -221,13 +238,17 @@
 
 
                 var ra_numbers = res["ra_numbers"]
+                var sdg_numbers = res["sdg_numbers"]
                 var ne_numbers = res["ne_numbers"]
                 var ra_occurances = res["ra_occurances"]
+                var sdg_occurances = res["sdg_occurances"]
                 var ne_occurances = res["ne_occurances"]
 
                 update_dashboard(res["project_count"],ra_numbers["minimum"],ra_numbers["maximum"],(Math.round(10*ra_numbers["average"])/10),
+                    sdg_numbers["minimum"],sdg_numbers["maximum"],(Math.round(10*sdg_numbers["average"])/10),
                     ne_numbers["minimum"],ne_numbers["maximum"],(Math.round(10*ne_numbers["average"])/10),
-                    ra_occurances["labels"], ra_occurances["values"], ne_occurances["labels"], ne_occurances["values"], vis_projects)
+                    ra_occurances["labels"], ra_occurances["values"], sdg_occurances["labels"], sdg_occurances["values"],
+                    ne_occurances["labels"], ne_occurances["values"], vis_projects)
             })
 
         })
@@ -237,18 +258,24 @@
         }
 
 
-        function update_dashboard(project_count, min_ras, max_ras, avg_ras, min_nes, max_nes, avg_nes,
-                                  ra_count_dict_labels, ra_count_dict_values, ne_count_dict_labels, ne_count_dict_values, vis_network){
+        function update_dashboard(project_count, min_ras, max_ras, avg_ras, min_sdgs, max_sdgs, avg_sdgs,
+                                  min_nes, max_nes, avg_nes, ra_count_dict_labels, ra_count_dict_values,
+                                  sdg_count_dict_labels, sdg_count_dict_values, ne_count_dict_labels, ne_count_dict_values, vis_network){
             document.getElementById("project_count_in").innerText = project_count
             document.getElementById("minimum_ras_in").innerText = min_ras
             document.getElementById("maximum_ras_in").innerText = max_ras
             document.getElementById("average_ras_in").innerText = avg_ras
+
+            document.getElementById("minimum_sdgs_in").innerText = min_sdgs
+            document.getElementById("maximum_sdgs_in").innerText = max_sdgs
+            document.getElementById("average_sdgs_in").innerText = avg_sdgs
 
             document.getElementById("minimum_nes_in").innerText = min_nes
             document.getElementById("maximum_nes_in").innerText = max_nes
             document.getElementById("average_nes_in").innerText = avg_nes
 
             update_ra_count(ra_count_dict_labels, ra_count_dict_values)
+            update_sdg_count(sdg_count_dict_labels, sdg_count_dict_values)
             update_ne_count(ne_count_dict_labels, ne_count_dict_values)
             update_network(vis_network)
 
@@ -273,6 +300,44 @@
                 datasets: [{
                     label: '# Projects',
                     data: ra_count_dict_values,
+                    backgroundColor: bg_colors,
+                    borderColor: bord_color,
+                    borderWidth: 1
+                }]
+            }
+
+            var myChart = new Chart(ctx, {
+                type: 'horizontalBar',
+                data: data,
+                options: {
+                    scales: {
+                        y: {
+                            min: 0
+                        }
+                    }
+                }
+            });
+        }
+
+        function update_sdg_count(sdg_count_dict_labels, sdg_count_dict_values){
+            endloading("sdg_dis_load")
+            var bg_colors = []
+            var bord_color = []
+            for (var i=0; i< sdg_count_dict_values.length; i++){
+                var r = randomInt()
+                var g = randomInt()
+                var b = randomInt()
+                bg_colors.push('rgba(' + r + ', ' + g + ', ' + b + ', 0.3)')
+                bord_color.push('rgba(' + r + ', ' + g + ', ' + b + ', 1)')
+            }
+
+            var ctx = document.getElementById('sdg_dist_chart_in').getContext('2d');
+            Chart.defaults.indexAxis = 'y'
+            const data = {
+                labels: sdg_count_dict_labels,
+                datasets: [{
+                    label: '# Projects',
+                    data: sdg_count_dict_values,
                     backgroundColor: bg_colors,
                     borderColor: bord_color,
                     borderWidth: 1
