@@ -26,7 +26,7 @@ def results():
     tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
     similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
 
-    print("## ANALYSE ##\n" + name)
+    print("## ANALYSE" + classification_scheme + " ##\n" + name)
 
     if similarity_cutoff is not None:
         try:

@@ -30,11 +30,11 @@ class MongoInterface:
         if result is None:
             if project_description is not None:
                 self.save_new_project(project_name, project_link, project_description)
-            return None, None, None, None
+            return None, None, None, None, None
         elif result["description"] != project_description and not whole_data:
             if project_description is not None and project_description != "":
                 self.update_project_data(None, project_link, False, project_description)
-            return result["description"], result["project_link"], None, None
+            return result["description"], result["project_link"], None, None, None
         else:
             if user_generated and self.user_prefix + "ra_results" in result:
                 ra_res = result[self.user_prefix + "ra_results"]
