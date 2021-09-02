@@ -47,13 +47,11 @@ if preload_vectors:
 
     preloaded = {
         "esa_research_areas": {
-            "classification_esa": research_areas_esa,
             "classification_areas": research_areas,
             "classification_area_wikis": research_area_wikis,
             "classification_area_vectors": research_area_vectors
         },
         "esa_sdgs": {
-            "classification_esa": sdg_esa,
             "classification_areas": sdg_areas,
             "classification_area_wikis": sdg_area_wikis,
             "classification_area_vectors": sdg_area_vectors
@@ -72,6 +70,9 @@ else:
             "classification_area_wikis": sdg_area_wikis
         }
     }
+
+del sdg_esa
+del research_areas_esa
 print("done")
 
 
