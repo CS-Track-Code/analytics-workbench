@@ -224,6 +224,10 @@ def get_classification_areas_esa_with_dbpedia_integrated(text, host, user, passw
         get_classification_areas_esa_with_dbpedia(text, host, user, password, database, tfidf_extractor,
                                                   classification_areas_esa=classification_areas_esa)
 
+    if classification_areas_with_sim_list == []:
+        #ToDo: throw error
+        return [], [], [], "", [], []
+
     counts = Counter([i for i in tokens])
     unique_words = list({i: i for i in tokens}.values())
 

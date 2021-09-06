@@ -135,7 +135,10 @@ class ClassificationESA:
             text_vec = self.esa.get_text_vector(text)
             tokens = ""
 
-        if len(text_vec) == 0:
+        if text_vec is None:
+            #ToDO: throw error
+            return [], [], [], "", []
+        elif len(text_vec) == 0:
             #ToDO: throw error
             return [], [], [], "", []
 
