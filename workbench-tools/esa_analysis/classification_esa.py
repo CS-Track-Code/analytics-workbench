@@ -134,6 +134,11 @@ class ClassificationESA:
         else:
             text_vec = self.esa.get_text_vector(text)
             tokens = ""
+
+        if len(text_vec) == 0:
+            #ToDO: throw error
+            return [], [], [], "", []
+
         text_vec_abs_val = self.esa.abs_val_of_vec(text_vec)
         print("~~ got text vector in " + str(time.time() - start_time))
 

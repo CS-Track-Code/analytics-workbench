@@ -20,33 +20,37 @@ def results():
     name = request.form["name"]
     description = request.form["description"]
 
-    classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
-        else "research_areas"
+    if description is not None and description != "":
+        classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
+            else "research_areas"
 
-    tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
-    similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
+        tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+        similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
 
-    print("## ANALYSE" + classification_scheme + " ##\n" + name)
+        print("## ANALYSE" + classification_scheme + " ##\n" + name)
 
-    if similarity_cutoff is not None:
-        try:
-            similarity_cutoff = float(similarity_cutoff)
-        except ValueError:
-            similarity_cutoff = None
+        if similarity_cutoff is not None:
+            try:
+                similarity_cutoff = float(similarity_cutoff)
+            except ValueError:
+                similarity_cutoff = None
 
-    if tfidf_cutoff is not None:
-        try:
-            tfidf_cutoff = float(tfidf_cutoff)
-        except ValueError:
-            tfidf_cutoff = None
+        if tfidf_cutoff is not None:
+            try:
+                tfidf_cutoff = float(tfidf_cutoff)
+            except ValueError:
+                tfidf_cutoff = None
 
-    result = get_esa_results(description, classification_scheme, tfidf_cutoff, similarity_cutoff)
+        result = get_esa_results(description, classification_scheme, tfidf_cutoff, similarity_cutoff)
 
-
-    json_result = json.dumps(result)
-    header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
-    response = Response(json_result, headers=header)
-    print(response)
+        json_result = json.dumps(result)
+        header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
+        response = Response(json_result, headers=header)
+        print(response)
+    else:
+        header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
+        response = Response("got no description", status=400, headers=header)
+        print(response)
 
     return response
 
