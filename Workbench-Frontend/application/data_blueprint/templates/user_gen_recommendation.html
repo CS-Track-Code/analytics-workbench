@@ -19,6 +19,11 @@
 
         </select>
 
+        <label class="input-group-text" for="like_sdg_input">SDGs</label>
+        <select multiple class="js-example-basic-multiple js-states form-control" id="like_sdg_input" name="sdgs[]">
+
+        </select>
+
         <div class="btn_row">
             <button type="button" class="btn btn-secondary btn_send" id="generate_recommendations">generate</button>
         </div>
@@ -63,6 +68,26 @@
                 })
             })
 
+            $j.get("{{ url_for("data_bp.get_sdgs") }}").done(function(res){
+                var sdgs = JSON.parse(res)
+
+                sdgs = sdgs.sort(function (a,b){
+                    if (a < b) {return -1}
+                    else if (a > b) {return 1}
+                    return 0
+                })
+
+                sdgs.forEach(function(sdg){
+                    var newOption = new Option(sdg, sdg, false, false);
+                    $j("#like_sdg_input").append(newOption).trigger('change');
+
+                    /*var ra_option = document.createElement("option")
+                    ra_option.value = ra
+                    ra_option.innerText = ra
+                    document.getElementById("like_research_area_input").appendChild(ra_option);*/
+                })
+            })
+
             $j.get("/get-project-names").done(function(res){
                 var project_names = JSON.parse(res)
 
@@ -86,6 +111,7 @@
         $j('#generate_recommendations').click(function(){
             var project_list = $j('#like_project_input').select2('data');
             var ra_list = $j('#like_research_area_input').select2('data');
+            var sdg_list = $j('#like_sdg_input').select2('data');
             var complete_list = []
             if (project_list !== undefined && project_list.length > 0){
                 project_list.forEach(function(option){
@@ -96,6 +122,13 @@
             }
             if (ra_list !== undefined && ra_list.length > 0){
                 ra_list.forEach(function(option){
+                    if (option !== undefined){
+                        complete_list.push(option['id'])
+                    }
+                })
+            }
+            if (sdg_list !== undefined && sdg_list.length > 0){
+                sdg_list.forEach(function(option){
                     if (option !== undefined){
                         complete_list.push(option['id'])
                     }

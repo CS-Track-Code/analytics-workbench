@@ -11,45 +11,49 @@
 {% block content %}
 
     <div class="textblock flexbox">
-        <div id="project_counter" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-            <span class="big_number no_wrap" id="project_count_in">--</span> <br>
-            Analysed Projects
-        </div>
-        <div id="number_of_ras" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-            <span class="medium_number" id="minimum_ras_in">-</span> to <span class="medium_number" id="maximum_ras_in">-</span> <br>
-            Research Areas per Project <br>
-            <span class="medium_number" id="average_ras_in">-</span> <br>
-            Research Areas on average
-        </div>
-        <div id="number_of_sdgs" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-            <span class="medium_number" id="minimum_sdgs_in">-</span> to <span class="medium_number" id="maximum_sdgs_in">-</span> <br>
-            SDGs per Project <br>
-            <span class="medium_number" id="average_sdgs_in">-</span> <br>
-            SDGs on average
-        </div>
-        <div id="number_of_nes" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-            <span class="medium_number" id="minimum_nes_in">-</span> to <span class="medium_number" id="maximum_nes_in">-</span> <br>
-            Named Entities per Project <br>
-            <span class="medium_number" id="average_nes_in">-</span> <br>
-            Named Entities on average
-        </div>
+        <div class="flexbox">
+            <div class="flexbox">
+                <div class="flexbox-vertical">
+                    <div id="project_counter" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+                        <span class="big_number no_wrap" id="project_count_in">--</span> <br><br>
+                        Analysed Projects <br>
+                    </div>
+                    <div id="number_of_ras" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+                        <span class="medium_number" id="minimum_ras_in">-</span> to <span class="medium_number" id="maximum_ras_in">-</span> <br> Research Areas per Project <br><br>
+                        <span class="medium_number" id="average_ras_in">-</span> <br> Research Areas on average
+                    </div>
+                </div>
+                <div class="flexbox-vertical">
+                    <div id="number_of_sdgs" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+                        <span class="medium_number" id="minimum_sdgs_in">-</span> to <span class="medium_number" id="maximum_sdgs_in">-</span> <br> SDGs per Project <br><br>
+                        <span class="medium_number" id="average_sdgs_in">-</span> <br>
+                        SDGs on average
+                    </div>
+                    <div id="number_of_nes" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+                        <span class="medium_number" id="minimum_nes_in">-</span> to <span class="medium_number" id="maximum_nes_in">-</span> <br> Named Entities per Project <br><br>
+                        <span class="medium_number" id="average_nes_in">-</span> <br>
+                        Named Entities on average
+                    </div>
+                </div>
+            </div>
 
-        <div id="ra_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-            Top 20 Research Areas
-            <div id="ra_dis_load"></div>
-            <canvas id="ra_dist_chart_in" width="600" height="400"></canvas>
-        </div>
+            <div id="ra_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+                Top 20 Research Areas
+                <div id="ra_dis_load"></div>
+                <canvas id="ra_dist_chart_in" width="600" height="400"></canvas>
+            </div>
 
-        <div id="sdg_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-            Top 20 SDGs
-            <div id="sdg_dis_load"></div>
-            <canvas id="sdg_dist_chart_in" width="600" height="400"></canvas>
-        </div>
+            <div id="sdg_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+                Top 20 SDGs
+                <div id="sdg_dis_load"></div>
+                <canvas id="sdg_dist_chart_in" width="600" height="400"></canvas>
+            </div>
 
-        <div id="ne_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-            Top 20 Named Entities
-            <div id="ne_dis_load"></div>
-            <canvas id="ne_dist_chart_in" width="600" height="400"></canvas>
+            <div id="ne_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
+                Top 20 Named Entities
+                <div id="ne_dis_load"></div>
+                <canvas id="ne_dist_chart_in" width="600" height="400"></canvas>
+            </div>
         </div>
 
         <div class="card bg-light p-3 m-1 card_no_wrap">

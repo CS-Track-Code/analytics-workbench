@@ -73,3 +73,14 @@ def get_research_areas():
 
     response = Response(content, status=200)
     return response
+
+
+@data_bp.route("/data/sdgs")
+def get_sdgs():
+    url_data = config.middleware + "esa/sdgs"
+    data = {}
+    data_response = py_requests.get(url_data, data=data)
+    content = data_response.content
+
+    response = Response(content, status=200)
+    return response

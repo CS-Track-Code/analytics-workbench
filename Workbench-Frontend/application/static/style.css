@@ -187,6 +187,11 @@ div.flexbox {
     flex-flow: row wrap;
 }
 
+div.flexbox-vertical {
+    display: flex;
+    flex-flow: column wrap;
+}
+
 div.flexbox div.card {
     flex: auto;
 }
