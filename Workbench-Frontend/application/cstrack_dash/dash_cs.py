@@ -184,7 +184,7 @@ def create_dashboard(server=None):
             ]),
 
             return html_plot
-        elif pathname == "/hashtags/rt":
+        elif pathname == (base_string + "/hashtags/rt"):
             controls = dash_utils.get_controls_rt("input-key-rt", "hashtag-number-rt")
             html_plot = html.Div(children=[
                 dcc.Loading(
@@ -204,7 +204,7 @@ def create_dashboard(server=None):
 
             ]),
             return html_plot
-        elif pathname == "/timeseries/allhashtags":
+        elif pathname == (base_string + "/timeseries/allhashtags"):
             print("PATH 2")
             controls = dash_utils.get_controls_ts("input-key-ts-all", "hashtag-number-ts-all", "hashtags-name-ts-all",
                                                   df_ts)
@@ -225,7 +225,7 @@ def create_dashboard(server=None):
             ]),
             return html_plot
 
-        elif pathname == "/wordcloud":
+        elif pathname == (base_string + "/wordcloud"):
             html_plot = html.Div(children=[
                 dcc.Loading(
                     # style={"height":"200px","font-size":"100px","margin-top":"500px", "z-index":"1000000"},
@@ -239,7 +239,7 @@ def create_dashboard(server=None):
                 ),
             ]),
             return html_plot
-        elif pathname == "/timeseries/rthashtags":
+        elif pathname == (base_string + "/timeseries/rthashtags"):
             print("PATH 2")
             controls = dash_utils.get_controls_ts("input-key-ts-rt", "hashtag-number-ts-rt", "hashtags-name-ts-rt",
                                                   df_ts_rt)
@@ -261,7 +261,7 @@ def create_dashboard(server=None):
             ]),
             return html_plot
 
-        elif pathname == "/tables/retweets":
+        elif pathname == (base_string + "/tables/retweets"):
             print("PATH 2")
             list_names = [hashlib.md5(str(name).encode()).hexdigest() for name in df_deg["Name"].tolist()]
             new_deg = df_deg.copy()
@@ -311,7 +311,7 @@ def create_dashboard(server=None):
                 ),
             ]),
             return html_plot
-        elif pathname == "/tables/sentiment":
+        elif pathname == (base_string + "/tables/sentiment"):
             print(df_sentiment.columns)
             list_names = [hashlib.md5(str(name).encode()).hexdigest() for name in df_sentiment["Usuario"].tolist()]
             df_new_sent = df_sentiment.copy()
@@ -360,7 +360,7 @@ def create_dashboard(server=None):
                 ),
             ]),
             return html_plot
-        elif pathname == "/graph/retweets":
+        elif pathname == (base_string + "/graph/retweets"):
             print("PATH GRAPH RT")
             web = Web(nx_G=kcore_g)
             web.display.height = 600
@@ -385,7 +385,7 @@ def create_dashboard(server=None):
             ]),
 
             return html_plot
-        elif pathname == "/graph/two_mode":
+        elif pathname == (base_string + "/graph/two_mode"):
             print("PATH GRAPH RT")
             web = Web(nx_G=two_mode_g)
             web.display.height = 600
@@ -412,7 +412,7 @@ def create_dashboard(server=None):
             ]),
 
             return html_plot
-        elif pathname == "/graph/retweet_communities":
+        elif pathname == (base_string + "/graph/retweet_communities"):
             web = Web(nx_G=g_communities)
             web.display.height = 600
             web.display.gravity = 0.5
@@ -437,7 +437,7 @@ def create_dashboard(server=None):
 
             ]),
             return html_plot
-        elif pathname == "/geomap/activity":
+        elif pathname == (base_string + "/geomap/activity"):
             print("geomap")
             options = dash_utils.get_controls_activity()
             html_plot = html.Div(children=[
@@ -457,7 +457,7 @@ def create_dashboard(server=None):
             ]),
             return html_plot
 
-        elif pathname == "/geomap/locations":
+        elif pathname == (base_string + "/geomap/locations"):
             html_plot = html.Div(children=[
                 dcc.Loading(
                     # style={"height":"200px","font-size":"100px","margin-top":"500px", "z-index":"1000000"},
@@ -473,7 +473,7 @@ def create_dashboard(server=None):
 
             ]),
             return html_plot
-        elif pathname == "/topic/intertopic":
+        elif pathname == (base_string + "/topic/intertopic"):
             print("PATH INTERTOPIC")
             controls = dash_utils.get_controls_topics("topic-number", "topic-keywords",
                                                       topics=len(bert_model.get_topics()))
