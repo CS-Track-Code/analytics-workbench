@@ -122,6 +122,7 @@
         var all_research_areas_with_sim = null
         var used_tokens_ra = null
 
+        var sdg_names = null
         var best_sdgs = null
         var all_sdgs_with_sim = null
         var used_tokens_sdg = null
@@ -177,7 +178,11 @@
                     newCell.innerHTML = num_cell.toString()
                     newRow.append(newCell);
                     var raCell = document.createElement("td");
-                    raCell.innerHTML = best_sdgs[i][1];
+                    if (sdg_names !== null){
+                        raCell.innerHTML = sdg_names[best_sdgs[i][1]];
+                    } else {
+                        raCell.innerHTML = best_sdgs[i][1];
+                    }
                     newRow.append(raCell);
 
                     var simCell = document.createElement("td");
@@ -306,6 +311,15 @@
             loading("ner_rows")
             project_name = localStorage["project_name"]
             $j("#project_name_input").val(project_name)
+
+            if ("sdg_names" in localStorage){
+                sdg_names = JSON.parse(localStorage["sdg_names"])
+            } else {
+                $j.get("/analyse/project/sdg_names", {}).done(function (res){
+                    localStorage["sdg_names"] = res
+                    sdg_names = JSON.parse(res)
+                })
+            }
 
             if ("project_name" in localStorage && !("project-link" in localStorage && "project-description" in localStorage)) {
                 $j.post("/analyse/project/data", {"name":project_name}).done(function (res){

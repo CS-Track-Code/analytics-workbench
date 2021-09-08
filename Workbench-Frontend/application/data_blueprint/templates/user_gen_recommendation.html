@@ -41,12 +41,22 @@
         $j = jQuery.noConflict();
 
         var current_recommendations = []
+        var sdg_names
 
         $j(document).ready(function(){
             $j('.js-example-basic-multiple').select2({
                 placeholder: "Type to search ...",
                 width: 'resolve'
             });
+
+            if ("sdg_names" in localStorage){
+                sdg_names = JSON.parse(localStorage["sdg_names"])
+            } else {
+                $j.get("/analyse/project/sdg_names", {}).done(function (res){
+                    localStorage["sdg_names"] = res
+                    sdg_names = JSON.parse(res)
+                })
+            }
 
             $j.get("{{ url_for("data_bp.get_research_areas") }}").done(function(res){
                 var research_areas = JSON.parse(res)
@@ -78,13 +88,12 @@
                 })
 
                 sdgs.forEach(function(sdg){
-                    var newOption = new Option(sdg, sdg, false, false);
+                    var sdg_name = sdg
+                    if (sdg_names !== null){
+                        sdg_name = sdg_names[sdg]
+                    }
+                    var newOption = new Option(sdg_name, sdg, false, false);
                     $j("#like_sdg_input").append(newOption).trigger('change');
-
-                    /*var ra_option = document.createElement("option")
-                    ra_option.value = ra
-                    ra_option.innerText = ra
-                    document.getElementById("like_research_area_input").appendChild(ra_option);*/
                 })
             })
 

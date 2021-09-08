@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
 from werkzeug.wrappers import Response
 import requests as py_requests
+import json
 
 import config
 
@@ -167,4 +168,32 @@ def project_data():
     content = data_response.content
 
     response = Response(content, status=200)
+    return response
+
+
+@project_analysis_bp.route('/analyse/project/sdg_names', methods=['GET'])
+def get_sdg_names():
+    sdgs = {
+        "SDG #1": "SDG #01 - No Poverty",
+        "SDG #2": "SDG #02 - Zero Hunger",
+        "SDG #3": "SDG #03 - Good Health and Well-Being",
+        "SDG #4": "SDG #04 - Quality Education",
+        "SDG #5": "SDG #05 - Gender Equality",
+        "SDG #6": "SDG #06 - Clean Water and Sanitation",
+        "SDG #7": "SDG #07 - Affordable and Clean Energy",
+        "SDG #8": "SDG #08 - Decent Work and Economic Growth",
+        "SDG #9": "SDG #09 - Industry, Innovation and Infrastructure",
+        "SDG #10": "SDG #10 - Reduced Inequalities",
+        "SDG #11": "SDG #11 - Sustainable Cities and Communities",
+        "SDG #12": "SDG #12 - Responsible Consumption and Production",
+        "SDG #13": "SDG #13 - Climate Action",
+        "SDG #14": "SDG #14 - Life Below Water",
+        "SDG #15": "SDG #15 - Life on Land",
+        "SDG #16": "SDG #16 - Peace, Justice and Strong Institutions",
+        "SDG #17": "SDG #17 - Partnerships for the Goals"
+    }
+
+    json_result = json.dumps(sdgs)
+    response = Response(json_result)
+
     return response

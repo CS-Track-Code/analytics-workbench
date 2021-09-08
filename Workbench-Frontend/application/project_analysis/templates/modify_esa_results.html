@@ -54,6 +54,8 @@
     {% block more_script %}
         $j = jQuery.noConflict();
 
+        var sdg_names
+
         var best_results_of_classification = null
         var all_results_of_classification_with_sim = null
         var used_tokens = null
@@ -88,10 +90,29 @@
             all_results_of_classification_with_sim = res["classification_areas_with_sim_list"]
             used_tokens = res["used_tokens"]
 
+            if (classification_scheme === "research_areas") {
+                set_up_tables()
+            } else if ("sdg_names" in localStorage){
+                sdg_names = JSON.parse(localStorage["sdg_names"])
+                set_up_tables()
+            } else {
+                $j.get("/analyse/project/sdg_names", {}).done(function (res){
+                    localStorage["sdg_names"] = res
+                    sdg_names = JSON.parse(res)
+                    set_up_tables()
+                })
+            }
+
+        })
+
+        function set_up_tables(){
             research_areas_alph = []
             research_areas_cat = []
 
             all_results_of_classification_with_sim.forEach(function (row, index){
+                if (classification_scheme === "sdgs" && sdg_names !== null) {
+                    row[1] = sdg_names[row[1]]
+                }
                 research_areas_alph.push(row)
                 research_areas_cat.push(row)
                 lookup[row[1]] = index
@@ -128,8 +149,7 @@
                 var in_best = check_if_best(row[1])
                 add_to_table("esa_rows_cat_" + row[0], id, row[1], row[2], in_best)
             })
-
-        })
+        }
 
         function check_if_best(research_area){
             for(var i = 0, len = best_results_of_classification.length; i < len; i++ ) {
