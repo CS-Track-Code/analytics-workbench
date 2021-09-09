@@ -103,9 +103,16 @@ def mod_esa():
             "ra_results": ra_res
         }
         data_response = py_requests.post(url_data, data=data)
-        content = data_response.content
+        if data_response.status_code == 200:
+            content = {
+                "success": True
+            }
+        else:
+            content = {
+                "success": False
+            }
 
-        response = Response(content, status=200)
+        response = Response(json.dumps(content), status=200)
         return response
 
 
@@ -151,9 +158,16 @@ def mod_ner():
             "ner_results": ner_res
         }
         data_response = py_requests.post(url_data, data=data)
-        content = data_response.content
+        if data_response.status_code == 200:
+            content = {
+                "success": True
+            }
+        else:
+            content = {
+                "success": False
+            }
 
-        response = Response(content, status=200)
+        response = Response(json.dumps(content), status=200)
         return response
 
 
