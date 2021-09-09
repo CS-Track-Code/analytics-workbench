@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for
+from application.cstrack_dash import dash_cs as dcs
 from flask import current_app as app
 import requests as py_requests
 
@@ -57,3 +58,11 @@ def get_tba_project_names():
     content = data_response.content
 
     return content
+
+
+@home_bp.route('/load_dashapp')
+def load_dashapp():
+    from flask import current_app as app
+
+    app, server = dcs.create_dashboard(app)
+    return redirect("/dashapp")
