@@ -10,7 +10,7 @@
             (url_for("project_analysis_bp.analysepage"), 'analyse', 'Analyse Project'),
             (url_for("data_bp.generate_recommendation"), 'recommendation', 'Find a project like...'),
             (url_for("data_bp.dashboard"), 'explore', 'Explore Data'),
-            ("/dashapp", "dashapp", "Explore Twitter Data")
+            ("/load_dashapp", "dashapp", "Explore Twitter Data")
         ] %}
 
         {%  set active_page = active_page|default ('home')%}

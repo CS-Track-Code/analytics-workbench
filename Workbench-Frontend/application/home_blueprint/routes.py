@@ -63,6 +63,13 @@ def get_tba_project_names():
 @home_bp.route('/load_dashapp')
 def load_dashapp():
     from flask import current_app as app
+    import pymongo
 
-    app, server = dcs.create_dashboard(app)
+    if "_dashapp_dash_assets" not in app.blueprints:
+        try:
+            app, server = dcs.create_dashboard(app)
+        except pymongo.errors.ServerSelectionTimeoutError:
+            
+    # print(app.blueprints)
+    # return app.blueprints
     return redirect("/dashapp")
