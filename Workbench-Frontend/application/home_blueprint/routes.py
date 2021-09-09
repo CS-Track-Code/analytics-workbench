@@ -69,7 +69,7 @@ def load_dashapp():
         try:
             app, server = dcs.create_dashboard(app)
         except pymongo.errors.ServerSelectionTimeoutError:
-            
+            print(pymongo.errors.ServerSelectionTimeoutError)
     # print(app.blueprints)
     # return app.blueprints
     return redirect("/dashapp")
