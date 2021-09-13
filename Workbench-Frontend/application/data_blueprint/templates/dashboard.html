@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.css" integrity="sha512-NJXM8vzWgDcBy9SCUTJXYnNO43sZV3pfLWWZMFTuCtEUIOcznk+AMpH6N3XruxavYfMeMmjrzDMEQ6psRh/6Hw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 {% endblock %}
 
 {% block content %}
@@ -57,37 +58,62 @@
         </div>
 
         <div class="card bg-light p-3 m-1 card_no_wrap">
-            <!--form class="btn-group btn-group-toggle" data-toggle="buttons">
-                <button type="radio" name="browser" class="btn btn-secondary active" onclick="update_network_clicked(this.value)" value="project">Folded to projects only</button>
-                <button type="radio" name="browser" class="btn btn-secondary active" onclick="update_network_clicked(this.value)" value="research_areas">Only Projects and Research Areas</button>
-                <button type="radio" name="browser" class="btn btn-secondary active" onclick="update_network_clicked(this.value)" value="complete">Complete Network</button>
-            </form-->
-            <div id="select_connectors input-group mb-3">
-                <div class="input-group-prepend">
-                    <label for="connectors_select_box"> Choose connectors for the network:</label>
-                </div>
+            <div id="alert_placeholder"></div>
 
-                <select multiple class="js-example-basic-multiple js-states form-control" id="connectors_select_box" name="connectors[]" >
-                    <option value="ORG">Organisations</option>
-                    <option value="DATE TIME">Dates and Time</option>
-                    <option value="GPE LOC FAC">Places</option>
-                    <option value="PERSON PER">People</option>
-                    <option value="PERCENT MONEY QUANTITY ORDINAL CARDINAL">Numbers and Amounts</option>
-                    <option value="PRODUCT WORK_OF_ART">Items and Things</option>
-                    <option value="NORP LAW LANGUAGE MISC">Others</option>
+            <table class="table filter_network_table">
+                <tbody>
+                    <tr>
+                        <td><label for="connectors_select_box"> Choose connectors for the network:</label></td>
+                        <td>
+                            <select multiple class="js-example-basic-multiple js-states form-control" id="connectors_select_box" name="connectors[]" >
+                                <option value="ORG">Organisations</option>
+                                <option value="DATE TIME">Dates and Time</option>
+                                <option value="GPE LOC FAC">Places</option>
+                                <option value="PERSON PER">People</option>
+                                <option value="PERCENT MONEY QUANTITY ORDINAL CARDINAL">Numbers and Amounts</option>
+                                <option value="PRODUCT WORK_OF_ART">Items and Things</option>
+                                <option value="NORP LAW LANGUAGE MISC">Others</option>
 
-                    <option value="research-area">Research Areas</option>
-                    <option value="sdg">SDGs</option>
-                </select>
-                <button class="btn btn-outline-dark" type="button" id="buttonConnectorsApply" value="Apply">Apply</button>
+                                <option value="research-area">Research Areas</option>
+                                <option value="sdg">SDGs</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="filter_by_node_input">Filter by Project: </label></td>
+                        <td>
+                            <div class="input-group mb-3 auto_margin">
+                                <input id="filter_by_node_input" type="search" name="project_name" class="form-control" placeholder="Type to search..." list="datalistNodeOptions2">
+                                <datalist id="datalistNodeOptions2">
 
-            </div>
+                                </datalist>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="buttonEmptyNoneFilter" value="delete"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="filter_by_degree_input">Filter by Degree (k-core): </label></td>
+                        <td>
+                            <input id="filter_by_degree_input" type="number" name="project_name" class="form-control" placeholder="Type to enter...">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td id="button_field">
+                            <button class="btn btn-outline-dark" type="button" id="buttonShowAll" value="Apply">Delete all Filters</button>
+                            <button class="btn btn-outline-dark" type="button" id="buttonApplyFilter" value="Apply">Apply</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <label class="input-group-text" for="find_node_input">Find Node</label>
                 </div>
-                <input id="find_node_input" type="text" name="project_name" class="form-control" placeholder="Type to search..." list="datalistNodeOptions">
+                <input id="find_node_input" type="search" name="project_name" class="form-control" placeholder="Type to search..." list="datalistNodeOptions">
                 <datalist id="datalistNodeOptions">
 
                 </datalist>
@@ -114,7 +140,7 @@
         $j = jQuery.noConflict();
 
         var network
-        var vis_projects, vis_research_areas, vis_complete, vis_leafless
+        var vis_projects, vis_leafless
 
         var project_list = []
 
@@ -159,9 +185,16 @@
             }
         }
 
-        var sdg_names
+        var sdg_names = null
+
+        var degree = 0
 
         $j(document).ready(function(){
+            if ("project_name" in localStorage){
+                $j('#filter_by_node_input').val(localStorage["project_name"])
+                $j('#find_node_input').val(localStorage["project_name"])
+            }
+
             $j('.js-example-basic-multiple').select2({
                 placeholder: "Connectors between projects (default is folded network with all connectors)",
                 width: 'resolve'
@@ -232,18 +265,6 @@
                     project_list.push(node["label"])
                 })
 
-                vis = res["vis_projects_and_ras"]
-                vis_research_areas = {
-                    "nodes": vis["nodes"],
-                    "edges": vis["edges"]
-                }
-
-                vis = res["vis_complete"]
-                vis_complete = {
-                    "nodes": vis["nodes"],
-                    "edges": vis["edges"]
-                }
-
                 vis = res["vis_leafless"]
                 vis_leafless = {
                     "nodes": vis["nodes"],
@@ -291,7 +312,7 @@
             update_ra_count(ra_count_dict_labels, ra_count_dict_values)
             update_sdg_count(sdg_count_dict_labels, sdg_count_dict_values)
             update_ne_count(ne_count_dict_labels, ne_count_dict_values)
-            update_network(vis_network)
+            apply_filters()
 
         }
 
@@ -432,10 +453,11 @@
 
         function update_network(vis_network){
             endloading("network_in")
-            var nodes = new vis.DataSet(vis_network["nodes"])
-            var edges = new vis.DataSet(vis_network["edges"])
+            var new_network = filter_by_degree(vis_network)
+            var nodes = new vis.DataSet(new_network["nodes"])
+            var edges = new vis.DataSet(new_network["edges"])
             var options
-            if ("options" in vis_network) options = vis_network["options"]
+            if ("options" in new_network) options = new_network["options"]
             else options = vis_options
 
             var container = document.getElementById("network_in");
@@ -445,19 +467,45 @@
             };
             network = new vis.Network(container, data, options);
             set_up_node_options(nodes)
+            set_up_node_options(nodes, true)
             network.on("doubleClick", function(params){
                 clicked_in_network(params)
             })
-            network.on("click", function(params){
-                console.log(params)
-            })
+            if (nodes.length === 0 && vis_projects["nodes"].length > 0){
+                var alert = document.createElement("div")
+                alert.className = "alert alert-info alert-dismissible fade show"
+                alert.role = "alert"
+
+                var close_alert = document.createElement("span")
+                close_alert.className = "closebtn"
+                close_alert.id = "closebtn"
+                close_alert.innerHTML = '<i class="fas fa-times"></i>'
+
+                alert.appendChild(close_alert)
+
+                var alert_text = document.createElement("span")
+                alert_text.innerText = "Your set filters resulted in an empty network. Please check your settings."
+                alert.appendChild(alert_text)
+
+                document.getElementById("alert_placeholder").appendChild(alert)
+                document.getElementById("closebtn").addEventListener("click", remove_alert)
+            }
         }
 
-        function set_up_node_options(nodes){
-            document.getElementById("datalistNodeOptions").innerHTML = ""
+        function set_up_node_options(nodes, filter=false){
+            if (filter){
+                document.getElementById("datalistNodeOptions2").innerHTML = ""
+            } else {
+                document.getElementById("datalistNodeOptions").innerHTML = ""
+            }
+
             var options = []
             nodes.forEach(function(node){
-                options.push(node["id"])
+                if (filter && "group" in node && node["group"] == "project"){
+                    options.push(node["id"])
+                } else if (!filter || !("group" in node)){
+                    options.push(node["id"])
+                }
             })
 
             options = options.sort(function (a,b){
@@ -470,34 +518,15 @@
                 var node_option = document.createElement("option")
                 node_option.value = node
                 node_option.innerText = node
-                document.getElementById("datalistNodeOptions").appendChild(node_option);
+                if (filter){
+                    document.getElementById("datalistNodeOptions2").appendChild(node_option);
+                } else {
+                    document.getElementById("datalistNodeOptions").appendChild(node_option);
+                }
+
             })
 
             console.log("done")
-        }
-
-        function update_network_clicked(e){
-            switch (e){
-                case "projects":
-                    //document.getElementById("select_connectors").innerHTML = ""
-                    update_network(vis_projects);
-                    break;
-                case "research_areas":
-                    //document.getElementById("select_connectors").innerHTML = ""
-                    update_network(vis_research_areas);
-                    break;
-                case "complete":
-                    {#var new_select = document.createElement("select")
-                    new_select.className = "connectors_select_box"
-                    new_select.name = "connectors[]"
-                    new_select.multiple = "multiple"
-
-                    var connector_options = [["Organisation(s)", "ORG"], ]
-
-                    document.getElementById("select_connectors").appendChild(new_select)#}
-                    update_network(vis_complete);
-                    break;
-            }
         }
 
         function filter_nodes(nodes, chosen_connectors){
@@ -549,6 +578,133 @@
             }
         }
 
+        function filter_by_node(node_id, vis_network){
+            var nodes = vis_network["nodes"]
+            var edges = vis_network["edges"]
+            var filtered_nodes = []
+            var filtered_node_ids = [node_id]
+            var new_node_ids = []
+            var filtered_edges = []
+
+            var connectors = true
+            while (connectors){
+                edges.forEach(function(edge){
+                    if (filtered_node_ids.includes(edge["from"]) && !filtered_node_ids.includes(edge["to"])){
+                        new_node_ids.push(edge["to"])
+                        if (!filtered_edges.includes(edge)) filtered_edges.push(edge)
+                    }
+                    if (filtered_node_ids.includes(edge["to"]) && !filtered_node_ids.includes(edge["from"])){
+                        new_node_ids.push(edge["from"])
+                        if (!filtered_edges.includes(edge)) filtered_edges.push(edge)
+                    }
+                })
+
+                connectors = false
+                nodes.forEach(function(node){
+                    if (new_node_ids.includes(node["id"])){
+                        filtered_node_ids.push(node["id"])
+                    }
+                    if (filtered_node_ids.includes(node["id"]) && !filtered_nodes.includes(node)){
+                        filtered_nodes.push(node)
+                        if ("group" in node && node["group"] !== "project"){
+                            connectors = true
+                        }
+                    }
+                })
+            }
+
+            degree = 1
+            var new_network = {}
+            new_network["nodes"] = filtered_nodes
+            new_network["edges"] = filtered_edges
+            return new_network
+        }
+
+        function filter_by_degree(vis_network, local_degree=degree){
+            var nodes = vis_network["nodes"]
+            var edges = vis_network["edges"]
+            var filtered_nodes = []
+            var filtered_node_ids = []
+            var filtered_edges = []
+            nodes.forEach(function(node){
+                var current_edges = []
+                edges.forEach(function(edge){
+                    if (edge["from"] === node["id"] || edge["to"] === node["id"]){
+                        current_edges.push(edge)
+                    }
+                })
+                if (current_edges.length >= local_degree){
+                    filtered_nodes.push(node)
+                    filtered_node_ids.push(node["id"])
+                    current_edges.forEach(function (edge){
+                        if (filtered_node_ids.includes(edge["from"]) && filtered_node_ids.includes(edge["to"])){
+                            filtered_edges.push(edge)
+                        }
+                    })
+                }
+            })
+            for(var i=0; i<filtered_nodes.length; i++){
+                var current_edges = []
+                filtered_edges.forEach(function(edge){
+                    if (edge["from"] === filtered_nodes[i]["id"] || edge["to"] === filtered_nodes[i]["id"]){
+                        current_edges.push(edge)
+                    }
+                })
+                //filtered_nodes[i]["size"] = 5+ 0.2 * current_edges.length
+                filtered_nodes[i]["value"] = current_edges.length
+                delete filtered_nodes[i]["size"]
+            }
+
+            var new_network = {}
+            new_network["nodes"] = filtered_nodes
+            new_network["edges"] = filtered_edges
+
+            if (nodes.length !== filtered_nodes.length){
+                return filter_by_degree(new_network)
+            } else {
+                return new_network
+            }
+        }
+
+        function apply_filters(){
+            var node_name = $j('#filter_by_node_input').val()
+            var connectors = $j("#connectors_select_box").val()
+            var local_degree = parseInt($j('#filter_by_degree_input').val())
+            if (!isNaN(local_degree)){
+                degree = local_degree
+            } else {
+                $j('#filter_by_degree_input').val("0")
+                degree = 0
+            }
+            var chosen_connectors = []
+            var show_network
+            connectors.forEach(function(c){
+                var split_at_space = c.split(" ")
+                for (var i=0; i<split_at_space.length; i++){
+                    chosen_connectors.push(split_at_space[i])
+                }
+            })
+            if (chosen_connectors.length > 0){
+                var filtered_nodes = filter_nodes(vis_leafless["nodes"], chosen_connectors)
+                var filtered_network = {
+                    "nodes": filtered_nodes,
+                    "edges": vis_leafless["edges"]
+                }
+                show_network = filter_by_degree(filtered_network, 0)
+            } else {
+                show_network = vis_projects
+            }
+
+            if (node_name !== ""){ //ToDo: test if real node name
+                show_network = filter_by_node(node_name, show_network)
+            }
+            update_network(show_network)
+            if (node_name !== ""){ //ToDo: test if real node name
+                network.selectNodes([node_name])
+                network.focus(node_name, move_options)
+            }
+        }
+
         var move_options = {
             scale: 1.0,
             offset: {x:0, y:0},
@@ -557,11 +713,33 @@
                 easingFunction: "easeInOutQuad"
             }
         }
+
         $j('#buttonFindNode').click(function(){
             var node_name = $j('#find_node_input').val()
             console.log("selecting: " + node_name)
             network.selectNodes([node_name])
             network.focus(node_name, move_options)
+        })
+
+        {#$j('#buttonFilterByNode').click(function(){
+            var node_name = $j('#filter_by_node_input').val()
+            var vis_network = filter_by_node(node_name)
+            update_network(vis_network)
+            network.focus(node_name, move_options)
+        })#}
+
+        $j('#buttonApplyFilter').click(function(){
+            apply_filters()
+        })
+
+        $j('#buttonEmptyNoneFilter').click(function(){
+            $j('#filter_by_node_input').val("")
+        })
+
+        $j('#buttonShowAll').click(function(){
+            $j('#filter_by_node_input').val("")
+            $j("#connectors_select_box").val("")
+            apply_filters()
         })
 
 

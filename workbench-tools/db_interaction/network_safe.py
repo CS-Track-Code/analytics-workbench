@@ -16,8 +16,6 @@ class Safe:
         self.analyzed_projects = None
         self.tba_projects = None
         self.time_of_project_list = time.time()
-        self.ra_network = None
-        self.ne_network = None
         self.complete_network = None
         self.named_entities_in_num = None
         self.research_areas_in_num = None
@@ -70,10 +68,8 @@ class Safe:
 
     def build_networks(self):
         self.split_lists()
-        ra_network, ne_network, complete_network, named_entities_in_num, research_areas_in_num, sdgs_in_num = \
+        complete_network, named_entities_in_num, research_areas_in_num, sdgs_in_num = \
             network_builder.build_networks(self.analyzed_projects)
-        self.ra_network = ra_network
-        self.ne_network = ne_network
         self.complete_network = complete_network
 
         self.named_entities_in_num = named_entities_in_num
@@ -150,14 +146,6 @@ class Safe:
             "labels": labels,
             "values": values
         }
-
-    def get_ra_network(self):
-        self.check_if_current()
-        return self.ra_network
-
-    def get_ne_network(self):
-        self.check_if_current()
-        return self.ne_network
 
     def get_complete_network(self):
         self.check_if_current()
@@ -246,6 +234,8 @@ class Safe:
         ntG.from_nx(network_graph)
 
         nodes, edges, head, height, width, options = ntG.get_network_data()
+        for i in range(len(nodes)):
+            nodes[i]["title"]=nodes[i]["label"]
 
         vis = {
             "nodes": nodes,

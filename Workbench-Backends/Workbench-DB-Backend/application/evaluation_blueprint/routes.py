@@ -69,8 +69,7 @@ def get_evaluation_data():
     sdg_occurances = safe.get_sdg_occurances()
     ne_occurances = safe.get_ne_occurances()
     vis_projects = safe.convert_network_to_vis(safe.get_folded_project_network())
-    vis_p_ra = safe.convert_network_to_vis(safe.get_ra_network())
-    vis_complete = safe.convert_network_to_vis(safe.get_complete_network())
+    # vis_complete = safe.convert_network_to_vis(safe.get_complete_network())
     vis_leafless = safe.convert_network_to_vis(safe.get_leafless_network())
 
     result = {
@@ -82,8 +81,7 @@ def get_evaluation_data():
         "sdg_occurances": sdg_occurances,
         "ne_occurances": ne_occurances,
         "vis_projects": vis_projects,
-        "vis_projects_and_ras": vis_p_ra,
-        "vis_complete": vis_complete,
+        # "vis_complete": vis_complete,
         "vis_leafless": vis_leafless
     }
 

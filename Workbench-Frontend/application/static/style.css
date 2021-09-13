@@ -112,6 +112,12 @@ header {
     position: relative;
 }
 
+.btn_apply {
+    position: absolute;
+    margin-bottom: 20px;
+    right: 10px;
+}
+
 .btn_send {
     position: absolute;
     right: 10px;
@@ -124,8 +130,16 @@ header {
     top: 0;
 }
 
+.filter_network_table {
+    margin-bottom: 10px;
+}
+
 .result_table {
     margin-bottom: 50px;
+}
+
+#button_field {
+    text-align: right;
 }
 
 .red {
@@ -360,7 +374,7 @@ div.flexbox div.card {
 }
 
 #connectors_select_box{
-    width: 50%;
+    width: 100%;
     height: 20px;
 }
 
@@ -378,6 +392,10 @@ div.flexbox div.card {
 
 button {
     cursor: pointer;
+}
+
+.auto_margin {
+    margin-bottom: auto!important;
 }
 
 #generated_recommendations div{
