@@ -6,7 +6,6 @@ df = pd.read_csv("full_data.csv")
 continent = []
 country_name = []
 for i, row in df.iterrows():
-    print(row["country_code"])
     if str(row["country_code"]).lower() == "nan":
         continent.append("nan")
         country_name.append("nan")

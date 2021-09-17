@@ -20,7 +20,6 @@ coordinates["lat"] = pd.to_numeric(coordinates["lat"])
 coordinates["lon"] = pd.to_numeric(coordinates["lon"])
 eu_coordinates = coordinates[(coordinates["lat"] > eu_box["south"]) & (coordinates["lat"] < eu_box["north"]) &
                              (coordinates["lon"] > eu_box["west"]) & (coordinates["lon"] < eu_box["east"])]
-print(coordinates.dtypes)
 """fig = px.scatter_geo(coordinates, lat="lat", lon="lon")
 fig.show()"""
 

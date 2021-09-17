@@ -7,7 +7,6 @@ import plotly.express as px
 
 def get_map_stats_by_country(df, type="tweets"):
     result = df.groupby(["iso_3", "continent", "country"])[type].sum().reset_index(name=type)
-    print(result)
     fig = px.scatter_geo(result, locations="iso_3", width=1500, height=768,
                          color="continent",
                          hover_name="country",

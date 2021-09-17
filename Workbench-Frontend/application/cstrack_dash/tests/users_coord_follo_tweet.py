@@ -16,7 +16,6 @@ coordinates["lat"] = pd.to_numeric(coordinates["lat"])
 coordinates["lon"] = pd.to_numeric(coordinates["lon"])
 
 for i, row in coordinates.iterrows():
-    print(users[users["screen_name"] == row["screen_name"]]["followers_count"].values[0])
     users_followers.append(users[users["screen_name"] == row["screen_name"]]["followers_count"].values[0])
     users_tweets.append(users[users["screen_name"] == row["screen_name"]]["statuses_count"].values[0])
 coordinates["tweets"] = users_tweets

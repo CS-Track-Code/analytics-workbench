@@ -267,21 +267,17 @@ def get_edgesMain(values):
 botwords=['airpollution', 'luftdaten', 'fijnstof', 'waalre', 'pm2', 'pm10']
 
 def prepare_hashtagsmain(list_h, stopwords=None):
-    print(list_h)
     stop_words = ['#citizenscience', 'citizenscience', 'rt', 'citizen', 'science', 'citsci', 'cienciaciudadana', 'machinelearning', 'ml', 'ai', 'deeplearning' ]
     if stopwords:
         stop_words = stop_words + stopwords
     list_x = [x.lower() for x in list_h]
     list_x = [word for word in list_x if word.strip() not in stop_words]
-    print(list_x)
     mainHashtags = np.unique(list_x,return_counts=True)
     mainHashtags = sorted((zip(mainHashtags[1], mainHashtags[0])), reverse=True)
     un = []
     unzipped = zip(*mainHashtags)
     for v1 in unzipped:
         un.append(list(v1))
-    print("THIS IS UN")
-    print(un)
     sortedNumberHashtags, sortedMainHashtags = un[0], un[1]
     return sortedNumberHashtags,sortedMainHashtags
 
@@ -570,6 +566,7 @@ def getuv_htRT(filename, keywords=None, stopwords=None, interest=None, filter_ha
 # Wordcloud function for main hashtags:
 
 def wordcloudmain(df, keywords=None, stopwords=None, interest=None ):
+
     hashtags =[]
     stop_words = ['citizenscience', 'rt', 'citizen', 'science', 'citsci', 'cienciaciudadana', 'CitizenScience']
     df = filter_by_interest(df, interest)
@@ -832,7 +829,6 @@ def sentiment_analyser(df_entry,keywords=None, stopwords=None, keywords2=None, s
     list_of_dicts = []
     for sentence in sentences:
         adict = analyser.polarity_scores(sentence)
-        print(adict)
         list_of_dicts.append(adict)
     df_sentiment = pd.DataFrame(list_of_dicts)
     df_sentiment['Usuario'] = Users

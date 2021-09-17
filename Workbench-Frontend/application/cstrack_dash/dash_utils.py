@@ -56,9 +56,7 @@ def get_community_graph(g, communities, i=0):
         list_edges = g.edges(node)
         list_edges = [edge for edge in list_edges if edge[1] in communities[i]]
         c.add_edges_from(list_edges)
-    print(c.nodes)
     dict_names = get_hash_name_list(c.nodes)
-    print(dict_names)
     #c = nx.relabel_nodes(c, dict_names)
     return c
 
@@ -326,7 +324,7 @@ def get_rt_temporalseries(df, keywords=None):
     return df, dias, sortedMH
 
 
-def wordcloudmain(df, keywords=None, stopwords=None, interest=None):
+def wordcloudmain(df, save_url="./assets/"):
     """
     Given a DataFrame with all the tweets the function creates a Wordcloud with the words that appear the most.
 
@@ -354,7 +352,7 @@ def wordcloudmain(df, keywords=None, stopwords=None, interest=None):
     plt.imshow(wordcloud)
     plt.axis("off")
     plt.tight_layout(pad=0)
-    plt.savefig("./assets/wc2.png")
+    plt.savefig(save_url + "wc2.png")
 
 
 def get_graph_rt(df):
@@ -762,3 +760,12 @@ def get_controls_topics(number_id, keyword_id, topics):
         ],
     )
     return controls
+
+def toast_info(title, text):
+    return dbc.Toast(
+        [html.P(text, className="mb-0")],
+        id="simple-toast",
+        header=title,
+        icon="primary",
+        dismissable=True,
+    ),

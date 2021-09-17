@@ -26,13 +26,9 @@ def get_communities_representative_graph(g, l_communities):
     edges = []
     #for each community
     for i in range(0, len(l_communities)):
-        print("COMMUNITY", i)
-        print(l_communities[i])
         #for each element in community
         for e in l_communities[i]:
             edges = connections(g, e, l_communities, i)
-            print("----------- ARE THERE EDGES --------------")
-            print(edges)
             if len(edges) > 0:
                 n_graph.add_edges_from(edges)
     return n_graph
