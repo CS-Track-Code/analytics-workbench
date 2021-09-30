@@ -170,10 +170,8 @@ class Safe:
         nodes = network.nodes
         project_nodes = [node for node in nodes if network.nodes[node]["group"]=="project"]
 
-        if fave_list == modified_list == visited_list is None:
-            ppr = nx.pagerank(self.get_complete_network())
-        else:
-            personalization = {}
+        personalization = {}
+        if not fave_list == modified_list == visited_list is None:
             for project in visited_list:
                 personalization[project] = 1
             for project in modified_list:
@@ -181,7 +179,10 @@ class Safe:
             for project in fave_list:
                 personalization[project] = 3
 
+        if len(personalization) > 0:
             ppr = nx.pagerank(self.get_complete_network(), personalization=personalization)
+        else:
+            ppr = nx.pagerank(self.get_complete_network())
 
         ppr_sort = sorted(ppr.items(), key=operator.itemgetter(1), reverse=True)
         ppr_filtered = [node for node in ppr_sort if node[0] in project_nodes]
