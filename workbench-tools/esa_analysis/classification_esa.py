@@ -3,8 +3,8 @@ import numpy as np
 import mysql.connector
 import time
 
-from esa_analysis import esa as esa_class
 from esa_analysis.esa import ESA
+from concept_extraction import tokenizer
 
 """
 Renaming -> 
@@ -127,7 +127,7 @@ class ClassificationESA:
     def get_classification_area_similarities_from_text(self, text, tfidf_extractor):
         start_time = time.time()
         if not self.tfidf_proportion == 0:
-            bow, tokens = esa_class.text_to_most_important_tokens(text, tfidf_extractor,
+            bow, tokens = tokenizer.text_to_most_important_tokens(text, tfidf_extractor,
                                                                   minimum_percentage=self.tfidf_proportion,
                                                                   also_return_all_tokens=True)
             text_vec = self.esa.get_text_vector_from_bow(bow)

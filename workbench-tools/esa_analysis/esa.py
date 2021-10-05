@@ -5,6 +5,8 @@ from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 from collections import Counter
 
+from concept_extraction import tokenizer
+
 
 class ESA:
     def __init__(self, db_path='../esa_data/esa.db', filter_with_tfidf=False):
@@ -62,9 +64,12 @@ class ESA:
 
     def get_text_vector(self, text):
         if self.filter_with_tfidf:
-            bow = text_to_most_important_tokens(text)
+            # bow = key_ex.text_to_most_important_tokens(text)
+            bow = tokenizer.text_to_tokens(text)
+            print("ERROR: No tfidf model!")
+            # ToDo: ERROR: No tfidf model!
         else:
-            bow = text_to_tokens(text)
+            bow = tokenizer.text_to_tokens(text)
         text_vec = self.get_text_vector_from_bow(bow)
         return text_vec
 
