@@ -12,6 +12,8 @@ import hashlib
 import datetime
 
 com_algorithm = "louvain"
+communities = None
+com = None
 
 try:
     import berttopic_utils as bt
@@ -37,12 +39,15 @@ except ModuleNotFoundError:
 
 
 def create_dashboard(server=None):
+    global communities
+    global com
+
     if server:
         base_string = "/dashapp"
     else:
         base_string = ""
 
-    #df_map = dash_utils.get_map_df()
+    df_map = dash_utils.get_map_df()
     df = pd.read_csv(config.TWEET_DATASET, sep=';', encoding='latin-1', error_bad_lines=False)
     df = df.drop_duplicates(subset=['Texto', 'Usuario'], keep="last").reset_index(drop=True)
     documents = bt.get_cleaned_documents(df)
@@ -55,7 +60,7 @@ def create_dashboard(server=None):
     df_ts = dash_utils.get_df_ts(df_ts_raw, days, sortedMH)
     df_ts_rt_raw, days_rt, sortedMH_rt = dash_utils.get_rt_temporalseries(df)
     df_ts_rt = dash_utils.get_df_ts(df_ts_rt_raw, days_rt, sortedMH_rt)
-    wc_main = dash_utils.wordcloudmain(df, config.WC_URL)
+    """wc_main = dash_utils.wordcloudmain(df, config.WC_URL)
     df_deg = dash_utils.get_degrees(df)
     df_sentiment = gu.sentiment_analyser((df))
     df_deg.to_csv("dashdeg.csv")
@@ -70,7 +75,7 @@ def create_dashboard(server=None):
 
     g_communities = cu.get_communities_representative_graph(G, communities)
     kcore_g = dash_utils.kcore_graph(df=df)
-    two_mode_g = dash_utils.get_two_mode_graph(df)
+    two_mode_g = dash_utils.get_two_mode_graph(df)"""
 
     submenu_1, submenu_2, submenu_3, submenu_4, submenu_5, submenu_6, submenu_7 = submenus.create_submenus(base_string)
     # link fontawesome to get the chevron icons
@@ -655,8 +660,10 @@ def create_dashboard(server=None):
         df_filtered = filter_by_date(df_filtered, start_date, end_date)
         topics = get_topics(input_key, file_contents)
         if len(topics) > 0 or start_date or end_date:
-            df_ts_raw, days, sortedMH = dash_utils.get_all_temporalseries(df_filtered, k=topics)
-            df_ts = dash_utils.get_df_ts(df_ts_raw, days, sortedMH)
+            df_ts_raw, days, sortedMH = dash_utils.get_all_temporalseries(df_filtered, keywords=topics)
+        else:
+            df_ts_raw, days, sortedMH = dash_utils.get_all_temporalseries(df_filtered)
+        df_ts = dash_utils.get_df_ts(df_ts_raw, days, sortedMH)
         if value_dd and len(value_dd) > 0:
             df_ts_filtered = df_ts[value_dd + ["date"]]
             return dash_utils.get_temporal_figure(df_ts_filtered, n_hashtags=hashtag_number)
@@ -681,8 +688,10 @@ def create_dashboard(server=None):
         df_filtered = filter_by_date(df_filtered, start_date, end_date)
         topics = get_topics(input_key, file_contents)
         if len(topics) > 0:
-            df_ts_raw, days, sortedMH = dash_utils.get_all_temporalseries(df_filtered, k=topics)
-            df_ts = dash_utils.get_df_ts(df_ts_raw, days, sortedMH)
+            df_ts_rt_raw, days, sortedMH = dash_utils.get_rt_temporalseries(df_filtered, keywords=topics)
+        else:
+            df_ts_rt_raw, days, sortedMH = dash_utils.get_rt_temporalseries(df_filtered, keywords=topics)
+        df_ts = dash_utils.get_df_ts(df_ts_rt_raw, days, sortedMH)
         if value_dd and len(value_dd) > 0:
             df_ts_filtered = df_ts[value_dd + ["date"]]
             return dash_utils.get_temporal_figure(df_ts_filtered, n_hashtags=hashtag_number)
@@ -703,7 +712,7 @@ def create_dashboard(server=None):
          dash.dependencies.Input('com_algorithm2', 'value')])
     def update_com_graph(value, algorithm):
         global com_algorithm
-        global communities
+        global commusnities
         if value == "all":
             com = g_communities
         else:
