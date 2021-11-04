@@ -8,6 +8,11 @@ password = "esa_pw"
 research_area_database = "esa_research_areas"
 sdg_database = "esa_sdgs"
 
+version_control = {
+    "research_areas": "0.1",
+    "sdgs": "2.0"
+}
+
 # TFIDF #
 tfidf_model_path = path.join(path.dirname(__file__), "application", "esa_blueprint", "static", "concept_extraction", "data", "tfidf_en.tfidf_model")
 tfidf_extractor = TfIdfExtractor(model_path=tfidf_model_path, tf_scaling="log")

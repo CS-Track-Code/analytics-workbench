@@ -4,7 +4,7 @@ import gc
 
 import config_esa
 
-preload_vectors = False
+preload_vectors = True
 
 host = config_esa.host
 user = config_esa.user
@@ -15,8 +15,10 @@ database_sdgs = config_esa.sdg_database
 
 databases = {
     "esa_research_areas": database_research_areas,
-    "esa_sdgs":database_sdgs
+    "esa_sdgs": database_sdgs
 }
+
+version_control = config_esa.version_control
 
 # TFIDF #
 tfidf_model_path = config_esa.tfidf_model_path
