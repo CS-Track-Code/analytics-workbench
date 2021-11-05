@@ -3,10 +3,18 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import SnowballStemmer
 
+nltk.download("stopwords")
+nltk.download('punkt')
+
+
+def split_to_tokens(text, lang):
+    t_tokens = nltk.word_tokenize(text, language=lang)
+    return t_tokens
+
 
 def split_to_tokens_without_stopwords(text, lang):
     sw = set(stopwords.words(lang))
-    t_tokens = nltk.word_tokenize(text, language=lang)
+    t_tokens = split_to_tokens(text, lang)
     t_tokens = [item.lower() for item in t_tokens if item not in sw and len(item) > 3 and not item.isdigit()]
     return t_tokens
 
