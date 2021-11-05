@@ -52,7 +52,7 @@ def get_project_data():
     content_loaded = json.loads(content)
 
     #TODO: !!!
-    if "ra_results" in content_loaded:
+    if content_loaded["ra_results"] is not None:
         needs_new = True
         if "version_control" in content_loaded["ra_results"]:
             if content_loaded["ra_results"]["version_control"] == config.version_control["research_areas"]:
@@ -75,7 +75,7 @@ def get_project_data():
 
             data_response = py_requests.post(url_data, data=data)
 
-    if "sdg_results" in content_loaded:
+    if content_loaded["sdg_results"] is not None:
         if "version_control" in content_loaded["sdg_results"]:
             if content_loaded["sdg_results"]["version_control"] == config.version_control["sdgs"]:
                 needs_new = False
