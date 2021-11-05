@@ -52,49 +52,51 @@ def get_project_data():
     content_loaded = json.loads(content)
 
     #TODO: !!!
-    needs_new = True
-    if "version_control" in content_loaded["ra_results"]:
-        if content_loaded["ra_results"]["version_control"] == config.version_control["research_areas"]:
+    if "ra_results" in content_loaded:
+        needs_new = True
+        if "version_control" in content_loaded["ra_results"]:
+            if content_loaded["ra_results"]["version_control"] == config.version_control["research_areas"]:
+                needs_new = False
+        elif config.version_control["research_areas"] is None:
             needs_new = False
-    elif config.version_control["research_areas"] is None:
-        needs_new = False
-    if needs_new:
-        data = {
-            "name": project_name,
-            "link": content_loaded["project_link"],
-            "description": content_loaded["project_description"]
-        }
-        url_new = config.backend_esa + "results"
-        backend_response = py_requests.post(url_new, data=data, timeout=125)
-        content = backend_response.content
-        config.version_control["research_areas"] = json.loads(content)["version_control"]
-        content_loaded["ra_results"] = json.loads(content)
-        data["ra_results"] = content
-        url_data = config.backend_data + "data/save-updates"
+        if needs_new:
+            data = {
+                "name": project_name,
+                "link": content_loaded["project_link"],
+                "description": content_loaded["project_description"]
+            }
+            url_new = config.backend_esa + "results"
+            backend_response = py_requests.post(url_new, data=data, timeout=125)
+            content = backend_response.content
+            config.version_control["research_areas"] = json.loads(content)["version_control"]
+            content_loaded["ra_results"] = json.loads(content)
+            data["ra_results"] = content
+            url_data = config.backend_data + "data/save-updates"
 
-        data_response = py_requests.post(url_data, data=data)
+            data_response = py_requests.post(url_data, data=data)
 
-    if "version_control" in content_loaded["sdg_results"]:
-        if content_loaded["sdg_results"]["version_control"] == config.version_control["sdgs"]:
+    if "sdg_results" in content_loaded:
+        if "version_control" in content_loaded["sdg_results"]:
+            if content_loaded["sdg_results"]["version_control"] == config.version_control["sdgs"]:
+                needs_new = False
+        elif config.version_control["sdgs"] is None:
             needs_new = False
-    elif config.version_control["sdgs"] is None:
-        needs_new = False
-    if needs_new:
-        data = {
-            "name": project_name,
-            "link": content_loaded["project_link"],
-            "description": content_loaded["project_description"]
-        }
-        url_new = config.backend_esa + "results"
-        data["classification_scheme"] = "sdgs"
-        backend_response = py_requests.post(url_new, data=data, timeout=125)
-        content = backend_response.content
-        config.version_control["sdgs"] = json.loads(content)["version_control"]
-        content_loaded["sdg_results"] = json.loads(content)
-        data["sdg_results"] = content
-        url_data = config.backend_data + "data/save-updates"
+        if needs_new:
+            data = {
+                "name": project_name,
+                "link": content_loaded["project_link"],
+                "description": content_loaded["project_description"]
+            }
+            url_new = config.backend_esa + "results"
+            data["classification_scheme"] = "sdgs"
+            backend_response = py_requests.post(url_new, data=data, timeout=125)
+            content = backend_response.content
+            config.version_control["sdgs"] = json.loads(content)["version_control"]
+            content_loaded["sdg_results"] = json.loads(content)
+            data["sdg_results"] = content
+            url_data = config.backend_data + "data/save-updates"
 
-        data_response = py_requests.post(url_data, data=data)
+            data_response = py_requests.post(url_data, data=data)
 
     content = json.dumps(content_loaded)
 
