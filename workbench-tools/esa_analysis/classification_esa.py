@@ -1,6 +1,6 @@
 from collections import Counter
 import numpy as np
-import mysql.connector
+import pymysql
 import time
 
 from esa_analysis.esa import ESA
@@ -22,29 +22,35 @@ class ClassificationESA:
             self.esa = esa
 
         try:
-            self.ra_con = mysql.connector.connect(
+            self.ra_con = pymysql.connect(
                 host=db_host,
                 user=db_user,
                 password=db_password,
-                database=db_name
+                database=db_name,
+                cursorclass=pymysql.cursors.DictCursor
             )
-        except mysql.connector.errors.ProgrammingError:
-            mydb = mysql.connector.connect(
-                host=db_host,
-                user=db_user,
-                password=db_password
-            )
-
-            mycursor = mydb.cursor(buffered=True)
-
-            mycursor.execute("CREATE DATABASE " + db_name)
-
-            self.ra_con = mysql.connector.connect(
+        except pymysql.ProgrammingError:
+            mydb = pymysql.connect(
                 host=db_host,
                 user=db_user,
                 password=db_password,
-                database=db_name
+                cursorclass=pymysql.cursors.DictCursor
             )
+
+            with mydb:
+                with mydb.cursor() as mycursor:
+
+                    mycursor.execute("CREATE DATABASE " + db_name)
+
+                    self.ra_con = pymysql.connect(
+                        host=db_host,
+                        user=db_user,
+                        password=db_password,
+                        database=db_name,
+                        cursorclass=pymysql.cursors.DictCursor
+                    )
+
+                    mydb.commit()
 
         self.db_name = db_name
 
@@ -63,6 +69,7 @@ class ClassificationESA:
         if 'absolute_value' not in tables:
             self.mycursor.execute('CREATE TABLE IF NOT EXISTS absolute_value (area_id INTEGER NOT NULL PRIMARY KEY, '
                                   'abs_val REAL NOT NULL)')
+            self.ra_con.commit()
 
         self.cutoff_in_relation_to_max = cutoff_in_relation_to_max
         self.top = top

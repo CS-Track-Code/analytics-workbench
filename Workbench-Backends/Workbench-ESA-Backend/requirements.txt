@@ -3,5 +3,5 @@ numpy~=1.19.5
 pandas~=1.1.5
 nltk~=3.4
 Werkzeug~=2.0.1
-mysql-connector-python~=8.0.23
 workbench-tools
+PyMySQL~=1.0.2

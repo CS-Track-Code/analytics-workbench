@@ -1,6 +1,6 @@
 import pandas as pd
 import copy
-import mysql.connector
+import pymysql
 import nltk
 from os import path
 
@@ -34,26 +34,29 @@ def init(data_base_name, table_base_name):
     nltk.download('punkt')
 
     try:
-        mydb = mysql.connector.connect(
+        mydb = pymysql.connect(
             host=config.host,
             user=config.user,
             password=config.password,
-            database=data_base_name
+            database=data_base_name,
+            cursorclass=pymysql.cursors.DictCursor
         )
 
         mycursor = mydb.cursor()
         print("connected")
 
-    except mysql.connector.errors.ProgrammingError:
-        mydb = mysql.connector.connect(
+    except pymysql.ProgrammingError:
+        mydb = pymysql.connect(
             host=config.host,
             user=config.user,
-            password=config.password
+            password=config.password,
+            cursorclass=pymysql.cursors.DictCursor
         )
 
-        mycursor = mydb.cursor(buffered=True)
+        mycursor = mydb.cursor()
 
         mycursor.execute("CREATE DATABASE " + data_base_name)
+        mydb.commit()
         print("created")
 
     mycursor.execute("SHOW TABLES")
@@ -75,6 +78,7 @@ def init(data_base_name, table_base_name):
     if table_base_name + '_vec' not in tables:
         mycursor.execute(
             "CREATE TABLE research_areas_wiki_vec (area_id INTEGER NOT NULL, article_id INTEGER NOT NULL, tf_idf REAL NOT NULL, PRIMARY KEY(area_id, article_id))")
+    mydb.commit()
 
     return mydb, mycursor
 
