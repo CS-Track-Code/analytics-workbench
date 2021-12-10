@@ -1,7 +1,6 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, request
 import requests as py_requests
 from werkzeug.wrappers import Response
-import json
 
 import config
 

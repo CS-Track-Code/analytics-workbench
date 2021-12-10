@@ -51,13 +51,15 @@ has_version_control = False
 def get_version_control():
     url_data = backend_esa + "version_control"
     data = {}
-    data_response = py_requests.get(url_data, data=data)
-    if data_response.status_code == 200:
-        content = json.loads(data_response.content)
-        version_control["sdgs"] = content["sdgs"]
-        version_control["research_areas"] = content["research_areas"]
-        has_version_control = True
-    pass
+    try:
+        data_response = py_requests.get(url_data, data=data)
+        if data_response.status_code == 200:
+            content = json.loads(data_response.content)
+            version_control["sdgs"] = content["sdgs"]
+            version_control["research_areas"] = content["research_areas"]
+            has_version_control = True
+    except py_requests.exceptions.ConnectionError:
+        print("Couldn't get version control")
 
 
 get_version_control()
