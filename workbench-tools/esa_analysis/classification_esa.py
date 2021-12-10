@@ -64,7 +64,8 @@ class ClassificationESA:
 
         tables = []
         for x in self.mycursor:
-            tables.append(x[0])
+            for entry in x:
+                tables.append(x[entry])
 
         if 'absolute_value' not in tables:
             self.mycursor.execute('CREATE TABLE IF NOT EXISTS absolute_value (area_id INTEGER NOT NULL PRIMARY KEY, '
@@ -97,7 +98,7 @@ class ClassificationESA:
             self.mycursor.execute('SELECT id, wos_category, wos_topic FROM research_areas;')
             self.classification_areas = []
             for row in self.mycursor.fetchall():
-                self.classification_areas.append([row[0], row[1], row[2]])
+                self.classification_areas.append([row["id"], row["wos_category"], row["wos_topic"]])
             print("~~ got classification areas in: " + str(time.time() - start_time))
         return self.classification_areas[min_row_id:]
 
@@ -118,7 +119,7 @@ class ClassificationESA:
 
         vec = {}
         for pair in self.mycursor.fetchall():
-            vec[pair[0]] = pair[1]
+            vec[pair["article_id"]] = pair["tf_idf"]
         return vec
 
     def get_classification_area_wikis(self, min_row_id=0):
@@ -127,7 +128,7 @@ class ClassificationESA:
             self.mycursor.execute('SELECT id, wos_category, wos_topic, wiki_name FROM research_areas_wiki;')
             self.classifiaction_area_wikis = []
             for row in self.mycursor.fetchall():
-                self.classifiaction_area_wikis.append([row[0], row[1], row[2], row[3]])
+                self.classifiaction_area_wikis.append([row["id"], row["wos_category"], row["wos_topic"], row["wiki_name"]])
             print("~~ got classification area wikis in: " + str(time.time() - start_time))
         return self.classifiaction_area_wikis[min_row_id:]
 
