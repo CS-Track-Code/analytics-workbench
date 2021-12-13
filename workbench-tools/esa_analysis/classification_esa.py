@@ -226,7 +226,7 @@ class ClassificationESA:
                                   str(classification_area_id) + ',' + str(classification_area_vec_abs_val) + ');')
             self.ra_con.commit()
         else:
-            classification_area_vec_abs_val = value_row[0]
+            classification_area_vec_abs_val = value_row["abs_val"]
         if classification_area_vec_abs_val == 0:
             classification_area = [line for line in self.get_classification_areas() if line[0] == classification_area_id]
             print("The absolute value of the classification area '" + classification_area[0][2] +
