@@ -220,7 +220,7 @@ class ClassificationESA:
     def get_abs_value_of_ca_vec(self, classification_area_id, vec):
         self.mycursor.execute('SELECT abs_val FROM absolute_value WHERE area_id = ' + str(classification_area_id) + ';')
         value_row = self.mycursor.fetchone()
-        if value_row is None:
+        if value_row is None or value_row == 0:
             classification_area_vec_abs_val = self.esa.abs_val_of_vec(vec)
             self.mycursor.execute('INSERT into absolute_value (area_id, abs_val) VALUES (' +
                                   str(classification_area_id) + ',' + str(classification_area_vec_abs_val) + ');')
