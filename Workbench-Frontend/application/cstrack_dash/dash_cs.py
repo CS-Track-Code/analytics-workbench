@@ -41,7 +41,7 @@ except ModuleNotFoundError:
 def create_dashboard(server=None):
     global communities
     global com
-
+    #Checking if the app is embedded in flask or not
     if server:
         base_string = "/dashapp"
     else:
