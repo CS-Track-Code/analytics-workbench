@@ -5,6 +5,9 @@
 # basedir = path.abspath(path.dirname(__file__))
 # load_dotenv(path.join(basedir, '.env'))
 
+import requests as py_requests
+import json
+
 
 class Config:
     """Base config."""
@@ -37,3 +40,26 @@ backend_ner = "http://localhost:5002/"
 backend_esa = "http://localhost:5003/"
 backend_data = "http://localhost:5004/"
 
+
+version_control = {
+    "sdgs": None,
+    "research_areas": None
+}
+has_version_control = False
+
+
+def get_version_control():
+    url_data = backend_esa + "version_control"
+    data = {}
+    try:
+        data_response = py_requests.get(url_data, data=data)
+        if data_response.status_code == 200:
+            content = json.loads(data_response.content)
+            version_control["sdgs"] = content["sdgs"]
+            version_control["research_areas"] = content["research_areas"]
+            has_version_control = True
+    except py_requests.exceptions.ConnectionError:
+        print("Couldn't get version control")
+
+
+get_version_control()

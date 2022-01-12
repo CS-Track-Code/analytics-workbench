@@ -45,7 +45,7 @@
             </div>
 
             <div id="sdg_distribution" class="card bg-light p-3 m-1 card_no_wrap card_big_font">
-                Top 20 SDGs
+                Top SDGs
                 <div id="sdg_dis_load"></div>
                 <canvas id="sdg_dist_chart_in" width="600" height="400"></canvas>
             </div>
@@ -451,6 +451,17 @@
             });
         }
 
+        var alert = document.createElement("div")
+        alert.className = "alert alert-info alert-dismissible fade show"
+        alert.role = "alert"
+
+        var close_alert = document.createElement("span")
+        close_alert.className = "closebtn"
+        close_alert.id = "closebtn"
+        close_alert.innerHTML = '<i class="fas fa-times"></i>'
+
+        alert.appendChild(close_alert)
+
         function update_network(vis_network){
             endloading("network_in")
             var new_network = filter_by_degree(vis_network)
@@ -472,17 +483,6 @@
                 clicked_in_network(params)
             })
             if (nodes.length === 0 && vis_projects["nodes"].length > 0){
-                var alert = document.createElement("div")
-                alert.className = "alert alert-info alert-dismissible fade show"
-                alert.role = "alert"
-
-                var close_alert = document.createElement("span")
-                close_alert.className = "closebtn"
-                close_alert.id = "closebtn"
-                close_alert.innerHTML = '<i class="fas fa-times"></i>'
-
-                alert.appendChild(close_alert)
-
                 var alert_text = document.createElement("span")
                 alert_text.innerText = "Your set filters resulted in an empty network. Please check your settings."
                 alert.appendChild(alert_text)
@@ -490,6 +490,11 @@
                 document.getElementById("alert_placeholder").appendChild(alert)
                 document.getElementById("closebtn").addEventListener("click", remove_alert)
             }
+        }
+
+        var remove_alert = function(e){
+            document.getElementById("closebtn").removeEventListener("click", remove_alert)
+            e.target.parentNode.parentNode.parentNode.removeChild(alert);
         }
 
         function set_up_node_options(nodes, filter=false){

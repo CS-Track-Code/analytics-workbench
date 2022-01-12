@@ -1,6 +1,3 @@
 Flask~=2.0.1
 requests~=2.26.0
 Werkzeug~=2.0.1
-WTForms~=2.3.3
-Flask-Mail
-email_validator

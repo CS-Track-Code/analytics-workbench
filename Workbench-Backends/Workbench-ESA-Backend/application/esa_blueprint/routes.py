@@ -124,7 +124,8 @@ def get_esa_results(description, classification_scheme, tfidf_cutoff, similarity
         "top_classification_areas_with_sim": classification_areas_similarity_shortlist,
         "classification_areas_with_sim_list": classification_areas_with_sim_list,
         "used_tokens": tokens,
-        "classification_scheme": classification_scheme
+        "classification_scheme": classification_scheme,
+        "version_control": config.version_control[classification_scheme]
     }
 
     return result
@@ -147,6 +148,17 @@ def get_sdgs():
     sdg_area_list = [r[2] for r in config.sdg_areas]
 
     json_result = json.dumps(sdg_area_list)
+    header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
+    response = Response(json_result, status=200, headers=header)
+    print(response)
+
+    return response
+
+
+@esa_bp.route("/version_control")
+def get_version_control():
+
+    json_result = json.dumps(config.version_control)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
     response = Response(json_result, status=200, headers=header)
     print(response)

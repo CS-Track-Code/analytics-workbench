@@ -1,11 +1,11 @@
 from collections import Counter
 import numpy as np
-import mysql.connector
+import pymysql
 import time
 import gc
 
-from esa_analysis import esa as esa_class
 from esa_analysis.esa import ESA
+from concept_extraction import tokenizer
 
 
 class ResearchAreasESA:
@@ -16,11 +16,12 @@ class ResearchAreasESA:
             self.esa = ESA(esa_db_path)
         else:
             self.esa = esa
-        self.ra_con = mysql.connector.connect(
+        self.ra_con = pymysql.connect(
             host=ra_db_host,
             user=ra_db_user,
             password=ra_db_password,
-            database=ra_db_name
+            database=ra_db_name,
+            cursorclass=pymysql.cursors.DictCursor
         )
 
         self.mycursor = self.ra_con.cursor()
@@ -37,6 +38,7 @@ class ResearchAreasESA:
         if 'absolute_value' not in tables:
             self.mycursor.execute('CREATE TABLE IF NOT EXISTS absolute_value (area_id INTEGER NOT NULL PRIMARY KEY, '
                                   'abs_val REAL NOT NULL)')
+            self.ra_con.commit()
 
         self.cutoff_in_relation_to_max = cutoff_in_relation_to_max
         self.top = top
@@ -97,7 +99,7 @@ class ResearchAreasESA:
     def get_research_area_similarities_from_text(self, text, tfidf_extractor):
         start_time = time.time()
         if not self.tfidf_proportion == 0:
-            bow, tokens = esa_class.text_to_most_important_tokens(text, tfidf_extractor,
+            bow, tokens = tokenizer.text_to_most_important_tokens(text, tfidf_extractor,
                                                                   minimum_percentage=self.tfidf_proportion,
                                                                   also_return_all_tokens=True)
             text_vec = self.esa.get_text_vector_from_bow(bow)

@@ -1,10 +1,10 @@
 from collections import Counter
 import numpy as np
-import mysql.connector
+import pymysql
 import time
 
-from esa_analysis import esa as esa_class
 from esa_analysis.esa import ESA
+from concept_extraction import tokenizer
 
 """
 Renaming -> 
@@ -22,29 +22,35 @@ class ClassificationESA:
             self.esa = esa
 
         try:
-            self.ra_con = mysql.connector.connect(
+            self.ra_con = pymysql.connect(
                 host=db_host,
                 user=db_user,
                 password=db_password,
-                database=db_name
+                database=db_name,
+                cursorclass=pymysql.cursors.DictCursor
             )
-        except mysql.connector.errors.ProgrammingError:
-            mydb = mysql.connector.connect(
-                host=db_host,
-                user=db_user,
-                password=db_password
-            )
-
-            mycursor = mydb.cursor(buffered=True)
-
-            mycursor.execute("CREATE DATABASE " + db_name)
-
-            self.ra_con = mysql.connector.connect(
+        except pymysql.ProgrammingError:
+            mydb = pymysql.connect(
                 host=db_host,
                 user=db_user,
                 password=db_password,
-                database=db_name
+                cursorclass=pymysql.cursors.DictCursor
             )
+
+            with mydb:
+                with mydb.cursor() as mycursor:
+
+                    mycursor.execute("CREATE DATABASE " + db_name)
+
+                    self.ra_con = pymysql.connect(
+                        host=db_host,
+                        user=db_user,
+                        password=db_password,
+                        database=db_name,
+                        cursorclass=pymysql.cursors.DictCursor
+                    )
+
+                    mydb.commit()
 
         self.db_name = db_name
 
@@ -58,11 +64,13 @@ class ClassificationESA:
 
         tables = []
         for x in self.mycursor:
-            tables.append(x[0])
+            for entry in x:
+                tables.append(x[entry])
 
         if 'absolute_value' not in tables:
             self.mycursor.execute('CREATE TABLE IF NOT EXISTS absolute_value (area_id INTEGER NOT NULL PRIMARY KEY, '
                                   'abs_val REAL NOT NULL)')
+            self.ra_con.commit()
 
         self.cutoff_in_relation_to_max = cutoff_in_relation_to_max
         self.top = top
@@ -90,7 +98,7 @@ class ClassificationESA:
             self.mycursor.execute('SELECT id, wos_category, wos_topic FROM research_areas;')
             self.classification_areas = []
             for row in self.mycursor.fetchall():
-                self.classification_areas.append([row[0], row[1], row[2]])
+                self.classification_areas.append([row["id"], row["wos_category"], row["wos_topic"]])
             print("~~ got classification areas in: " + str(time.time() - start_time))
         return self.classification_areas[min_row_id:]
 
@@ -111,7 +119,7 @@ class ClassificationESA:
 
         vec = {}
         for pair in self.mycursor.fetchall():
-            vec[pair[0]] = pair[1]
+            vec[pair["article_id"]] = pair["tf_idf"]
         return vec
 
     def get_classification_area_wikis(self, min_row_id=0):
@@ -120,14 +128,14 @@ class ClassificationESA:
             self.mycursor.execute('SELECT id, wos_category, wos_topic, wiki_name FROM research_areas_wiki;')
             self.classifiaction_area_wikis = []
             for row in self.mycursor.fetchall():
-                self.classifiaction_area_wikis.append([row[0], row[1], row[2], row[3]])
+                self.classifiaction_area_wikis.append([row["id"], row["wos_category"], row["wos_topic"], row["wiki_name"]])
             print("~~ got classification area wikis in: " + str(time.time() - start_time))
         return self.classifiaction_area_wikis[min_row_id:]
 
     def get_classification_area_similarities_from_text(self, text, tfidf_extractor):
         start_time = time.time()
         if not self.tfidf_proportion == 0:
-            bow, tokens = esa_class.text_to_most_important_tokens(text, tfidf_extractor,
+            bow, tokens = tokenizer.text_to_most_important_tokens(text, tfidf_extractor,
                                                                   minimum_percentage=self.tfidf_proportion,
                                                                   also_return_all_tokens=True)
             text_vec = self.esa.get_text_vector_from_bow(bow)
@@ -212,13 +220,13 @@ class ClassificationESA:
     def get_abs_value_of_ca_vec(self, classification_area_id, vec):
         self.mycursor.execute('SELECT abs_val FROM absolute_value WHERE area_id = ' + str(classification_area_id) + ';')
         value_row = self.mycursor.fetchone()
-        if value_row is None:
+        if value_row is None or value_row == 0:
             classification_area_vec_abs_val = self.esa.abs_val_of_vec(vec)
             self.mycursor.execute('INSERT into absolute_value (area_id, abs_val) VALUES (' +
                                   str(classification_area_id) + ',' + str(classification_area_vec_abs_val) + ');')
             self.ra_con.commit()
         else:
-            classification_area_vec_abs_val = value_row[0]
+            classification_area_vec_abs_val = value_row["abs_val"]
         if classification_area_vec_abs_val == 0:
             classification_area = [line for line in self.get_classification_areas() if line[0] == classification_area_id]
             print("The absolute value of the classification area '" + classification_area[0][2] +
