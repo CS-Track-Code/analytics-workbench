@@ -93,15 +93,28 @@ def mod_esa():
         name = request.form["name"]
         link = request.form["link"]
         description = request.form["description"]
-        ra_res = request.form["ra_res"]
+        if "ra_res" in request.form:
+            ra_res = request.form["ra_res"]
 
-        url_data = config.middleware + "esa/changes"
-        data = {
-            "name": name,
-            "link": link,
-            "description": description,
-            "ra_results": ra_res
-        }
+            url_data = config.middleware + "esa/changes"
+            data = {
+                "name": name,
+                "link": link,
+                "description": description,
+                "ra_results": ra_res,
+                "classification_scheme": "research_areas"
+            }
+        else:
+            sdg_res = request.form["sdg_res"]
+
+            url_data = config.middleware + "esa/changes"
+            data = {
+                "name": name,
+                "link": link,
+                "description": description,
+                "sdg_results": sdg_res,
+                "classification_scheme": "sdgs"
+            }
         data_response = py_requests.post(url_data, data=data)
         if data_response.status_code == 200:
             content = {

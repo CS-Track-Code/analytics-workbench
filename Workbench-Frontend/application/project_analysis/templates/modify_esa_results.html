@@ -105,15 +105,18 @@
 
         })
 
+        function classification_area_name_for_table(name){
+            if (classification_scheme === "sdgs" && sdg_names !== null) {
+                return sdg_names[name]
+            }
+            return name
+        }
+
         function set_up_tables(){
             research_areas_alph = []
             research_areas_cat = []
 
             all_results_of_classification_with_sim.forEach(function (row, index){
-                if (classification_scheme === "sdgs" && sdg_names !== null) {
-                    sdg_names[sdg_names[row[1]]] = row[1]
-                    row[1] = sdg_names[row[1]]
-                }
                 research_areas_alph.push(row)
                 research_areas_cat.push(row)
                 lookup[row[1]] = index
@@ -156,10 +159,6 @@
             for(var i = 0, len = best_results_of_classification.length; i < len; i++ ) {
                 if(best_results_of_classification[i][1] === classification_area) {
                     return true
-                } else if (classification_scheme == "sdgs") {
-                    if(best_results_of_classification[i][1] === sdg_names[classification_area]){
-                        return true
-                    }
                 }
             }
             return false
@@ -216,7 +215,7 @@
             newCell.innerHTML = id.toString()
             newRow.append(newCell);
             var caCell = document.createElement("td");
-            caCell.innerHTML = classification_area
+            caCell.innerHTML = classification_area_name_for_table(classification_area)
             newRow.append(caCell);
 
             var simCell = document.createElement("td");
@@ -326,14 +325,16 @@
             var link = localStorage["project-link"];
             var description = localStorage["project-description"];
             var res_name = ""
-            if (classification_scheme === "research_area"){
+            data = {"name": project_name, "link":link, "description":description}
+            if (classification_scheme === "research_areas"){
                 res_name = "ra_res"
             } else {
                 res_name = "sdg_res"
             }
             var res = JSON.parse(localStorage[res_name]);
             res["top_classification_areas_with_sim"] = best_results_of_classification;
-            $j.post("/analyse/project/modify_esa", {"name": project_name, "link":link, "description":description, res_name: JSON.stringify(res)}).done(function(res_save){
+            data[res_name] = JSON.stringify(res)
+            $j.post("/analyse/project/modify_esa", data).done(function(res_save){
                 var res_save_success = JSON.parse(res_save)["success"]
                 if (res_save_success === true){
                     localStorage[res_name] = JSON.stringify(res);
