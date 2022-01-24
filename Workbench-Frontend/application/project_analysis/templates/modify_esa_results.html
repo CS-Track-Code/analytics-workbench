@@ -111,6 +111,7 @@
 
             all_results_of_classification_with_sim.forEach(function (row, index){
                 if (classification_scheme === "sdgs" && sdg_names !== null) {
+                    sdg_names[row[1]] = row[1]
                     row[1] = sdg_names[row[1]]
                 }
                 research_areas_alph.push(row)
@@ -151,10 +152,14 @@
             })
         }
 
-        function check_if_best(research_area){
+        function check_if_best(classification_area){
             for(var i = 0, len = best_results_of_classification.length; i < len; i++ ) {
-                if( best_results_of_classification[i][1] === research_area ) {
+                if(best_results_of_classification[i][1] === classification_area) {
                     return true
+                } else if (classification_scheme == "sdgs") {
+                    if(best_results_of_classification[i][1] === sdg_names[classification_area]){
+                        return true
+                    }
                 }
             }
             return false
