@@ -111,7 +111,7 @@
 
             all_results_of_classification_with_sim.forEach(function (row, index){
                 if (classification_scheme === "sdgs" && sdg_names !== null) {
-                    sdg_names[row[1]] = row[1]
+                    sdg_names[sdg_names[row[1]]] = row[1]
                     row[1] = sdg_names[row[1]]
                 }
                 research_areas_alph.push(row)
