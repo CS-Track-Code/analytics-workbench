@@ -41,7 +41,7 @@ except ModuleNotFoundError:
 def create_dashboard(server=None):
     global communities
     global com
-
+    #Checking if the app is embedded in flask or not
     if server:
         base_string = "/dashapp"
     else:
@@ -60,7 +60,7 @@ def create_dashboard(server=None):
     df_ts = dash_utils.get_df_ts(df_ts_raw, days, sortedMH)
     df_ts_rt_raw, days_rt, sortedMH_rt = dash_utils.get_rt_temporalseries(df)
     df_ts_rt = dash_utils.get_df_ts(df_ts_rt_raw, days_rt, sortedMH_rt)
-    """wc_main = dash_utils.wordcloudmain(df, config.WC_URL)
+    wc_main = dash_utils.wordcloudmain(df, config.WC_URL)
     df_deg = dash_utils.get_degrees(df)
     df_sentiment = gu.sentiment_analyser((df))
     df_deg.to_csv("dashdeg.csv")
@@ -75,7 +75,7 @@ def create_dashboard(server=None):
 
     g_communities = cu.get_communities_representative_graph(G, communities)
     kcore_g = dash_utils.kcore_graph(df=df)
-    two_mode_g = dash_utils.get_two_mode_graph(df)"""
+    two_mode_g = dash_utils.get_two_mode_graph(df)
 
     submenu_1, submenu_2, submenu_3, submenu_4, submenu_5, submenu_6, submenu_7 = submenus.create_submenus(base_string)
     # link fontawesome to get the chevron icons
@@ -89,21 +89,23 @@ def create_dashboard(server=None):
         logo = "/static/dash/cstrack_logo.png"
     else:
         logo = app.get_asset_url("cstrack_logo.png")
-    sidebar = html.Div(
-        [
-            html.A('Back to Workbench', href=url_for("home_bp.startpage")),
+
+
+    sidebar_children =  [
             html.Hr(),
             dbc.Col(html.Img(src=logo, height='50px')),
             html.Hr(),
             html.P('Available graphs', className='lead'),
             dbc.Nav(
-                [dbc.NavLink('CS-Track stats', href='/dashapp/cstrack',
+                [dbc.NavLink('CS-Track stats', href=base_string + '/cstrack',
                                  active='exact')
                  ] + submenu_1 + submenu_2 + submenu_3 + submenu_4 + submenu_5 + submenu_6 + submenu_7,
                     vertical=True, pills=True),
-        ]
-
-        ,
+    ]
+    if server:
+        sidebar_children.insert(0,  html.A('Back to Workbench', href=url_for("home_bp.startpage")))
+    sidebar = html.Div(
+        sidebar_children,
         style=style.SIDEBAR_STYLE,
         id='sidebar',
     )
@@ -356,6 +358,7 @@ def create_dashboard(server=None):
             list_names = [hashlib.md5(str(name).encode()).hexdigest() for name in df_sentiment["Usuario"].tolist()]
             df_new_sent = df_sentiment.copy()
             del df_new_sent["Usuario"]
+            del df_new_sent["Texto"]
             df_new_sent.insert(0, "Name", list_names, True)
             html_plot = html.Div(children=[
                 dcc.Loading(
