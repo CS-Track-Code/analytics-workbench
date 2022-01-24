@@ -51,7 +51,9 @@ def get_project_data():
     content = data_response.content
     content_loaded = json.loads(content)
 
-    #TODO: !!!
+    if not config.has_version_control:
+        config.get_version_control()
+
     if content_loaded["ra_results"] is not None:
         needs_new = True
         if "version_control" in content_loaded["ra_results"]:
