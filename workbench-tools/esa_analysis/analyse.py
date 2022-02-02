@@ -219,7 +219,7 @@ def get_classification_areas_esa_with_dbpedia_integrated(text, host, user, passw
     unique_words (used bag of words for esa)
     """
 
-    classification_areas_esa.edit_cutoff(cutoff_in_relation_to_max=None)
+    classification_areas_esa.edit_cutoff(cutoff_in_relation_to_max=None, cutoff=None)
 
     classification_areas_with_sim_list, classification_areas, categories_with_count, top_category, db_classification_areas, tokens = \
         get_classification_areas_esa_with_dbpedia(text, host, user, password, database, tfidf_extractor,
