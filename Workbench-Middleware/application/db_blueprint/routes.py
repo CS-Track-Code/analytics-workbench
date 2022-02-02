@@ -78,6 +78,7 @@ def get_project_data():
             data_response = py_requests.post(url_data, data=data)
 
     if content_loaded["sdg_results"] is not None:
+        needs_new = True
         if "version_control" in content_loaded["sdg_results"]:
             if content_loaded["sdg_results"]["version_control"] == config.version_control["sdgs"]:
                 needs_new = False
