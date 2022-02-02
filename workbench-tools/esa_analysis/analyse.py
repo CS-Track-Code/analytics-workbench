@@ -234,7 +234,7 @@ def get_classification_areas_esa_with_dbpedia_integrated(text, host, user, passw
 
     if cutoff_in_rel_to_max:
         max_sim = classification_areas_with_sim_list[0][2]
-        cutoff = max_sim * cutoff_in_rel_to_max
+        cutoff = max_sim * cutoff
     classification_areas_similarity_shortlist = [ras for ras in classification_areas_with_sim_list if ras[2] > cutoff]
 
     categories = [ras[0] for ras in classification_areas_similarity_shortlist]
