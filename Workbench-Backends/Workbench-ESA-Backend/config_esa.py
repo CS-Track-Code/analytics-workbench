@@ -26,10 +26,13 @@ esa_db_path = "application/esa_blueprint/static/esa/esa_data/esa.db"
 esa_cutoffs = {
     "esa_research_areas": {
         "esa_tf_proportion": 0.2,
-        "esa_cutoff_in_relation_to_max": 0.75
+        "esa_cutoff_in_relation_to_max": True,
+        "esa_cutoff": 0.75
     },
     "esa_sdgs": {
         "esa_tf_proportion": 0.2,
-        "esa_cutoff_in_relation_to_max": 0.9
+        "esa_cutoff_in_relation_to_max": False,
+        "esa_cutoff": 0.2
+        # TODO: Fixer Cutoff
     }
 }

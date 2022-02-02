@@ -25,6 +25,7 @@ def results():
             else "research_areas"
 
         tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+        relative_cutoff = request.form["relative_cutoff"] if "relative_cutoff" in request.form else None
         similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
 
         print("## ANALYSE" + classification_scheme + " ##\n" + name)
@@ -41,7 +42,7 @@ def results():
             except ValueError:
                 tfidf_cutoff = None
 
-        result = get_esa_results(description, classification_scheme, tfidf_cutoff, similarity_cutoff)
+        result = get_esa_results(description, classification_scheme, tfidf_cutoff, relative_cutoff, similarity_cutoff)
 
         json_result = json.dumps(result)
         header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
@@ -61,11 +62,12 @@ def esa_results():
     description = request.form["description"]
 
     tfidf_cutoff = request.form["tfidf_cutoff"] if "tfidf_cutoff" in request.form else None
+    relative_cutoff = request.form["relative_cutoff"] if "relative_cutoff" in request.form else None
     similarity_cutoff = request.form["similarity_cutoff"] if "similarity_cutoff" in request.form else None
 
     print("## ANALYSE ##\n" + name)
 
-    result = get_esa_results(description, "research_areas", tfidf_cutoff, similarity_cutoff)
+    result = get_esa_results(description, "research_areas", tfidf_cutoff, relative_cutoff, similarity_cutoff)
 
     json_result = json.dumps(result)
     header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5001"}
@@ -95,7 +97,7 @@ def sdg_results():
     return response
 
 
-def get_esa_results(description, classification_scheme, tfidf_cutoff, similarity_cutoff):
+def get_esa_results(description, classification_scheme, tfidf_cutoff, relative_cutoff, similarity_cutoff):
     if classification_scheme == "sdgs":
         database = config.database_sdgs
     else:
@@ -105,12 +107,15 @@ def get_esa_results(description, classification_scheme, tfidf_cutoff, similarity
 
     tfidf_cutoff = tfidf_cutoff if isinstance(tfidf_cutoff, float) and 0 <= tfidf_cutoff < 1 \
         else config.esa_cutoffs[database]["esa_tf_proportion"]
-    similarity_cutoff = similarity_cutoff if isinstance(similarity_cutoff, float) and 0 <= similarity_cutoff < 1 \
+    relative_cutoff = relative_cutoff if isinstance(similarity_cutoff, bool) \
         else config.esa_cutoffs[database]["esa_cutoff_in_relation_to_max"]
+    similarity_cutoff = similarity_cutoff if isinstance(similarity_cutoff, float) and 0 <= similarity_cutoff < 1 \
+        else config.esa_cutoffs[database]["esa_cutoff"]
 
     classification_esa = analyse.setup_classification_area_esa(classification_esa, config.host, config.user,
                                                                config.password, database, edits=True, top=None,
-                                                               cutoff_in_relation_to_max=similarity_cutoff,
+                                                               cutoff_in_relation_to_max=relative_cutoff,
+                                                               cutoff=similarity_cutoff,
                                                                sort=True, tfidf_proportion=tfidf_cutoff)
 
     classification_areas_similarity_shortlist, classification_areas_with_sim_list, categories_with_count, \
@@ -118,7 +123,7 @@ def get_esa_results(description, classification_scheme, tfidf_cutoff, similarity
         analyse.get_classification_areas_esa_with_dbpedia_integrated(description, config.host, config.user,
                                                                      config.password, database,
                                                                      config.tfidf_extractor, classification_esa,
-                                                                     similarity_cutoff)
+                                                                     relative_cutoff, similarity_cutoff)
 
     result = {
         "top_classification_areas_with_sim": classification_areas_similarity_shortlist,

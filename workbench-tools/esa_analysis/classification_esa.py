@@ -14,8 +14,8 @@ research areas -> classification areas
 
 class ClassificationESA:
     def __init__(self, esa_db_path, db_host, db_user, db_password, db_name, classification_areas=None,
-                 classifiaction_area_wikis=None, classification_area_vectors=None, cutoff_in_relation_to_max=0.75,
-                 top=None, sort=True, tfidf_proportion=0.2, esa=None, load_all_vectors=True):
+                 classification_area_wikis=None, classification_area_vectors=None, cutoff_in_relation_to_max=True,
+                 cutoff=0.75, top=None, sort=True, tfidf_proportion=0.2, esa=None, load_all_vectors=True):
         if esa is None:
             self.esa = ESA(esa_db_path)
         else:
@@ -56,7 +56,7 @@ class ClassificationESA:
 
         self.mycursor = self.ra_con.cursor()
         self.classification_areas = classification_areas
-        self.classifiaction_area_wikis = classifiaction_area_wikis
+        self.classification_area_wikis = classification_area_wikis
         self.classification_area_vectors = classification_area_vectors
         self.load_all_vectors = load_all_vectors
 
@@ -73,12 +73,14 @@ class ClassificationESA:
             self.ra_con.commit()
 
         self.cutoff_in_relation_to_max = cutoff_in_relation_to_max
+        self.cutoff = cutoff
         self.top = top
         self.sort = sort
         self.tfidf_proportion = tfidf_proportion
 
-    def edit_cutoff(self, cutoff_in_relation_to_max):
+    def edit_cutoff(self, cutoff_in_relation_to_max, cutoff):
         self.cutoff_in_relation_to_max = cutoff_in_relation_to_max
+        self.cutoff = cutoff
 
     def edit_top(self, top):
         self.top = top
@@ -123,14 +125,14 @@ class ClassificationESA:
         return vec
 
     def get_classification_area_wikis(self, min_row_id=0):
-        if self.classifiaction_area_wikis is None:
+        if self.classification_area_wikis is None:
             start_time = time.time()
             self.mycursor.execute('SELECT id, wos_category, wos_topic, wiki_name FROM research_areas_wiki;')
-            self.classifiaction_area_wikis = []
+            self.classification_area_wikis = []
             for row in self.mycursor.fetchall():
-                self.classifiaction_area_wikis.append([row["id"], row["wos_category"], row["wos_topic"], row["wiki_name"]])
+                self.classification_area_wikis.append([row["id"], row["wos_category"], row["wos_topic"], row["wiki_name"]])
             print("~~ got classification area wikis in: " + str(time.time() - start_time))
-        return self.classifiaction_area_wikis[min_row_id:]
+        return self.classification_area_wikis[min_row_id:]
 
     def get_classification_area_similarities_from_text(self, text, tfidf_extractor):
         start_time = time.time()
@@ -189,7 +191,10 @@ class ClassificationESA:
             classification_areas_similarity.append([classification_area_category, classification_area_topic, sim])
 
         if self.cutoff_in_relation_to_max is not None:
-            cutoff = max_sim * self.cutoff_in_relation_to_max
+            if self.cutoff_in_relation_to_max:
+                cutoff = max_sim * self.cutoff_in_relation_to_max
+            else:
+                cutoff = self.cutoff
             classification_areas_similarity = [cas for cas in classification_areas_similarity if cas[2] > cutoff]
 
         categories = [cas[0] for cas in classification_areas_similarity]

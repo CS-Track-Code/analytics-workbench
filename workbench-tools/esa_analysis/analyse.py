@@ -58,17 +58,18 @@ def keywords_plain_dbpedia(dbpedia_list):
     return db_keywords
 
 
-def setup_research_area(research_areas_esa, host, user, password, database, edits, top, cutoff_in_relation_to_max, sort,
-                        tfidf_proportion):
+def setup_research_area(research_areas_esa, host, user, password, database, edits, top, cutoff_in_relation_to_max,
+                        cutoff, sort, tfidf_proportion):
     """ deprecated """
     return setup_classification_area_esa(research_areas_esa, host, user, password, database, edits, top,
-                                         cutoff_in_relation_to_max, sort, tfidf_proportion)
+                                         cutoff_in_relation_to_max, cutoff, sort, tfidf_proportion)
 
 
 def setup_classification_area_esa(classification_areas_esa, host, user, password, database, edits, top,
-                                  cutoff_in_relation_to_max, sort, tfidf_proportion):
+                                  cutoff_in_relation_to_max, cutoff, sort, tfidf_proportion):
     """
 
+    :param cutoff:
     :param database:
     :param password:
     :param user:
@@ -86,10 +87,10 @@ def setup_classification_area_esa(classification_areas_esa, host, user, password
     """
     if classification_areas_esa is None:
         classification_areas_esa = ClassificationESA("esa_data/esa.db", host, user, password, database,
-                                                     cutoff_in_relation_to_max=cutoff_in_relation_to_max,
+                                                     cutoff_in_relation_to_max=cutoff_in_relation_to_max, cutoff=cutoff,
                                                      sort=sort, tfidf_proportion=tfidf_proportion, top=None)
     elif edits:
-        classification_areas_esa.edit_cutoff(cutoff_in_relation_to_max)
+        classification_areas_esa.edit_cutoff(cutoff_in_relation_to_max, cutoff)
         classification_areas_esa.edit_sort(sort)
         classification_areas_esa.edit_tfidf(tfidf_proportion)
         classification_areas_esa.edit_top(top)
@@ -98,13 +99,13 @@ def setup_classification_area_esa(classification_areas_esa, host, user, password
 
 
 def get_research_areas_esa(text, host, user, password, database, tfidf_extractor, research_areas_esa=None, edits=False,
-                           top=None, cutoff_in_relation_to_max=None, sort=True, tfidf_proportion=0.2):
+                           top=None, cutoff_in_relation_to_max=None, cutoff=0.75, sort=True, tfidf_proportion=0.2):
     return get_classification_areas_esa(text, host, user, password, database, tfidf_extractor, research_areas_esa, edits,
-                                        top, cutoff_in_relation_to_max, sort, tfidf_proportion)
+                                        top, cutoff_in_relation_to_max, cutoff, sort, tfidf_proportion)
 
 
 def get_classification_areas_esa(text, host, user, password, database, tfidf_extractor, classification_areas_esa=None,
-                                 edits=False, top=None, cutoff_in_relation_to_max=None, sort=True,
+                                 edits=False, top=None, cutoff_in_relation_to_max=None, cutoff=0.75, sort=True,
                                  tfidf_proportion=0.2):
     """
 
@@ -132,7 +133,7 @@ def get_classification_areas_esa(text, host, user, password, database, tfidf_ext
     bow (used bag of words for esa)
     """
     classification_areas_esa = setup_classification_area_esa(classification_areas_esa, host, user, password, database, edits,
-                                                             top, cutoff_in_relation_to_max, sort, tfidf_proportion)
+                                                             top, cutoff_in_relation_to_max, cutoff, sort, tfidf_proportion)
 
     classification_areas_with_sim_list, classification_areas, categories_with_count, top_category, bow = \
         classification_areas_esa.get_classification_area_similarities_from_text(text, tfidf_extractor)
@@ -143,15 +144,15 @@ def get_classification_areas_esa(text, host, user, password, database, tfidf_ext
 
 
 def get_research_areas_esa_with_dbpedia(text, host, user, password, database, tfidf_extractor, research_areas_esa=None,
-                                        edits=False, top=None, cutoff_in_relation_to_max=None, sort=True,
+                                        edits=False, top=None, cutoff_in_relation_to_max=None, cutoff=0.75, sort=True,
                                         tfidf_proportion=0.25):
     return get_classification_areas_esa_with_dbpedia(text, host, user, password, database, tfidf_extractor, research_areas_esa,
-                                                     edits, top, cutoff_in_relation_to_max, sort, tfidf_proportion)
+                                                     edits, top, cutoff_in_relation_to_max, cutoff, sort, tfidf_proportion)
 
 
 def get_classification_areas_esa_with_dbpedia(text, host, user, password, database, tfidf_extractor,
                                               classification_areas_esa=None, edits=False, top=None,
-                                              cutoff_in_relation_to_max=None, sort=True, tfidf_proportion=0.25):
+                                              cutoff_in_relation_to_max=None, cutoff=0.75, sort=True, tfidf_proportion=0.25):
     """
 
     :param tfidf_extractor:
@@ -175,7 +176,7 @@ def get_classification_areas_esa_with_dbpedia(text, host, user, password, databa
     bow (used bag of words for esa)
     """
     classification_areas_esa = setup_classification_area_esa(classification_areas_esa, host, user, password, database, edits, top,
-                                                             cutoff_in_relation_to_max, sort, tfidf_proportion)
+                                                             cutoff_in_relation_to_max, cutoff, sort, tfidf_proportion)
 
     try:
         db_list = keyword_extraction_dbpedia(text, "en")
@@ -191,13 +192,13 @@ def get_classification_areas_esa_with_dbpedia(text, host, user, password, databa
 
 
 def get_research_areas_esa_with_dbpedia_integrated(text, host, user, password, database, tfidf_extractor,
-                                                   research_areas_esa, cutoff_in_rel_to_max=0.75):
+                                                   research_areas_esa, cutoff_in_rel_to_max=True, cutoff=0.75):
     return get_classification_areas_esa_with_dbpedia_integrated(text, host, user, password, database, tfidf_extractor,
-                                                                research_areas_esa, cutoff_in_rel_to_max)
+                                                                research_areas_esa, cutoff_in_rel_to_max, cutoff)
 
 
 def get_classification_areas_esa_with_dbpedia_integrated(text, host, user, password, database, tfidf_extractor,
-                                                         classification_areas_esa, cutoff_in_rel_to_max=0.75):
+                                                         classification_areas_esa, cutoff_in_rel_to_max=True, cutoff=0.75):
     """
     method made specifically for workbench application, returns the complete list of all classification areas additionally
     to the shortened list (using the cutoff). Used to give users the option to modify the results.
@@ -231,9 +232,9 @@ def get_classification_areas_esa_with_dbpedia_integrated(text, host, user, passw
     counts = Counter([i for i in tokens])
     unique_words = list({i: i for i in tokens}.values())
 
-    max_sim = classification_areas_with_sim_list[0][2]
-
-    cutoff = max_sim * cutoff_in_rel_to_max
+    if cutoff_in_rel_to_max:
+        max_sim = classification_areas_with_sim_list[0][2]
+        cutoff = max_sim * cutoff_in_rel_to_max
     classification_areas_similarity_shortlist = [ras for ras in classification_areas_with_sim_list if ras[2] > cutoff]
 
     categories = [ras[0] for ras in classification_areas_similarity_shortlist]

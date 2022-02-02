@@ -132,7 +132,7 @@
 
         function update_research_areas(){
             endloading("ra_best_rows")
-            if (best_research_areas != null){
+            if (best_research_areas != null && best_research_areas.length > 0){
                 for (var i=0; i<best_research_areas.length; i++){
                     var newRow = document.createElement("tr");
                     var newCell = document.createElement("th");
@@ -169,7 +169,7 @@
 
         function update_sdgs(){
             endloading("sdg_best_rows")
-            if (best_sdgs != null){
+            if (best_sdgs != null && best_sdgs.length > 0){
                 for (var i=0; i<best_sdgs.length; i++){
                     var newRow = document.createElement("tr");
                     var newCell = document.createElement("th");
@@ -198,7 +198,7 @@
                 newCell.innerHTML = ""
                 newRow.append(newCell);
                 var neCell = document.createElement("td");
-                neCell.innerHTML = "no results available"
+                neCell.innerHTML = "No SDGs assigned"
                 newRow.append(neCell);
                 var typeCell = document.createElement("td");
                 typeCell.innerHTML = ""
@@ -210,7 +210,7 @@
 
         function update_named_entities(){
             endloading("ner_rows")
-            if (named_entities != null){
+            if (named_entities != null && named_entities.length > 0){
                 for (var i=0; i<named_entities.length; i++){
                     var newRow = document.createElement("tr");
                     var newCell = document.createElement("th");
