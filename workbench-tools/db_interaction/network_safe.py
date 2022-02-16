@@ -168,7 +168,7 @@ class Safe:
     def get_project_recommendations(self, fave_list=[], modified_list=[], visited_list=[], new_first=True):
         network = self.get_complete_network()
         nodes = network.nodes
-        project_nodes = [node for node in nodes if network.nodes[node]["group"]=="project"]
+        project_nodes = [node for node in nodes if network.nodes[node]["group"] == "project"]
 
         personalization = {}
         if not fave_list == modified_list == visited_list is None:
@@ -180,7 +180,10 @@ class Safe:
                 personalization[project] = 3
 
         if len(personalization) > 0:
-            ppr = nx.pagerank(self.get_complete_network(), personalization=personalization)
+            try:
+                ppr = nx.pagerank(self.get_complete_network(), personalization=personalization)
+            except ZeroDivisionError:
+                ppr = nx.pagerank(self.get_complete_network())
         else:
             ppr = nx.pagerank(self.get_complete_network())
 
