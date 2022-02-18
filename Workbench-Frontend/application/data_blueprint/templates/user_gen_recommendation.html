@@ -179,10 +179,21 @@
             button.value = recommended
             button.className = "project_button btn btn-outline-secondary"
             button.innerText = "visit"
-            button.addEventListener('click', clicked_project)
+            button.addEventListener('click', clicked_project_new_tab)
             card.appendChild(button)
             document.getElementById(div_id).appendChild(card);
         }
+
+        var clicked_project_new_tab = function(e){
+        var project_name
+        if (e.target.type === "button") {
+            project_name = e.target.value
+        } else {
+            project_name = e.target.parentNode.value
+        }
+
+        navigate_to_analysed_project(project_name, true)
+    }
 
     </script>
 {% endblock %}
