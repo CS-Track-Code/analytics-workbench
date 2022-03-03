@@ -25,22 +25,25 @@ def keyword_extraction_dbpedia(text, lang):
 
     word_tokenlist = [item["word"] for item in token_list]
 
-    db_result = dbpedia_ex.extract(word_tokenlist)
-    dbpedia_list = [[word, tf, surface_form, types] for word, tf, surface_form, types in
-                    zip(db_result['word'], db_result['tf'],
-                        db_result['surface_form'], db_result['types'])]
+    try:
+        db_result = dbpedia_ex.extract(word_tokenlist)
+        dbpedia_list = [[word, tf, surface_form, types] for word, tf, surface_form, types in
+                        zip(db_result['word'], db_result['tf'],
+                            db_result['surface_form'], db_result['types'])]
 
-    dbpedia_list_unique = []
-    for item in dbpedia_list:
-        item_not_in_unique_list = True
-        for unique_item in dbpedia_list_unique:
-            if item[0] == unique_item[0]:
-                unique_item[1] = unique_item[1] + item[1]
-                item_not_in_unique_list = False
-        if item_not_in_unique_list:
-            dbpedia_list_unique.append(item)
+        dbpedia_list_unique = []
+        for item in dbpedia_list:
+            item_not_in_unique_list = True
+            for unique_item in dbpedia_list_unique:
+                if item[0] == unique_item[0]:
+                    unique_item[1] = unique_item[1] + item[1]
+                    item_not_in_unique_list = False
+            if item_not_in_unique_list:
+                dbpedia_list_unique.append(item)
 
-    sorted_dbpedia_list = sorted(dbpedia_list_unique, key=lambda item: item[1], reverse=True)
+        sorted_dbpedia_list = sorted(dbpedia_list_unique, key=lambda item: item[1], reverse=True)
+    except ConnectionError:
+        sorted_dbpedia_list = []
 
     del dbpedia_ex
 

@@ -98,7 +98,10 @@ class MongoInterface:
             prefix = self.user_prefix
 
         if project_description is not None and project_description != existing_project_data["description"]:
-            self.data_collection.update_one({"_id": project_id}, {'$set': {"description": project_description}})
+            self.data_collection.update_one({"_id": project_id}, {'$set': {"description": project_description},
+                                                                  "$unset": {"ra_results": 1,
+                                                                             "sdg_results": 1,
+                                                                             "ner_results": 1}})
 
         analysis_results = {}
         if ra_results is not None:
