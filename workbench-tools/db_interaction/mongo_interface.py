@@ -1,4 +1,6 @@
 import pymongo
+import time
+import datetime
 
 
 class MongoInterface:
@@ -103,16 +105,16 @@ class MongoInterface:
                                                                              "sdg_results": 1,
                                                                              "ner_results": 1}})
 
-        analysis_results = {}
+        st = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
         if ra_results is not None:
+            ra_results["save_time"] = st
             self.data_collection.update_one({"_id": project_id}, {'$set': {prefix + "ra_results": ra_results}})
         if sdg_results is not None:
+            sdg_results["save_time"] = st
             self.data_collection.update_one({"_id": project_id}, {'$set': {prefix + "sdg_results": sdg_results}})
         if ner_results is not None:
+            ner_results["save_time"] = st
             self.data_collection.update_one({"_id": project_id}, {'$set': {prefix + "ner_results": ner_results}})
-
-        if len(analysis_results) > 0:
-            self.data_collection.update_one({"_id": project_id}, {'$set': analysis_results})
 
     def get_projects_with_user_generated_data(self):
         project_list = self.data_collection.find()
