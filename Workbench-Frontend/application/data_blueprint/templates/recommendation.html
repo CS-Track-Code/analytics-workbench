@@ -1,7 +1,9 @@
 
 <div class="sidebar" id="mySidebar">
     <div>
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <button type="button" class="btn btn-light" id="close_sidebar" onclick="closeNav()">&#9776; Minimize</button>
+        <br/>
+
         <span id="rec_descriptor"></span>
         <button type="button" class="btn" id="rec_help" data-toggle="tooltip" data-placement="right" title="More about recommendations">
             <i class="far fa-question-circle"></i>
@@ -17,17 +19,27 @@
 <script>
     $j = jQuery.noConflict();
 
+    var showing_sidebar
     $j(document).ready(function (){
-        init_recommendations()
-        get_recommendations(6, "recommendations")
+        if ("showing_sidebar" in localStorage){
+            showing_sidebar = localStorage["showing_sidebar"]
+        } else {
+            showing_sidebar = "true"
+            localStorage["showing_sidebar"] = showing_sidebar
+        }
 
-        get_tba_projects()
+        if (showing_sidebar === "true") {
+            openNav()
+        }
+
+        init_recommendations()
 
         $('[data-toggle="tooltip"]').tooltip();
-        close_sidebar()
     });
 
     function close_sidebar(){
+        showing_sidebar = "false"
+        localStorage["showing_sidebar"] = showing_sidebar
         const tba_node = document.getElementById("projects-tba");
         while (tba_node.firstChild) {
             tba_node.removeChild(tba_node.lastChild);
@@ -44,8 +56,10 @@
     }
 
     function open_sidebar(){
-        set_up_tba_projects()
+        showing_sidebar = "true"
+        localStorage["showing_sidebar"] = showing_sidebar
         get_recommendations(6, "recommendations")
+        get_tba_projects()
     }
 
     function get_tba_projects(){
@@ -53,7 +67,7 @@
             request_tba_projects()
         } else if (JSON.parse(localStorage["used_tba"]) > 1){
             request_tba_projects()
-        } else {
+        } else{
             set_up_tba_projects()
         }
     }

@@ -18,6 +18,12 @@ body {
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
 }
 
+#close_sidebar{
+    top: 58px;
+    left: 15px;
+    position: absolute;
+}
+
 /* Position and style the close button (top right corner) */
 .sidebar .closebtn {
     position: absolute;
