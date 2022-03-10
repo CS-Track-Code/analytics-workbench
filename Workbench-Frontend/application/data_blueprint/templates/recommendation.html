@@ -1,13 +1,14 @@
 
-<div class="sidebar">
+<div class="sidebar" id="mySidebar">
     <div>
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <span id="rec_descriptor"></span>
         <button type="button" class="btn" id="rec_help" data-toggle="tooltip" data-placement="right" title="More about recommendations">
             <i class="far fa-question-circle"></i>
         </button>
         <div id="recommendations"></div>
         <br><br>
-        <span id="tba_descriptor">Help adding to the database and work on one of these projects:</span>
+        <span id="tba_descriptor"></span>
         <div id="projects-tba"></div>
     </div>
 </div>
@@ -23,7 +24,29 @@
         get_tba_projects()
 
         $('[data-toggle="tooltip"]').tooltip();
+        close_sidebar()
     });
+
+    function close_sidebar(){
+        const tba_node = document.getElementById("projects-tba");
+        while (tba_node.firstChild) {
+            tba_node.removeChild(tba_node.lastChild);
+        }
+        document.getElementById("tba_descriptor").innerText = ""
+
+        document.getElementById("rec_descriptor").innerText = ""
+            document.getElementById("rec_help").title = ""
+
+        const rec_node = document.getElementById("recommendations");
+        while (rec_node.firstChild) {
+            rec_node.removeChild(rec_node.lastChild);
+        }
+    }
+
+    function open_sidebar(){
+        set_up_tba_projects()
+        get_recommendations(6, "recommendations")
+    }
 
     function get_tba_projects(){
         if (!("tba_projects" in localStorage)){
@@ -60,6 +83,8 @@
         }
         if (max === 0){
             document.getElementById("tba_descriptor").innerText = "There are currently no unanalyzed Projects in the Database."
+        } else {
+            document.getElementById("tba_descriptor").innerText = "Help adding to the database and work on one of these projects:."
         }
     }
 

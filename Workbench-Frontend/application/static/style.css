@@ -5,7 +5,7 @@ body {
 /* The sidebar menu */
 .sidebar {
     height: 100%; /* Full-height: remove this if you want "auto" height */
-    width: 12%;
+    width: 0; /* 0 width - change this with JavaScript */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
@@ -15,6 +15,29 @@ body {
     padding-top: 75px;
     padding-left: 10px;
     color: #FFFFFF;
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidebar */
+}
+
+/* Position and style the close button (top right corner) */
+.sidebar .closebtn {
+    position: absolute;
+    top: 50px;
+    left: 5px;
+    font-size: 36px;
+    /*margin-left: 50px;*/
+}
+
+/* The button used to open the sidebar */
+.openbtn {
+    position: fixed;
+    height: 100%;
+    top: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #235476;
+    color: white;
+    padding: 10px 15px;
+    border: none;
 }
 
 #recommendations {
@@ -32,6 +55,12 @@ body {
 @media screen and (max-height: 450px) {
     .sidebar {padding-top: 15px;}
     .sidebar a {font-size: 18px;}
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s; /* If you want a transition effect */
+  padding: 20px;
 }
 
 main {
@@ -156,6 +185,14 @@ header {
     position: relative;
 }
 
+#buttons-right-align {
+    text-align: right;
+}
+
+#analysis-results-title-table {
+    width: 100%;
+}
+
 .btn_apply {
     position: absolute;
     margin-bottom: 20px;
@@ -167,13 +204,13 @@ header {
     right: 10px;
     top: 15px;
 }
-
+/*
 .btn_send2 {
     position: absolute;
     right: 10px;
     top: 0;
 }
-
+*/
 .filter_network_table {
     margin-bottom: 10px;
 }
