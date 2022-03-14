@@ -1,5 +1,8 @@
 body {
     background: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* The sidebar menu */
@@ -85,7 +88,6 @@ header {
 }
 
 .footer {
-    bottom: 0;
     width: 100%;
     margin-top: auto;
     margin-right: auto;
