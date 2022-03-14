@@ -118,11 +118,11 @@ header {
     color: #1A171B;
 }
 
-#buttonProjectInput {
+/*#buttonProjectInput {
     padding: 3px;
     font-family: monospace;
     margin-left: 5%;
-}
+}*/
 
 #project_description {
     height: auto;
