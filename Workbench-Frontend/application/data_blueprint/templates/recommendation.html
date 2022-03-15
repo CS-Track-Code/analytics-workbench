@@ -21,6 +21,8 @@
 
     var showing_sidebar
     $j(document).ready(function (){
+        init_recommendations()
+
         if ("showing_sidebar" in localStorage){
             showing_sidebar = localStorage["showing_sidebar"]
         } else {
@@ -31,8 +33,6 @@
         if (showing_sidebar === "true") {
             openNav()
         }
-
-        init_recommendations()
 
         $('[data-toggle="tooltip"]').tooltip();
     });
@@ -64,19 +64,33 @@
 
     function get_tba_projects(){
         if (!("tba_projects" in localStorage)){
-            request_tba_projects()
+            request_tba_projects(true)
         } else if (JSON.parse(localStorage["used_tba"]) > 1){
-            request_tba_projects()
+            request_tba_projects(true)
         } else{
             set_up_tba_projects()
         }
     }
 
-    function request_tba_projects(){
+    function set_up_suggestions(){
+        if (!("tba_projects" in localStorage)){
+            request_tba_projects(false)
+        } else if (JSON.parse(localStorage["used_tba"]) > 1){
+            request_tba_projects(false)
+        } else {
+            setup_project_name_field()
+        }
+    }
+
+    function request_tba_projects(setup_tba){
         $j.get("/get-tba-projects").done(function (res){
             localStorage["tba_projects"] = res
             localStorage["used_tba"] = 0
-            set_up_tba_projects()
+            if (setup_tba) {
+                set_up_tba_projects()
+            } else {
+                setup_project_name_field()
+            }
         })
     }
 
@@ -264,5 +278,29 @@
             localStorage["changed_project_lists"] = true
         }
 
+    }
+
+    function setup_project_name_field(){
+        $j.get("/get-project-names").done(function(res){
+            project_names = JSON.parse(res)
+
+            project_names = project_names.sort(function (a,b){
+                if (a < b) {return -1}
+                else if (a > b) {return 1}
+                return 0
+            })
+
+            if ("tba_projects" in localStorage) {
+                var tba_projects = JSON.parse(localStorage["tba_projects"])
+                project_names = project_names.concat(tba_projects)
+            }
+
+            for (var i=0; i<project_names.length; i++){
+                var project_name = document.createElement("option")
+                project_name.value = project_names[i]
+                project_name.innerText = project_names[i]
+                document.getElementById("datalistOptions").appendChild(project_name);
+            }
+        })
     }
 </script>
