@@ -6,7 +6,7 @@
         <h1>Welcome to the Analytics Workbench!</h1>
         <p>
             This Workbench offers tools to analyze Citizen Science Projects.
-            As of now it utilizes Explicit Semantic Analysis (ESA) to assign Research Areas to the Projects
+            As of now it utilizes Explicit Semantic Analysis (ESA) to assign Research Areas and SDGs to the Projects
             and Named Entity Recognition (NER) to identify Named Entities in the descriptions.
         </p>
 
@@ -80,7 +80,8 @@
 
             localStorage.removeItem("project-link")
             localStorage.removeItem("project-description")
-            localStorage.removeItem("esa_res")
+            localStorage.removeItem("ra_res")
+            localStorage.removeItem("sdg_res")
             localStorage.removeItem("ner_res")
 
             if (project_names.includes(project_name)) {
