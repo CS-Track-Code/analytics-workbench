@@ -17,12 +17,19 @@ spacy_bp = Blueprint(
 @spacy_bp.route("/get_ners", methods=['POST'])
 def get_ners():
     description = request.form["description"]
+    if "name" in request.form:
+        name = request.form["name"]
+    else:
+        name = ""
     # print(description)
 
     lang = "en"  # TODO: Language!
 
     spacy = SpacyNer(lang, config.spacy_model_path, config.training_data_path)
-    ner_list = spacy.process_text_get_filtered_results(description)
+    if name != "":
+        ner_list = spacy.process_text_get_filtered_results(description, request.form["name"])
+    else:
+        ner_list = spacy.process_text_get_filtered_results(description)
     all_descriptors = spacy.get_descriptors_list()
     # print(ner_list)
 

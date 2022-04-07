@@ -5,26 +5,11 @@ import pickle as pkl
 import random
 from spacy.util import minibatch, compounding
 
+from spacy_ner.entity_ruler import SpacyEntity
+
 
 class SpacyNer:
     def __init__(self, lang, spacy_trained_model_path="", training_data_path=""):
-        if lang in ["zh", "en"]:
-            self.spacy_model = lang + "_core_web_sm"
-        elif lang in ["ca", "da", "nl", "fr", "de", "el", "it", "ja", "lt", "mk", "nb", "pl", "pt", "ro", "ru", "es"]:
-            self.spacy_model = lang + "_core_news_sm"
-        else:
-            self.spacy_model = "xx_ent_wiki_sm"
-            print("No language specific spacy model available. Using default model. "
-                  "Check on https://spacy.io/models how to get a model for this language.")
-        try:
-            try:
-                self.nlp = spacy.load(self.spacy_model)
-            except OSError:
-                spacy.cli.download(self.spacy_model)
-                self.nlp = spacy.load(self.spacy_model)
-        except OSError:
-            print("Couldn't load spacy model")
-
         self.lab_desc = {
             "PERSON": "People, including fictional.",
             "NORP": "Nationalities or religious or political groups.",
@@ -48,6 +33,80 @@ class SpacyNer:
             "MISC": "Miscellaneous entities, e.g. events, nationalities, products or works of art."
         }
 
+        self.entity_ruler = SpacyEntity(lang, spacy_trained_model_path)
+
+        self.saved_patterns = [
+            {"label": "PER", "pattern": [{"ORTH": "<"},
+                                         {"TEXT": {"REGEX": "PER>.{64}</PER"}},
+                                         {"ORTH": ">"}]},
+            {"label": "PER", "pattern": [{"ORTH": "<"},
+                                         {"TEXT": {"REGEX": "PER"}},
+                                         {"ORTH": ">"},
+                                         {"TEXT": {"REGEX": ".{64}</PER>"}}]},
+            {"label": "PER", "pattern": [{"ORTH": "<"},
+                                         {"TEXT": {"REGEX": "PER"}},
+                                         {"ORTH": ">"},
+                                         {"TEXT": {"REGEX": ".{64}</PER"}},
+                                         {"ORTH": ">"}]},
+            {"label": "PERSON", "pattern": [{"ORTH": "<"},
+                                            {"TEXT": {"REGEX": "PERSON>.{64}</PERSON"}},
+                                            {"ORTH": ">"}]},
+            {"label": "PERSON", "pattern": [{"ORTH": "<"},
+                                            {"TEXT": {"REGEX": "PERSON"}},
+                                            {"ORTH": ">"},
+                                            {"TEXT": {"REGEX": ".{64}</PERSON>"}}]},
+            {"label": "PERSON", "pattern": [{"ORTH": "<"},
+                                            {"TEXT": {"REGEX": "PERSON"}},
+                                            {"ORTH": ">"},
+                                            {"TEXT": {"REGEX": ".{64}</PERSON"}},
+                                            {"ORTH": ">"}]},
+            {"label": "EMAIL", "pattern": [{"ORTH": "<"},
+                                           {"TEXT": {"REGEX": "EMAIL>.{64}</EMAIL"}},
+                                           {"ORTH": ">"}]},
+            {"label": "EMAIL", "pattern": [{"ORTH": "<"},
+                                           {"TEXT": {"REGEX": "EMAIL"}},
+                                           {"ORTH": ">"},
+                                           {"TEXT": {"REGEX": ".{64}</EMAIL>"}}]},
+            {"label": "EMAIL", "pattern": [{"ORTH": "<"},
+                                           {"TEXT": {"REGEX": "EMAIL"}},
+                                           {"ORTH": ">"},
+                                           {"TEXT": {"REGEX": ".{64}</EMAIL"}},
+                                           {"ORTH": ">"}]},
+            {"label": "PERSONAL_ACCOUNT", "pattern": [{"ORTH": "<"},
+                                                      {"TEXT": {"REGEX": "PERSONAL_ACCOUNT>.{64}</PERSONAL_ACCOUNT"}},
+                                                      {"ORTH": ">"}]},
+            {"label": "PERSONAL_ACCOUNT", "pattern": [{"ORTH": "<"},
+                                                      {"TEXT": {"REGEX": "PERSONAL_ACCOUNT"}},
+                                                      {"ORTH": ">"},
+                                                      {"TEXT": {"REGEX": ".{64}</PERSONAL_ACCOUNT>"}}]},
+            {"label": "PERSONAL_ACCOUNT", "pattern": [{"ORTH": "<"},
+                                                      {"TEXT": {"REGEX": "PERSONAL_ACCOUNT"}},
+                                                      {"ORTH": ">"},
+                                                      {"TEXT": {"REGEX": ".{64}</PERSONAL_ACCOUNT"}},
+                                                      {"ORTH": ">"}]},
+            {"label": "PHONE_NUMBER", "pattern": [{"ORTH": "<"},
+                                                  {"TEXT": {"REGEX": "PHONE_NUMBER"}},
+                                                  {"ORTH": ">"},
+                                                  {"TEXT": {"REGEX": ".{64}</PHONE_NUMBER>"}}]},
+            {"label": "PHONE_NUMBER", "pattern": [{"ORTH": "<"},
+                                                  {"TEXT": {"REGEX": "PHONE_NUMBER"}},
+                                                  {"ORTH": ">"},
+                                                  {"TEXT": {"REGEX": ".{64}</PHONE_NUMBER>"}},
+                                                  {"ORTH": ">"}]},
+            {"label": "PHONE_NUMBER", "pattern": [{"ORTH": "<"},
+                                                  {"TEXT": {"REGEX": "PHONE_NUMBER>.{64}</PHONE_NUMBER"}},
+                                                  {"ORTH": ">"}]}
+        ]
+
+        self.entity_ruler.add_pattern(self.saved_patterns)
+
+        self.nlp = self.entity_ruler.get_nlp()
+
+        self.lab_desc["EMAIL"] = "Former email address of a person, organization or institution"
+        self.lab_desc["PERSONAL_ACCOUNT"] = "Former link to a personal account e.g. on zooniverse"
+        self.lab_desc["PHONE_NUMBER"] = "Former phone number"
+        self.lab_desc["PROJECT"] = "Name of a (Citizen Science) project"
+
         self.training_data_file = lang + "_core_web_sm_training_data.pkl"
         self.training_data_file = lang + "_core_web_sm_training_data.pkl"
         self.training_data_path = training_data_path
@@ -56,6 +115,48 @@ class SpacyNer:
                 self.training_data = pkl.load(in_file)
         else:
             self.training_data = []
+
+    def add_project_name_patterns(self, project_name):
+        normal = []
+        lower = []
+        upper = []
+        split_in_words = self.entity_ruler.nlp(project_name)
+        for word in split_in_words:
+            normal.append({"ORTH": word.text})
+            lower.append({"ORTH": word.text.lower()})
+            upper.append({"ORTH": word.text.upper()})
+        pattern = [{"label": "PROJECT", "pattern": normal},
+                   {"label": "PROJECT", "pattern": lower},
+                   {"label": "PROJECT", "pattern": upper}]
+        self.entity_ruler.add_pattern(pattern)
+
+        for p in pattern:
+            if p not in self.saved_patterns:
+                self.saved_patterns.append(p)
+
+        for i in range(len(split_in_words)):
+            if 1 < i < len(split_in_words):
+                for j in range(len(split_in_words) - i + 1):
+                    normal = []
+                    lower = []
+                    upper = []
+                    text = ""
+                    for word in split_in_words[j:j + i]:
+                        text += word.text + " "
+                        normal.append({"ORTH": word.text})
+                        lower.append({"ORTH": word.text.lower()})
+                        upper.append({"ORTH": word.text.upper()})
+                    if len(text[:-1]) > 8:
+                        pattern = [{"label": "PROJECT", "pattern": normal},
+                                   {"label": "PROJECT", "pattern": lower},
+                                   {"label": "PROJECT", "pattern": upper}]
+                        self.entity_ruler.add_pattern(pattern)
+
+                        for p in pattern:
+                            if p not in self.saved_patterns:
+                                self.saved_patterns.append(p)
+
+        self.entity_ruler.add_pattern(self.saved_patterns)
 
     def get_descriptors(self):
         return self.lab_desc
@@ -66,8 +167,11 @@ class SpacyNer:
             list.append((key, self.lab_desc[key]))
         return list
 
-    def get_labels(self, text):
+    def get_labels(self, text, project_name=None):
         labels = []
+        if project_name is not None:
+            self.add_project_name_patterns(project_name)
+            self.nlp = self.entity_ruler.get_nlp()
         doc = self.nlp(text)
 
         for d in doc.ents:
@@ -75,9 +179,9 @@ class SpacyNer:
 
         return labels
 
-    def process_text(self, text):
+    def process_text(self, text, project_name=None):
         labels_and_descriptions = []
-        labels = self.get_labels(text)
+        labels = self.get_labels(text, project_name)
 
         for lab in labels:
             if lab[1] in self.lab_desc:
@@ -86,8 +190,8 @@ class SpacyNer:
                 labels_and_descriptions.append((lab[0], lab[1], ""))
         return labels_and_descriptions
 
-    def process_text_get_filtered_results(self, text):
-        results = self.process_text(text)
+    def process_text_get_filtered_results(self, text, project_name=None):
+        results = self.process_text(text, project_name)
         shortlist = []
         for res in results:
             if not res in shortlist:
