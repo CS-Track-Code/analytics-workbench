@@ -3,7 +3,7 @@ import copy
 import pymysql
 import nltk
 from os import path
-import pathlib
+import logging
 
 from esa_analysis import esa
 from esa_analysis.esa import ESA
@@ -19,6 +19,8 @@ filepath_base = "application/esa_blueprint/static/esa/esa_data/"
 filename = "research_areas.csv"
 filepath_csv = filepath_base + filename
 ###
+
+logging.basicConfig(level=logging.DEBUG, filename="log.log", filemode='a', format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S')
 
 in_data_base = input("Enter Database-Name (press enter for '" + data_base_name + "'): ")
 data_base_name = in_data_base if in_data_base != '' else data_base_name
@@ -85,6 +87,7 @@ def init(data_base_name, table_base_name):
 
 
 mydb, mycursor = init(data_base_name, table_base_name)
+logging.info("connected to database - all tables available")
 
 api_endpoint = "http://localhost:8888/myapp/"
 
@@ -125,6 +128,7 @@ for area in research_areas:
             with open(path_to_file, "r") as f:
                 text = f.read()
                 print("Pulled text for: '" + wiki_name + "'")
+                logging.debug("Pulled text for %s from ref_dump", wiki_name.upper())
                 f.close()
 
             tokens = esa.text_to_most_important_tokens(text, config.tfidf_extractor, minimum_percentage=0.20)  # extract tokens from text
@@ -141,15 +145,18 @@ for area in research_areas:
 
             # add every vec line to db (wiki)
             print("saving vec -- DO NOT STOP")
+            logging.debug("saving wiki-vec for %s .... stand by", wiki_name.upper())
             for key in vec:
                 mycursor.execute('INSERT into research_areas_wiki_vec (area_id, article_id, tf_idf) VALUES (' +
                                  str(row_id) + ', ' + str(key) + ', ' + str(vec[key]) + ');')
             mydb.commit()
             print("saving vec: " + wiki_name + " -- DONE")
+            logging.debug("saved wiki-vec for %s", wiki_name.upper())
         else:
             print("Already in db: " + wiki_name)
+            logging.info("Already in wiki db: %s", wiki_name.upper())
 
-            mycursor.execute('SELECT article_id, tf_idf FROM research_areas_wiki_vec WHERE area_id = ' + str(row_id[0]) + ';')
+            mycursor.execute('SELECT article_id, tf_idf FROM research_areas_wiki_vec WHERE area_id = ' + str(row_id["id"]) + ';')
             vec = {}
             for pair in mycursor.fetchall():
                 vec[pair["article_id"]] = pair["tf_idf"]
@@ -168,17 +175,20 @@ for area in research_areas:
                 row_id = mycursor.fetchone()["id"]
 
                 print("saving vec -- DO NOT STOP")
+                logging.debug("saving vec for %s .... stand by", last_topic.upper())
                 for key in topic_vec:
                     mycursor.execute("INSERT into research_areas_vec (area_id, article_id, tf_idf) VALUES (" +
                                      str(row_id) + ", " + str(key) + ", " + str(topic_vec[key]) + ");")
                 mydb.commit()
                 print("saving vec: " + last_topic + " -- DONE")
+                logging.debug("saved vec for %s", last_topic.upper())
             topic_vec = copy.deepcopy(vec)
             last_topic = wos_topic
             last_category = wos_category
 
     else:
         print("-- " + wos_topic + " already in db")
+        logging.info("Already in RA db: %s", wos_topic.upper())
 
 # save last wos topic
 mycursor.execute('INSERT into research_areas (wos_category, wos_topic) VALUES ("' +
@@ -189,9 +199,11 @@ mycursor.execute('SELECT id FROM research_areas WHERE wos_topic = "' + last_topi
 row_id = mycursor.fetchone()["id"]
 
 print("saving vec -- DO NOT STOP")
+logging.debug("saving vec for %s .... stand by", last_topic.upper())
 for key in topic_vec:
     mycursor.execute("INSERT into research_areas_vec (area_id, article_id, tf_idf) VALUES (" +
                      str(row_id) + ", " + str(key) + ", " + str(topic_vec[key]) + ");")
 mydb.commit()
 print("saving vec: " + last_topic + " -- DONE")
+logging.debug("saved vec for %s", last_topic.upper())
 print("ALL DONE")
