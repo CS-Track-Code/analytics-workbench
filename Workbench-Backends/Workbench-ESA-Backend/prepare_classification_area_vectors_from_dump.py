@@ -165,7 +165,7 @@ for area in research_areas:
                 mydb.commit()
 
                 mycursor.execute('SELECT id FROM research_areas WHERE wos_topic = "' + last_topic + '";')
-                row_id = mycursor.fetchone()[0]
+                row_id = mycursor.fetchone()["id"]
 
                 print("saving vec -- DO NOT STOP")
                 for key in topic_vec:
