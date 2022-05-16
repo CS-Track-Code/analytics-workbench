@@ -4,17 +4,20 @@ Arts & Humanities;Arts & Humanities Other Topics;Humanities;https://en.wikipedia
 Arts & Humanities;Asian Studies;Asian Studies;https://en.wikipedia.org/wiki/Asian_studies
 Arts & Humanities;Classics;Classics;https://en.wikipedia.org/wiki/Classics
 Arts & Humanities;Dance;Dance;https://en.wikipedia.org/wiki/Dance
+Arts & Humanities;Ethics;Ethics;https://en.wikipedia.org/wiki/Ethics
 Arts & Humanities;Film, Radio & Television;Film;https://en.wikipedia.org/wiki/Film
 Arts & Humanities;Film, Radio & Television;Radio;https://en.wikipedia.org/wiki/Radio
 Arts & Humanities;Film, Radio & Television;Television;https://en.wikipedia.org/wiki/Television
 Arts & Humanities;History;History;https://en.wikipedia.org/wiki/History
 Arts & Humanities;History & Philosophy of Science;History and Philosophy of Science;https://en.wikipedia.org/wiki/History_and_philosophy_of_science
 Arts & Humanities;Literature;Literature;https://en.wikipedia.org/wiki/Literature
+Arts & Humanities;Logic;Logic;https://en.wikipedia.org/wiki/Logic
 Arts & Humanities;Music;Music;https://en.wikipedia.org/wiki/Music
 Arts & Humanities;Philosophy;Philosophy;https://en.wikipedia.org/wiki/Philosophy
 Arts & Humanities;Religion;Religion;https://en.wikipedia.org/wiki/Religion
 Arts & Humanities;Theatre;Theatre;https://en.wikipedia.org/wiki/Theatre
 Life Sciences & Biomedicine;Agriculture;Agriculture;https://en.wikipedia.org/wiki/Agriculture
+Life Sciences & Biomedicine;Agronomy;Agronomy;https://en.wikipedia.org/wiki/Agronomy
 Life Sciences & Biomedicine;Allergy;Allergy;https://en.wikipedia.org/wiki/Allergy
 Life Sciences & Biomedicine;Anatomy & Morphology;Anatomy;https://en.wikipedia.org/wiki/Anatomy
 Life Sciences & Biomedicine;Anatomy & Morphology;Morphology (biology);https://en.wikipedia.org/wiki/Morphology_(biology)
@@ -27,6 +30,7 @@ Life Sciences & Biomedicine;Biochemistry & Molecular Biology;Biochemistry;https:
 Life Sciences & Biomedicine;Biochemistry & Molecular Biology;Molecular biology;https://en.wikipedia.org/wiki/Molecular_biology
 Life Sciences & Biomedicine;Biodiversity & Conservation;Biodiversity;https://en.wikipedia.org/wiki/Biodiversity
 Life Sciences & Biomedicine;Biodiversity & Conservation;Conservation biology;https://en.wikipedia.org/wiki/Conservation_biology
+Life Sciences & Biomedicine;Biology;Biology;https://en.wikipedia.org/wiki/Biology
 Life Sciences & Biomedicine;Biophysics;Biophysics;https://en.wikipedia.org/wiki/Biophysics
 Life Sciences & Biomedicine;Biotechnology & Applied Microbiology;Biotechnology;https://en.wikipedia.org/wiki/Biotechnology
 Life Sciences & Biomedicine;Biotechnology & Applied Microbiology;Microbiology;https://en.wikipedia.org/wiki/Microbiology
@@ -66,6 +70,7 @@ Life Sciences & Biomedicine;Integrative & Complementary Medicine;Alternative med
 Life Sciences & Biomedicine;Legal Medicine;Medical jurisprudence;https://en.wikipedia.org/wiki/Medical_jurisprudence
 Life Sciences & Biomedicine;Life Sciences Biomedicine Other Topics;List of life sciences;https://en.wikipedia.org/wiki/List_of_life_sciences
 Life Sciences & Biomedicine;Life Sciences Biomedicine Other Topics;Biomedicine;https://en.wikipedia.org/wiki/Biomedicine
+Life Sciences & Biomedicine;Limnology;Limnology;https://en.wikipedia.org/wiki/Limnology
 Life Sciences & Biomedicine;Marine & Freshwater Biology;Marine biology;https://en.wikipedia.org/wiki/Marine_biology
 Life Sciences & Biomedicine;Marine & Freshwater Biology;Freshwater biology;https://en.wikipedia.org/wiki/Freshwater_biology
 Life Sciences & Biomedicine;Mathematical & Computational Biology;Mathematical and theoretical biology;https://en.wikipedia.org/wiki/Mathematical_and_theoretical_biology
@@ -83,6 +88,7 @@ Life Sciences & Biomedicine;Nutrition & Dietetics;Dietitian;https://en.wikipedia
 Life Sciences & Biomedicine;Obstetrics & Gynecology;Obstetrics and gynaecology;https://en.wikipedia.org/wiki/Obstetrics_and_gynaecology
 Life Sciences & Biomedicine;Oncology;Oncology;https://en.wikipedia.org/wiki/Oncology
 Life Sciences & Biomedicine;Ophthalmology;Ophthalmology;https://en.wikipedia.org/wiki/Ophthalmology
+Life Sciences & Biomedicine;Ornithology;Ornithology;https://en.wikipedia.org/wiki/Ornithology
 Life Sciences & Biomedicine;Orthopedics;Orthopedic surgery;https://en.wikipedia.org/wiki/Orthopedic_surgery
 Life Sciences & Biomedicine;Otorhinolaryngology;Otorhinolaryngology;https://en.wikipedia.org/wiki/Otorhinolaryngology
 Life Sciences & Biomedicine;Paleontology;Paleontology;https://en.wikipedia.org/wiki/Paleontology
@@ -137,6 +143,7 @@ Physical Sciences;Optics;Optics;https://en.wikipedia.org/wiki/Optics
 Physical Sciences;Physical Geography;Physical geography;https://en.wikipedia.org/wiki/Physical_geography
 Physical Sciences;Physics;Physics;https://en.wikipedia.org/wiki/Physics
 Physical Sciences;Polymer Science;Polymer science;https://en.wikipedia.org/wiki/Polymer_science
+Physical Sciences;Sustainability Science;Sustainability Science;https://en.wikipedia.org/wiki/Sustainability_science
 Physical Sciences;Thermodynamics;Thermodynamics;https://en.wikipedia.org/wiki/Thermodynamics
 Physical Sciences;Water Resources;Water resources;https://en.wikipedia.org/wiki/Water_resources
 Social Sciences;Archaeology;Archaeology;https://en.wikipedia.org/wiki/Archaeology
@@ -178,6 +185,7 @@ Technology;Construction & Building Technology;Architectural technology;https://e
 Technology;Energy & Fuels;Energy;https://en.wikipedia.org/wiki/Energy
 Technology;Energy & Fuels;Fuel;https://en.wikipedia.org/wiki/Fuel
 Technology;Engineering;Engineering;https://en.wikipedia.org/wiki/Engineering
+Technology;Ergonomics;Human factors and ergonomics;https://en.wikipedia.org/wiki/Human_factors_and_ergonomics
 Technology;Imaging Science & Photographic Technology;Imaging science;https://en.wikipedia.org/wiki/Imaging_science
 Technology;Imaging Science & Photographic Technology;Timeline of photography technology;https://en.wikipedia.org/wiki/Timeline_of_photography_technology
 Technology;Imaging Science & Photographic Technology;Photography;https://en.wikipedia.org/wiki/Photography
@@ -188,6 +196,7 @@ Technology;Materials Science;Materials science;https://en.wikipedia.org/wiki/Mat
 Technology;Mechanics;Mechanics;https://en.wikipedia.org/wiki/Mechanics
 Technology;Metallurgy & Metallurgical Engineering;Metallurgy;https://en.wikipedia.org/wiki/Metallurgy
 Technology;Microscopy;Microscopy;https://en.wikipedia.org/wiki/Microscopy
+Technology;Nanoscience & Nanotechnology;Nanotechnology;https://en.wikipedia.org/wiki/Nanotechnology
 Technology;Nuclear Science & Technology;Nuclear technology;https://en.wikipedia.org/wiki/Nuclear_technology
 Technology;Nuclear Science & Technology;Nuclear physics;https://en.wikipedia.org/wiki/Nuclear_physics
 Technology;Operations Research & Management Science;Operations research;https://en.wikipedia.org/wiki/Operations_research
@@ -197,6 +206,8 @@ Technology;Robotics;Robotics;https://en.wikipedia.org/wiki/Robotics
 Technology;Science & Technology Other Topics;Science and Science_and_technologytechnology;https://en.wikipedia.org/wiki/Science_and_technology
 Technology;Science & Technology Other Topics;Science;https://en.wikipedia.org/wiki/Science
 Technology;Science & Technology Other Topics;Technology;https://en.wikipedia.org/wiki/Technology
+Technology;Statistics & Probability;Probability;https://en.wikipedia.org/wiki/Probability
+Technology;Statistics & Probability;Statistics;https://en.wikipedia.org/wiki/Statistics
 Technology;Spectroscopy;Spectroscopy;https://en.wikipedia.org/wiki/Spectroscopy
 Technology;Telecommunication;Telecommunication;https://en.wikipedia.org/wiki/Telecommunication
 Technology;Transportation;Transport;https://en.wikipedia.org/wiki/Transport
