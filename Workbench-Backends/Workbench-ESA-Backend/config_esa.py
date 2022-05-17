@@ -9,8 +9,8 @@ research_area_database = "esa_research_areas"
 sdg_database = "esa_sdgs"
 
 version_control = {
-    "research_areas": "0.1",
-    "sdgs": "3.0"
+    "research_areas": "1.0",
+    "sdgs": "4.0"
 }
 
 # TFIDF #
