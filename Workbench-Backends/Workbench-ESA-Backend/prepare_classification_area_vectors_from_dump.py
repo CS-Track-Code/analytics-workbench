@@ -131,7 +131,7 @@ for area in research_areas:
                 logging.debug("Pulled text for %s from ref_dump", wiki_name.upper())
                 f.close()
 
-            tokens = esa.text_to_most_important_tokens(text, config.tfidf_extractor, minimum_percentage=0.20)  # extract tokens from text
+            tokens = esa.text_to_most_important_tokens(text, config.tfidf_extractor, minimum_percentage=0.30)  # extract tokens from text
             vec = esa_db.get_text_vector_from_bow(tokens)  # calculate vec for text
 
             # add topic to db (wiki!)

@@ -33,7 +33,7 @@ class DBPediaExtractor:
             # print("Text:")
             # print(text)
             for i in range(3):
-                response = requests.get(url, params=params, headers=headers)
+                response = requests.get(url, params=params, headers=headers, timeout=5)
                 # print("RESPONSE: ")
                 # print(response.text)
                 # print(response.status_code)
@@ -62,6 +62,7 @@ class DBPediaExtractor:
                         break
                 else:
                     time.sleep(0.3)
+                response.close()
         count = Counter(resources)
         dedup_resources = []
         for k, v in count.items():

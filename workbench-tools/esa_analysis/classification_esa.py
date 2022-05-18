@@ -270,10 +270,13 @@ class ClassificationESA:
             if len(classification_areas) >= done+1:
                 store_sort = self.sort
                 self.sort = False
+                store_cutoff_rel_to_max = self.cutoff_in_relation_to_max
+                self.cutoff_in_relation_to_max = None
                 classification_areas_similarity, classification_areas, categories, top_category = \
                     self.get_classification_area_similarities_from_vec(vec, classification_area_vec_abs_val,
                                                                        min_row_id_of_ra=done + 1)
                 self.sort = store_sort
+                self.cutoff_in_relation_to_max = store_cutoff_rel_to_max
 
                 for category, topic, sim in classification_areas_similarity:
                     second_area_matrix_id = classification_area_index[topic]

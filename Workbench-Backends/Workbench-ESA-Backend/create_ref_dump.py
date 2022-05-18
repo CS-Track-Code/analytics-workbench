@@ -1,13 +1,7 @@
 import pandas as pd
-import copy
-import pymysql
-import nltk
 from os import path, mkdir
 
-from esa_analysis import esa
-from esa_analysis.esa import ESA
 from text_extraction import mercury_web_parser as Mercury
-import config_esa as config
 
 ###
 """Edit to prepare other Comparison Bases (like SDGs)"""
