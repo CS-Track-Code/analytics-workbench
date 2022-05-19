@@ -32,7 +32,7 @@ esa_cutoffs = {
     "esa_sdgs": {
         "esa_tf_proportion": 0.2,
         "esa_cutoff_in_relation_to_max": False,
-        "esa_cutoff": 0.2
+        "esa_cutoff": 0.25
         # TODO: Fixer Cutoff
     }
 }
