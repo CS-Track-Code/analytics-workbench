@@ -1,0 +1,28 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="/">Analytics Workbench</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        {% set navigation_bar = [
+            (url_for("home_bp.startpage"), 'home', 'Home'),
+            (url_for("project_analysis_bp.analysepage"), 'analyse', 'Analyse Project')
+        ] %}
+
+        {%  set active_page = active_page|default ('home')%}
+
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                {% for href, id, caption in navigation_bar %}
+                    <li class="nav-item{% if id == active_page %} active{% endif %}">
+                        <a class="nav-link" href="{{ href|e }}">{{ caption|e }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <span class="navbar-text">
+                    Analysis of Citizen Science Activities
+                </span>
+        </div>
+    </nav>
+</header>

@@ -1,0 +1,72 @@
+{% extends 'layout.html' %}
+{% set active_page = 'home' %}
+
+{% block content %}
+    <div class="textblock">
+        <h1>Welcome to the Analytics Workbench!</h1>
+        <p>
+            This Workbench offers tools to analyze Citizen Science Projects.
+            As of now it utilizes Explicit Semantic Analysis (ESA) to assign Research Areas and SDGs to the Projects
+            and Named Entity Recognition (NER) to identify Named Entities in the descriptions.
+        </p>
+
+        <p>
+            This is the "LITE" Version of the Workbench created within CS Track.
+            The Workbench LITE can be used to analyze and evaluate project description.
+            The full version also holds a database to save project names, urls, descriptions and their analysis results.
+            From the saved data it offers further insights into connections between projects.
+            If you are interested in this full version please contact us and we can discuss what is possible.
+        </p>
+
+        <p>
+            To analyse a project description you may enter it at the bottom of this page or go to the "Analyse Project" Page and enter it there.
+
+            You can then use the button "Analyse Project" to start the analysis process.
+        </p>
+
+
+        <br/> Enter the project description here:
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Project <br/>description</span>
+            </div>
+            <textarea class="form-control" id="project_description" aria-label="project description textarea" rows="10"></textarea>
+        </div>
+        <div class="btn_row">
+            <button type="button" class="btn btn-outline-dark btn_send" id="buttonAnalyse">Analyse project</button>
+        </div>
+
+    </div>
+
+
+    <!--
+    <div class="textblock project_input">
+        Do you have a link for the project you want to analyse?* Then enter it here: <br/>
+        <input id="project_link_Input_A" type="text" name="project_link_A" placeholder="project link">
+        <input class="btn btn-dark" id="buttonProjectInput" type="submit" value="Analyse Project">
+
+        <br/> * Otherwise go to <a href="/analyse">Analyse Project</a> to use a project description
+    </div>
+    -->
+{% endblock %}
+
+{% block script %}
+    <script>
+        $j = jQuery.noConflict();
+        var project_names = []
+        $j(document).ready(function () {
+        });
+
+        $j("#buttonAnalyse").click(function (){
+            var description = $j("#project_description").val();
+            localStorage["project-description"] = description
+
+            localStorage.removeItem("ra_res")
+            localStorage.removeItem("sdg_res")
+            localStorage.removeItem("ner_res")
+
+            //TODO: request an python -> wenn Wortanzahl reicht und englisch dann weiterleitung, sonst popup
+            window.location.href = "/analyse/project"
+        })
+    </script>
+{% endblock %}

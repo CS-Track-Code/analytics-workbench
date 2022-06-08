@@ -1,18 +1,24 @@
 {% extends 'modify_results_barebone.html' %}
 {% set active_page= 'analyse' %}
 
+{% block more_buttons_in_top_row %}
+    <button type="button" class="btn btn-outline-secondary" id="sort_sim" data-toggle="collapse" data-target="#esa_list_sim" aria-expanded="false" aria-controls="esa_list_cat">sort by similarity</button>
+    <button type="button" class="btn btn-outline-secondary" id="sort_alpha" data-toggle="collapse" data-target="#esa_list_alpha" aria-expanded="false" aria-controls="esa_list_alpha">sort alphabetically</button>
+    <button type="button" class="btn btn-outline-secondary" id="sort_cat" data-toggle="collapse" data-target="#esa_list_cat" aria-expanded="false" aria-controls="esa_list_cat">sort by category</button>
+{% endblock %}
+
 {% block modification_content %}
 
-    <div id="esa_list_sim">
-            <table class="table result_table sortable" id="esa_results_sim">
+    <div id="accordion">
+        <div id="esa_list_sim" class="collapse show" data-parent="#accordion">
+            <table class="table result_table" id="esa_results_sim">
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th class="click_me" scope="col" id="classification_area_sim">Classification Area</th>
-                    <th class="click_me" scope="col">Similarity</th>
-{#                    <th scope="col">Add</th>#}
-{#                    <th scope="col">Remove</th>#}
-                    <th class="click_me" scope="col">Status</th>
+                    <th scope="col" id="classification_area_sim">Classification Area</th>
+                    <th scope="col">Similarity</th>
+                    <th scope="col">Add</th>
+                    <th scope="col">Remove</th>
                 </tr>
                 </thead>
                 <tbody id="esa_rows_sim">
@@ -20,6 +26,28 @@
                 </tbody>
             </table>
         </div>
+
+        <div id="esa_list_alpha" class="collapse" data-parent="#accordion">
+            <table class="table result_table" id="esa_results_alpha">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col" id="classification_area_alpha">Classification Area</th>
+                    <th scope="col">Similarity</th>
+                    <th scope="col">Add</th>
+                    <th scope="col">Remove</th>
+                </tr>
+                </thead>
+                <tbody id="esa_rows_alpha">
+
+                </tbody>
+            </table>
+        </div>
+
+        <div id="esa_list_cat" class="collapse" data-parent="#accordion">
+
+        </div>
+    </div>
 {% endblock %}
 
 <script>
@@ -33,6 +61,8 @@
         var used_tokens = null
 
         var lookup = {}
+        var research_areas_alph = null
+        var research_areas_cat = null
         var categories = []
 
         var unsaved_changes = false
@@ -49,9 +79,11 @@
             if (classification_scheme === "research_areas"){
                 res = JSON.parse(localStorage["ra_res"])
                 document.getElementById("classification_area_sim").innerText = "Research Areas"
+                document.getElementById("classification_area_alpha").innerText = "Research Areas"
             } else {
                 res = JSON.parse(localStorage["sdg_res"])
                 document.getElementById("classification_area_sim").innerText = "SDGs"
+                document.getElementById("classification_area_alpha").innerText = "SDGs"
             }
 
             best_results_of_classification = res["top_classification_areas_with_sim"]
@@ -81,13 +113,46 @@
         }
 
         function set_up_tables(){
+            research_areas_alph = []
+            research_areas_cat = []
+
             all_results_of_classification_with_sim.forEach(function (row, index){
+                research_areas_alph.push(row)
+                research_areas_cat.push(row)
                 lookup[row[1]] = index
                 var in_best = check_if_best(row[1])
                 add_to_table("esa_rows_sim", index, row[1], row[2], in_best)
             })
 
+            research_areas_alph = research_areas_alph.sort(function (a,b){
+                if (a[1] < b[1]) {return -1}
+                else if (a[1] > b[1]) {return 1}
+                return 0
+            })
+            console.log("Social Sciences" < "Life Science & Biomedicine")
+            research_areas_cat = research_areas_cat.sort(function (a,b){
+                if (a[0] < b[0]) {return -1}
+                else if (a[0] > b[0]) {return 1}
+                return 0
+            })
 
+            research_areas_alph.forEach(function (row, index){
+                var id = lookup[row[1]]
+                var in_best = check_if_best(row[1])
+                add_to_table("esa_rows_alpha", id, row[1], row[2], in_best)
+            })
+
+            var last_category = null
+            research_areas_cat.forEach(function (row, index){
+                if (last_category !== row[0]){
+                    add_category_table("esa_list_cat", row[0])
+                    last_category = row[0]
+                    categories.push(row[0])
+                }
+                var id = lookup[row[1]]
+                var in_best = check_if_best(row[1])
+                add_to_table("esa_rows_cat_" + row[0], id, row[1], row[2], in_best)
+            })
         }
 
         function check_if_best(classification_area){
@@ -97,6 +162,50 @@
                 }
             }
             return false
+        }
+
+        function add_category_table (div, category){
+            var headline = document.createElement("h2");
+            headline.innerHTML = category
+
+            var table = document.createElement("table");
+            table.className = "table result_table"
+            table.id = "esa_results_cat" + category
+            var head = document.createElement("thead");
+            var row = document.createElement("tr");
+            var id_col = document.createElement("th");
+            id_col.scope = "col"
+            id_col.innerHTML = "#"
+            var class_col = document.createElement("th");
+            class_col.scope = "col"
+            if (classification_scheme === "research_areas"){
+                class_col.innerHTML = "Research Area"
+            } else {
+                class_col.innerHTML = "SDG"
+            }
+            var sim_col = document.createElement("th");
+            sim_col.scope = "col"
+            sim_col.innerHTML = "Similarity"
+            var add_col = document.createElement("th");
+            add_col.scope = "col"
+            add_col.innerHTML = "Add"
+            var remove_col = document.createElement("th");
+            remove_col.scope = "col"
+            remove_col.innerHTML = "Remove"
+            row.append(id_col)
+            row.append(class_col)
+            row.append(sim_col)
+            row.append(add_col)
+            row.append(remove_col)
+            head.append(row)
+            table.append(head)
+
+            var body = document.createElement("tbody");
+            body.id = "esa_rows_cat_" + category
+            table.append(body)
+
+            document.getElementById(div).appendChild(headline)
+            document.getElementById(div).appendChild(table)
         }
 
         function add_to_table (table, id, classification_area, similarity, currently_best){
@@ -114,55 +223,27 @@
             simCell.innerHTML = sim.toString();
             newRow.append(simCell);
 
-            var toggleCell = document.createElement("td")
-            toggleCell.id = table.replaceAll(" ", "-") + "_row_" + id + "_toggle"
-            var toggleInput = document.createElement("input")
-            toggleInput.id = table.replaceAll(" ", "-") + "_row_" + id + "_toggle_input"
-            toggleInput.className = "esa_toggle"
-            toggleInput.type = "checkbox"
-            toggleInput.value = id
-            toggleInput.dataset.toggle = "toggle"
-            toggleInput.dataset.onstyle = "success"
-            toggleInput.dataset.offstyle = "outline-danger"
-            toggleInput.onchange = clicked_switch
-
-            /* separate add/remove buttons
             var addCell = document.createElement("td");
             addCell.id = table + "_row_" + id + "_add"
             var removeCell = document.createElement("td");
-            removeCell.id = table + "_row_" + id + "_remove" */
+            removeCell.id = table + "_row_" + id + "_remove"
 
             if (currently_best) {
-                toggleInput.checked = true
-                /* separate add/remove buttons
                 removeButton = get_remove_button(id)
                 removeCell.appendChild(removeButton)
 
-                addCell.innerHTML = " "*/
+                addCell.innerHTML = " "
             } else {
-                toggleInput.checked = false
-                /* separate add/remove buttons
                 addButton = get_add_button(id)
                 addCell.appendChild(addButton)
 
-                removeCell.innerHTML = " "*/
+                removeCell.innerHTML = " "
             }
 
-            toggleCell.appendChild(toggleInput)
-
-            /* separate add/remove buttons
             newRow.append(addCell)
-            newRow.append(removeCell)*/
-
-            newRow.append(toggleCell)
+            newRow.append(removeCell)
 
             document.getElementById(table).appendChild(newRow);
-            $(function() {
-                $('#'+ table.replaceAll(" ", "-") + "_row_" + id + "_toggle_input").bootstrapToggle({
-                    on: "Assigned",
-                    off: "Not Assigned"
-                });
-              })
         }
 
         function get_add_button(id){
@@ -185,76 +266,10 @@
             return removeButton
         }
 
-        function sortTable(n) {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.getElementById("esa_results_sim");
-            switching = true;
-            // Set the sorting direction to ascending:
-            dir = "asc";
-            /* Make a loop that will continue until
-            no switching has been done: */
-            while (switching) {
-                // Start by saying: no switching is done:
-                switching = false;
-                rows = table.rows;
-                /* Loop through all table rows (except the
-                first, which contains table headers): */
-                for (i = 1; i < (rows.length - 1); i++) {
-                    // Start by saying there should be no switching:
-                    shouldSwitch = false;
-                    /* Get the two elements you want to compare,
-                    one from current row and one from the next: */
-                    x = rows[i].getElementsByTagName("TD")[n];
-                    y = rows[i + 1].getElementsByTagName("TD")[n];
-                    /* Check if the two rows should switch place,
-                    based on the direction, asc or desc: */
-                    if (dir == "asc") {
-                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                            // If so, mark as a switch and break the loop:
-                            shouldSwitch = true;
-                            break;
-                        }
-                    } else if (dir == "desc") {
-                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                            // If so, mark as a switch and break the loop:
-                            shouldSwitch = true;
-                            break;
-                        }
-                    }
-                }
-                if (shouldSwitch) {
-                    /* If a switch has been marked, make the switch
-                    and mark that a switch has been done: */
-                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                    switching = true;
-                    // Each time a switch is done, increase this count by 1:
-                    switchcount ++;
-                } else {
-                    /* If no switching has been done AND the direction is "asc",
-                    set the direction to "desc" and run the while loop again. */
-                    if (switchcount == 0 && dir == "asc") {
-                        dir = "desc";
-                        switching = true;
-                    }
-                }
-            }
-        }
-
-        var clicked_switch = function (e){
-            console.log("clicked switch")
-            if (e.target.checked){
-                console.log("add")
-                function_add_clicked(e)
-            } else {
-                console.log("remove")
-                function_remove_clicked(e)
-            }
-        }
-
         var function_add_clicked = function(e){
             unsaved_changes = true;
             var id
-            if (e.target.type === "button" || e.target.type === "checkbox") {
+            if (e.target.type === "button") {
                 id = e.target.value
             } else {
                 id = e.target.parentNode.value
@@ -268,22 +283,20 @@
                 return 0
             })
 
-            /*
             var tables = ["esa_rows_sim", "esa_rows_alpha", "esa_rows_cat_" + category]
 
             tables.forEach(function(table){
-                /*var row_sim_add = document.getElementById(table + "_row_" + id + "_add")
+                var row_sim_add = document.getElementById(table + "_row_" + id + "_add")
                 row_sim_add.innerHTML = " "
                 var row_sim_remove = document.getElementById(table + "_row_" + id + "_remove")
                 row_sim_remove.appendChild(get_remove_button(id))
-                $('#'+ table.replaceAll(" ", "-") + "_row_" + id + "_toggle_input").bootstrapToggle('on', true);
-            })*/
+            })
         }
 
         var function_remove_clicked = function(e){
             unsaved_changes = true;
             var id
-            if (e.target.type === "button" || e.target.type === "checkbox") {
+            if (e.target.type === "button") {
                 id = e.target.value
             } else {
                 id = e.target.parentNode.value
@@ -297,7 +310,6 @@
                 }
             })
 
-            /*
             var tables = ["esa_rows_sim", "esa_rows_alpha", "esa_rows_cat_" + category]
 
             tables.forEach(function(table){
@@ -305,8 +317,7 @@
                 row_sim_add.appendChild(get_add_button(id))
                 var row_sim_remove = document.getElementById(table + "_row_" + id + "_remove")
                 row_sim_remove.innerHTML = " "
-                $('#'+ table.replaceAll(" ", "-") + "_row_" + id + "_toggle_input").bootstrapToggle('off', true);
-            })*/
+            })
         }
 
         function safe(){

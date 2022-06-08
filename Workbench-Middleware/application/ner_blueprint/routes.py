@@ -51,6 +51,27 @@ def get_ner_results():
     return response
 
 
+@ner_bp.route("/ner_LITE", methods=['POST'])
+def get_ner_results_LITE():
+    name = request.form["name"]
+    link = request.form["link"]
+    description = request.form["description"]
+
+    url_new = config.backend_ner + "get_ners"
+    data = {
+        "name": name,
+        "link": link,
+        "description": description
+    }
+
+    backend_response = py_requests.post(url_new, data=data)
+    content = backend_response.content
+
+    header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
+    response = Response(content, status=200, headers=header)
+    return response
+
+
 @ner_bp.route("/ner/changes", methods=['POST'])
 def update_ner_results():
     name = request.form["name"]

@@ -5,12 +5,14 @@ import json
 ###########
 """Edit to point to API"""
 API_address = "http://localhost:5001/external/analyse"
+API_address = "https://workbench.rias-institute.eu/api/getAnalysisResults"
+AUTH = ('rias', 'cstrack')
 
 """Edit According to Database"""
 pymongo_clientport = '27017'
 pymongo_client_name = "data_collection"
 
-db_name = "projects"
+db_name = "projects_22_06_01-zooniverse-List"
 ###########
 
 
@@ -59,9 +61,9 @@ for project in project_list:
             "description": description
         }
 
-        data_response = py_requests.post(API_address, data=data)  # Todo: catch 500 error (wait and retry? alert to error?)
+        data_response = py_requests.post(API_address, data=data, auth=AUTH)  # Todo: catch 500 error (wait and retry? alert to error?)
         content = json.loads(data_response.content)
         ra_results = content["ra_results"]
-        sdg_result = content["sdg_result"]
+        sdg_results = content["sdg_results"]
         ner_results = content["ner_results"]
-        safe_analysis_results(data_collection, project, ra_results, ner_results)
+        safe_analysis_results(data_collection, project, ra_results, sdg_results, ner_results)

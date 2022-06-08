@@ -47,3 +47,22 @@ def get_project_text():
         return response
     else:
         abort(404)
+
+
+@mercury_bp.route('/mercury/get_project_text_LITE', methods=['POST'])
+def get_project_text_LITE():
+    name = request.form["name"]
+    project_url = request.form['link']
+    if project_url is not None:
+        data = {
+            "name": name,
+            "link": project_url
+        }
+        print(project_url)
+        website_text = mercury.extract_text(config.backend_mercury, project_url)
+
+        header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
+        response = Response(website_text, status=200, headers=header)
+        return response
+    else:
+        abort(404)

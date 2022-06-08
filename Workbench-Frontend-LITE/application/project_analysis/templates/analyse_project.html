@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+{% set active_page= 'analyse' %}
+
+{% block content %}
+
+    <div class="textblock project_input">
+        <br/> Enter the project description here:
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Project <br/>description</span>
+            </div>
+            <textarea class="form-control" id="project_description" aria-label="project description textarea" rows="10"></textarea>
+        </div>
+        <div class="btn_row">
+            <button type="button" class="btn btn-outline-dark btn_send" id="buttonAnalyse">Analyse project</button>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $j = jQuery.noConflict();
+
+        var project_names = []
+
+        var alert = document.createElement("div")
+        alert.className = "alert alert-info alert-dismissible fade show"
+        alert.role = "alert"
+
+        var close_alert = document.createElement("span")
+        close_alert.className = "closebtn"
+        close_alert.id = "closebtn"
+        close_alert.innerHTML = '<i class="fas fa-times"></i>'
+
+        alert.appendChild(close_alert)
+
+        var alert_text = close_alert = document.createElement("span")
+
+        $j(document).ready(function () {
+            if ("project-description" in localStorage) description = localStorage["project-description"];
+            else description = ""
+            $j("#project_description").val(description);
+        });
+
+        $j("#buttonAnalyse").click(function (){
+            var description = $j("#project_description").val();
+            localStorage["project-description"] = description
+
+            localStorage.removeItem("ra_res")
+            localStorage.removeItem("sdg_res")
+            localStorage.removeItem("ner_res")
+
+            //TODO: request an python -> wenn Wortanzahl reicht und englisch dann weiterleitung, sonst popup
+            window.location.href = "/analyse/project"
+        })
+
+    </script>
+{% endblock %}

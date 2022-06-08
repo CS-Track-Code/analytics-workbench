@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+{% set active_page = 'error' %}
+
+{% block content %}
+    <div class="textblock">
+        <img src='/static/error-404.jpg' alt=”Number 404 build with multi-colored legos” class="picture_on_the_side">
+        <h1>Ooops.. somewhere, something went wrong <br/>and now we're here.</h1>
+
+        The Site you were trying to reach doesn't seem to exist. <br/>
+        If you typed in the link yourself you might want to go back and check for typos. <br/>
+        If you used a link on our site, you may contact us so we can fix it (or wait till we find the error ourselves, though that might take longer).
+    </div>
+
+{% endblock %}

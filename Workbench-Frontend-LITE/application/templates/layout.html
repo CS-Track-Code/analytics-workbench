@@ -10,11 +10,8 @@
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@v2.3.7/dist/latest/bootstrap-autocomplete.min.js"></script>
-        <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
 
         {% block header %} {% endblock %}
         <link rel="stylesheet" type="text/css" href="/static/fontawesome-free-5.15.2-web/css/all.css">
@@ -24,10 +21,6 @@
     </head>
     <body>
         {% include 'navigation.html' %}
-
-        {% include 'recommendation.html' %}
-
-        <button class="openbtn" onclick="openNav()">&#9776;</button>
 
         <main id="main">
             {% block content %}{% endblock %}
@@ -53,21 +46,6 @@
                     document.getElementById(div_id).removeChild(element)
                 }
             }
-
-            /* Set the width of the sidebar to 250px and the left margin of the page content to 250px */
-            function openNav() {
-              document.getElementById("mySidebar").style.width = "250px";
-              document.getElementById("main").style.marginLeft = "300px";
-              open_sidebar()
-            }
-
-            /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-            function closeNav() {
-              document.getElementById("mySidebar").style.width = "0";
-              document.getElementById("main").style.marginLeft = "15%";
-              close_sidebar()
-            }
-
         </script>
 
 

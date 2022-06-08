@@ -130,15 +130,6 @@ header {
     height: auto;
 }
 
-.toggle-handle {
-    background-color: white;
-    border: thin rgba(0, 0, 0, .25) solid;
-}
-
-.click_me {
-    cursor: pointer;
-}
-
 .nav {
     color: rgba(255, 255, 255, 0.5);
 }

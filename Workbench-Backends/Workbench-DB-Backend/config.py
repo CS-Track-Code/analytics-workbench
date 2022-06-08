@@ -40,8 +40,13 @@ pymongo_client_name = "data_collection"
 user_prefix = "user_"
 
 old_databases = ["projects"]
-projects_db = "projects_21_05_11"
+# projects_db = "projects_21_05_11"
+# projects_db = "projects_22_06_01-SDG-List"
+projects_db = "projects_22_06_01-zooniverse-List"
+# projects_db = "SDG-Example-List"
+# projects_db = "zooniverse_projects_analysed"
 eval_db = "eval_db"
+anon_db = "anon_db_LITE"
 
 # to save networks for given time before new calculation
 # set_save_time = 60  #  10000  # in seconds
@@ -50,3 +55,6 @@ safe_for_list_and_networks = Safe(0, mongo)
 
 eval_mongo = MongoInterface(pymongo_clientport, pymongo_client_name, eval_db, user_prefix)
 eval_safe_for_list_and_networks = Safe(0, eval_mongo)
+
+anon_mongo = MongoInterface(pymongo_clientport, pymongo_client_name, anon_db, user_prefix)
+anon_safe_for_list_and_networks = Safe(0, anon_mongo)

@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+{% set active_page = 'explanation_esa' %}
+
+{% block content %}
+    <div class="textblock">
+        <h1>What is ESA?</h1>
+
+        ESA is short for Explicit Semantic Analysis (Gabrilovich & Markovitch, 2007), which can be used to calculate the similarity of texts.
+        <p>
+            In the Analytics Workbench it is utilized to assign Research Areas to Projects by calculating the similarity
+            of the projects description and descriptive texts for all Research Areas.
+        </p>
+        <p>
+            The similarity calculation is based on a precalculated matrix with the dimensions words and articles.
+            A cell in this matrix represents the value of a specific word in a specific article.
+            This matrix makes it possible to translate words in vectors.
+            Equally texts can be represented as vectors by the sum of the respective word vectors.
+            From the vectors we can now calculate similarities by calculating their cosine similarity.
+        </p>
+
+        <h2>How is it used?</h2>
+        <p>
+            For the Analytics Workbench we used the list of Research Areas by Web of Science to define the Research Areas.
+            For each Research Area matching Wikipedia Articles were used as descriptive texts.
+            Based on these the corresponding text vectors could be calculated.
+        </p>
+        <p>
+            When you enter a new project with description the Workbench uses ESA to calculate a corresponding text vector
+            and compare it to the Research Area vectors.
+        </p>
+        <p>
+            The similarity values lie anywhere between 0 an 1, 0 meaning no similarity whatsoever
+            and 1 indicating (near) identical texts.
+            Since the highest ranking Research Area can still have a low similarity score
+            and we also want to identify multidisciplinary projects,
+            we use a dynamic cutoff in relation to the highest similarity score,
+            rather than using a static cutoff based on the number of Research Areas or the height of their score.
+        </p>
+        <p>
+            To ensure that the more explicit mentions of Research Areas in the text don't go unnoticed
+            we also use DBpedia Spotlight (Daiber, Jakob, Hokamp & Mendes, 2013; Mendes, Jakob, Garćıa-Silva & Bizer, 2011) to identify those.
+            DBpedia Spotlight can identify DBpedia entities in natural language texts.
+            These entities can directly be linked to Wikipedia articles.
+            Thus, making it possible to compare these findings with the Wikipedia articles matched to the Research Areas.
+            We then check, if the Research Areas found with DBpedia were also found with ESA, and if they weren't we add them.
+        </p>
+
+
+        <p>
+            <b>Daiber, J., Jakob, M., Hokamp, C. & Mendes, P. N. (2013).</b> Improving efficiency and accuracy in multilingual entity extraction.
+            In <i>Proceedings of the 9th international conference on semantic systems (i-semantics)</i> (S. 121–124). doi: 10.1145/2506182.2506198
+            <br>
+            <b>Gabrilovich, E. & Markovitch, S.(2007).</b> Computing semantic relatedness using wikipedia-based explicit semantic analysis.
+            In <i>Proceedings of the 20th international joint conference on artifical intelligence</i> (S. 1606–1611). San Francisco, CA, USA: Morgan Kaufmann Publishers Inc. doi: 10.5555/1625275.1625535
+            <br>
+            <b>Mendes, P. N., Jakob, M., Garćıa-Silva, A. & Bizer, C. (2011).</b> DBpedia spotlight: Shedding light on the web of documents.
+            In <i>Proceedings of the 7th international conference on semantic systems (i-semantics)</i> (S. 1–8). doi: 10.1145/2063518.2063519
+        </p>
+
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'layout.html' %}
+{% set active_page= 'analyse' %}
+
+{% block content %}
+    <div class="textblock">
+
+        <div class="btn_row2">
+            <table id="analysis-results-title-table">
+                <tr>
+                    <td>
+                        <button type="button" class="btn btn_dark_cs previous" id="previous_1"><i class="fas fa-chevron-left"></i> Back to overview</button>
+                        <button type="button" class="btn btn_dark_cs save" id="save_changes_1">Save changes <i class="far fa-save"></i></button>
+                    </td>
+                    <td id="buttons-right-align">
+                        <div class="btn-group btn_send2">
+                            {% block more_buttons_in_top_row %} {% endblock %}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="modal" id="safe_changes_modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Unsaved changes</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>You have unsaved changes. Those will be lost if you leave this site.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn_dark_cs safe" id="safe_from_modal">Save changes and leave</button>
+                        <button type="button" class="btn btn_dark_cs" id="quit_from_modal">Leave without saving</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% block modification_content %}{% endblock %}
+
+        <div>
+            <div class="btn_row2">
+                <button type="button" class="btn btn_dark_cs previous" id="previous_2"><i class="fas fa-chevron-left"></i> Back to overview</button>
+                <button type="button" class="btn btn_dark_cs save" id="save_changes_2">Save changes <i class="far fa-save"></i></button>
+            </div>
+        </div>
+
+    </div>
+
+    {% endblock %}
+
+
+{% block script %}
+    <script>
+        $j = jQuery.noConflict();
+
+        $j(document).ready(function(){
+            var save_buttons = document.getElementsByClassName("save")
+            Array.from(save_buttons).forEach(function (button){
+                button.addEventListener('click', safe)
+            })
+
+            var previous_buttons = document.getElementsByClassName("previous")
+            Array.from(previous_buttons).forEach(function (button){
+                button.addEventListener('click', check_if_unsaved_before_leaving)
+            })
+        })
+
+        function check_if_unsaved_before_leaving (){
+            // TODO: switch from unsaved changes to comparison with local storage (to account for reversed changes)
+            if (!unsaved_changes){
+                go_back()
+            } else {
+                console.log("modal")
+                $j('#safe_changes_modal').modal('show')
+            }
+        }
+
+        $j('#safe_from_modal').click(function (){
+            safe()
+            go_back()
+        })
+
+        $j('#quit_from_modal').click(function(){
+            go_back()
+        })
+
+        function go_back(){
+            window.location.href = "/analyse/project"
+        }
+
+        {% block more_script %}{% endblock %}
+
+    </script>
+
+{% endblock %}

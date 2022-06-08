@@ -78,6 +78,40 @@ def get_esa_results():
     return response
 
 
+@esa_bp.route("/esa_LITE", methods=['POST'])
+def get_esa_results_LITE():
+    name = request.form["name"]
+    link = request.form["link"]
+    description = request.form["description"]
+
+    classification_scheme = request.form["classification_scheme"] if "classification_scheme" in request.form \
+        else "research_areas"
+    if classification_scheme != "research_areas" and classification_scheme != "sdgs":
+        pass  # ToDo: error
+
+    data = {
+        "name": name,
+        "link": link,
+        "description": description
+    }
+
+    if classification_scheme == "research_areas":
+        url_new = config.backend_esa + "results"
+        backend_response = py_requests.post(url_new, data=data, timeout=125)
+        content = backend_response.content
+        config.version_control["research_areas"] = json.loads(content)["version_control"]
+    else:
+        url_new = config.backend_esa + "results"
+        data["classification_scheme"] = "sdgs"
+        backend_response = py_requests.post(url_new, data=data, timeout=125)
+        content = backend_response.content
+        config.version_control["sdgs"] = json.loads(content)["version_control"]
+
+    header = {"Access-Control-Allow-Origin": "http://192.168.2.140:5000"}
+    response = Response(content, status=200, headers=header)
+    return response
+
+
 @esa_bp.route("/esa/changes", methods=['POST'])
 def update_esa_results():
     name = request.form["name"]
