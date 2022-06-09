@@ -135,7 +135,7 @@ header {
 }
 
 .nav:hover {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 .active {
@@ -479,9 +479,17 @@ div.flexbox div.card {
 .cs_logo {
     width: 75%;
     min-width: 50px;
+    max-height: 80px;
     height: auto;
     position: absolute;
     top: 15px;
+}
+
+.eu {
+    height: 80px;
+    position: relative;
+    float: left;
+    padding: 0 10px 0 0;
 }
 
 #content_description{

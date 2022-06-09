@@ -2,8 +2,7 @@
 
     {% set how_links= [
         (url_for("explanation_bp.explanation_esa"), 'explanation_esa', 'What is ESA?'),
-        (url_for("explanation_bp.explanation_ner"), 'explanation_ner', 'What is NER?'),
-        (url_for("explanation_bp.explanation_recommendation"), 'explanation_recommentation', 'How do the recommendations work?')
+        (url_for("explanation_bp.explanation_ner"), 'explanation_ner', 'What is NER?')
     ] %}
     {% set other_links= [
         (url_for("home_bp.contact"), 'contact', 'Contact us'),
@@ -13,22 +12,32 @@
     <div class="container">
         <div class="row align-items-start">
             <div class="col">
-                <b>How does it work</b>
-                {% for href, id, caption in how_links %}
-
-                    <a class="nav{% if id == active_page %} active{% endif %}" href="{{ href|e }}">{{ caption|e }}</a>
-                {% endfor %}
+                <img src='/static/logo_eu_flag.svg' alt=”EU Flag” class="eu">
+                This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No 872522.
 
             </div>
             <div class="col">
-                {% for href, id, caption in other_links %}
+                <div class="row align-items-start">
+                    <div class="col">
+                        <b>How does it work?</b>
+                        {% for href, id, caption in how_links %}
 
-                    <a class="nav{% if id == active_page %} active{% endif %}" href="{{ href|e }}">{{ caption|e }}</a>
-                {% endfor %}
+                            <a class="nav{% if id == active_page %} active{% endif %}" href="{{ href|e }}">{{ caption|e }}</a>
+                        {% endfor %}
+                    </div>
+                    <div class="col">
+                        <b>Further links</b>
+                        {% for href, id, caption in other_links %}
+
+                            <a class="nav{% if id == active_page %} active{% endif %}" href="{{ href|e }}">{{ caption|e }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
             <div class="col">
                 <a href="https://cstrack.eu/" target="_blank"><img src='/static/CS Track logo (White)_RGB-1.png' alt=”CS Track Logo” class="cs_logo"></a>
             </div>
         </div>
+        The European Commission’s support for this project does not constitute an endorsement of the contents, which reflect the views only of the partners, and the Commission cannot be held responsible for any use which may be made of the information contained therein.
     </div>
 </footer>
