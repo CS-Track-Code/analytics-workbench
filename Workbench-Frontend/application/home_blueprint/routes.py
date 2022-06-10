@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, redirect
+from flask import Blueprint, render_template, redirect, url_for
+from application.cstrack_dash import dash_cs as dcs
+from flask import current_app as app
 import requests as py_requests
 
 import config
@@ -62,12 +64,11 @@ def get_tba_project_names():
 def load_dashapp():
     from flask import current_app as app
     import pymongo
-
-    # if "_dashapp_dash_assets" not in app.blueprints:
-    #     try:
-    #         app, server = dcs.create_dashboard(app)
-    #     except pymongo.errors.ServerSelectionTimeoutError:
-    #         print(pymongo.errors.ServerSelectionTimeoutError)
+    if "_dashapp_dash_assets" not in app.blueprints:
+        try:
+            app, server = dcs.create_dashboard(app)
+        except pymongo.errors.ServerSelectionTimeoutError:
+            print(pymongo.errors.ServerSelectionTimeoutError)
     # print(app.blueprints)
     # return app.blueprints
     return redirect("/dashapp")
