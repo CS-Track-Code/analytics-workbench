@@ -103,6 +103,11 @@ header {
     padding-bottom: 10px
 }
 
+.footer > .container > .row .col:first-child{
+    font-size: smaller;
+    display: block;
+}
+
 .navbar {
     background-color: #235476;
 }
