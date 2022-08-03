@@ -1,6 +1,6 @@
 # Analytics Workbench
 
-Includes Frontend, Middleware and Backends for a Webbased Application to analyse Citizen Science projects.
+Includes Frontend, Middleware and Backends for a web-based application to analyse Citizen Science projects.
 
 Tips and Tricks on how to set up:
 - Every part has to be started individually (most cases by running wsgi.py) and some require additional setup work 
@@ -22,14 +22,14 @@ Tips and Tricks on how to set up:
 
 If you want to run all APIs on the same machine please follow all following instructions on that machine. 
 If you want to split the APIs on multiple machines please refer to the README.md files in 
-- `/Worbench-Frontend/`
-- `/Worbench-Middleware/`
+- `/Worbench-Frontend`
+- `/Worbench-Middleware`
 - `/Worbench-Backends/Workbench-DB-Backend`
 - `/Worbench-Backends/Workbench-ESA-Backend`
 - `/Worbench-Backends/Workbench-NER-Backend`
 - `/Worbench-Backends/Workbench-WMP-Backend`
 
-### First step
+### First step - Workbench Tool Suite
 Install the Workbench Tool Suite from /workbench-tools 
 - navigate to the directory
 - install the requirements by running `pip install -r requirements.txt`
@@ -80,17 +80,35 @@ as well which is to be placed in `/Worbench-Backends/Workbench-ESA-Backend/appli
 Additionally you will need a running MySQL service. The host of which you need to enter in the `/Worbench-Backends/Workbench-ESA-Backend/application/esa_blueprint/static/esa/config.py`
 file in addition to the user and password which the esa module should use.
 
-To set up ESA (for usage of assigning research areas to texts) previous to the first application it is necessary to run 
-`/Worbench-Backends/Workbench-ESA-Backend/application/esa_blueprint/static/esa/prep/prepare_research_areas.py`,
-which in turn needs the [Backend - Mercury Web Parser](#text_extraction) to run. In the setup the program will need to have a
-database "esa_research_areas", which it will try to create if there isn't one. Thus the given user should either be
+To set up ESA (for usage of assigning research areas to texts) previous to the first application it is necessary to prepare the comparison bases. 
+Which can be done in two ways: 
+
+#### Prepare reference base 
+In the setup the program will need to have a MySQL database "esa_research_areas", 
+which it will try to create if there isn't one. Thus the given user should either be
 given the right to create a database or it should be created manually.
 The setup will take a few hours depending on the machine you are using. During this time the text vectors for all
-research areas are pre calculated using the table in `/Worbench-Backends/Workbench-ESA-Backend/application/esa_blueprint/static/esa/esa_data/research_areas.csv` this table maps the
-research areas of [web of science](https://images.webofknowledge.com/images/help/WOS/hp_research_areas_easca.html) to
+research areas are pre calculated using the table in `/application/esa_blueprint/static/esa/esa_data/research_areas.csv` 
+this table maps the research areas of [web of science](https://images.webofknowledge.com/images/help/WOS/hp_research_areas_easca.html) to
 wikipedia articles. If you wanted to use a different taxonomy. You could do that by changing the table.
-Be advised though that the current code is not equipped to switch between taxonomies and you would have to facilitate
+Be advised though that the current code is not equipped to switch between taxonomies, and you would have to facilitate
 that manually.
+
+Since the ESA-Backend in its current setup supports the assignment of research areas *and* SDGs it is necessary 
+to prepare the reference bases **for both**. Which means you will have to run whichever route you choose **twice**; 
+in the first run using `research_areas.csv` as the file input name on request and in the second `sdgs.csv` (or vice versa).
+
+##### ... *without* saving (and modifying the reference texts)
+1. Run the Backend - Mercury Web Parser (refer to corresponding README file).
+2. Then run `prepare_research_areas.py`. 
+
+##### ... *with* saving (and modifying the reference texts)
+1. Run the Backend - Mercury Web Parser (refer to corresponding README file).
+Then run `create_ref_dump.py`. 
+
+2. Modify the reference texts as needed/wanted.
+
+3. Then run `prepare_classification_area_vectors_from_dump.py`
 
 ### Backend NER
 Please install modules from /Worbench-Backends/Workbench-NER-Backend/requirements.txt by navigating to the directory and running
@@ -98,7 +116,7 @@ Please install modules from /Worbench-Backends/Workbench-NER-Backend/requirement
 `pip install -r requirements.txt`
 
 NER is implemented using spacy and pretrained spacy models which must be downloaded manually via console.
-The commando line depends on the language for the model you need 
+The command line depends on the language for the model you need 
 (As of now english is the only language supported by the workbench).
 
 - English: `python -m spacy download en_core_web_sm`
@@ -115,11 +133,14 @@ As soon as this is done you can run the server by running `node app.js` in the s
 
 ### Dash visualizations
 
-When starting the Frontend of the analytics workbench the Dash application is also started. In order for Dash to work properly you need to add the inputs to the **analytics-workbench/Workbench-Frontend/application/cstrack_dash/** [(Input documentation)](davidrol6.github.io/CSTrack_Docs/inputs.html).
+When starting the Frontend of the analytics workbench the Dash application is also started. 
+In order for Dash to work properly you need to add the inputs to the 
+**analytics-workbench/Workbench-Frontend/application/cstrack_dash/** 
+[(Input documentation)](davidrol6.github.io/CSTrack_Docs/inputs.html).
 
 Once the frontend starts, you can access the visualizations by navigating to **http://frontend_url/dashapp/**.
 
-## First Run
+## Before the first Run
 Please check if the addresses and user data in all config files are correct
 - `/Worbench-Frontend/config.py` 
 	- correct host_ip_address (and host_port)
@@ -133,7 +154,7 @@ Please check if the addresses and user data in all config files are correct
 	- check if port and client for mongodb are correct
 - `/Worbench-Backends/Workbench-ESA-Backend/config.py`
 	- correct host_ip_address (and host_port)
-- `/Worbench-Backends/Workbench-ESA-Backend/application/esa_blueprint/static/esa/config.py` 
+- `/Worbench-Backends/Workbench-ESA-Backend/config_esa.py` 
 	- check if user, password and database for MySQL are
 - `/Worbench-Backends/Workbench-NER-Backend/config.py`
 	- correct host_ip_address (and host_port)

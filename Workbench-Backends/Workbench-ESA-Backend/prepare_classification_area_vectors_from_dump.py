@@ -25,7 +25,7 @@ logging.basicConfig(level=logging.DEBUG, filename="log.log", filemode='a', forma
 in_data_base = input("Enter Database-Name (press enter for '" + data_base_name + "'): ")
 data_base_name = in_data_base if in_data_base != '' else data_base_name
 
-print("Please have the csv table with wiki-links for each classification area prepared and saved in " + filepath_base)
+print("Please have the csv table with wiki-links for each classification area and the previously created ref_dump prepared and saved in " + filepath_base)
 in_file_name = input("Enter filename for csv (enter for '" + filename + "'): ")
 filepath_csv = filepath_base + in_file_name if in_file_name != '' and path.exists(filepath_base + in_file_name) \
     else filepath_base + filename
