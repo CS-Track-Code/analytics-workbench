@@ -104,6 +104,7 @@ fabric.properties
 *not_final__*
 *working_file--*
 *.log
+*/ref_dump/*
 
 
 # End of https://www.gitignore.io/api/pycharm
