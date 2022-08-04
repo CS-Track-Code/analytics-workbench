@@ -104,7 +104,11 @@ fabric.properties
 *not_final__*
 *working_file--*
 *.log
-*/ref_dump/*
+*ref_dump*
+*.tfidf_model
+*joblib*
+*CS Track*
+*eu_flag*
 
 
 # End of https://www.gitignore.io/api/pycharm

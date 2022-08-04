@@ -41,10 +41,6 @@ user_prefix = "user_"
 
 old_databases = ["projects"]
 projects_db = "projects_21_05_11"
-# projects_db = "projects_22_06_01-SDG-List"
-# projects_db = "projects_22_06_01-zooniverse-List"
-# projects_db = "SDG-Example-List"
-# projects_db = "zooniverse_projects_analysed"
 eval_db = "eval_db"
 anon_db = "anon_db_LITE"
 
